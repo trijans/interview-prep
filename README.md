@@ -13,8 +13,10 @@ The whole app is **one static file** (`index.html`). There is no server, no data
 | Home | Problem of the day, streak counter, activity heatmap, "due for review" queue, backup export/import |
 | Top Problems | 45 frequently asked LeetCode problems: pattern/company filters, step-by-step hints, target complexity, solve timer, personal notes, spaced-repetition reviews (1 → 3 → 7 → 14 → 30 days) |
 | System Design | URL shortener, rate limiter, chat, news feed, video streaming with animated request flows, guided 5-step practice with reference answers and a self-check score, plus token bucket and consistent hashing demos |
-| Behavioral | 21 common questions, a STAR editor with auto-save, word count and a 2-minute timer |
-| Technical Q&A | 36 flashcards (OS, networking, databases, OOP, concurrency, web/APIs) with a "due for review" mode |
+| Behavioral | 26 common questions (including AI & ML projects), a STAR editor with auto-save, word count and a 2-minute timer |
+| Technical Q&A | 72 flashcards in two decks: software engineering (OS, networking, databases, OOP, concurrency, web/APIs) and AI & ML (fundamentals, deep learning, transformers, RAG & agents, evaluation, MLOps) |
+| AI & ML | Role guide and interview loop; visual labs for gradient descent (GD / momentum / Adam), LLM sampling (temperature, top-k, top-p), precision/recall with ROC, and k-means; 16 ML coding problems with hints; 5 AI system designs (RAG, tool-using agent, recommendations, LLM serving, fraud detection) with guided practice |
+| Appearance | Light/dark mode, 5 accent colours, first-visit tour |
 
 Progress (solved problems, reviews, notes, flashcards, STAR stories, design practice) is saved in the browser's `localStorage`. Use **Export backup / Import backup** on the Home page to move it between devices.
 
@@ -50,6 +52,7 @@ All content lives in plain JavaScript arrays near the bottom of `index.html`:
 - `BQ` holds behavioral questions by category
 - `FC` holds flashcards by topic
 - `PATTERNS` holds pattern templates
+- `AIPROBS` / `AIFC` hold the AI & ML coding problems and flashcards; AI system designs live in `SD` with `ai:true`
 
 Edit, save, push, and it's live.
 

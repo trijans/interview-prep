@@ -250,6 +250,25 @@ ol.steps li.now{color:var(--text)}
 .checks label{display:block;font-size:15px;margin:8px 0;cursor:pointer}
 .checks input{margin-right:8px;width:17px;height:17px;vertical-align:-3px}
 
+
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px;margin-bottom:14px;padding:4px;background:var(--panel2);border:1px solid var(--line);border-radius:12px}
+.seg button{all:unset;cursor:pointer;padding:8px 15px;border-radius:9px;color:var(--muted);font-weight:700;font-size:14.5px}
+.seg button:hover{color:var(--text)}
+.seg button.active{background:var(--panel);color:var(--text);box-shadow:0 1px 3px rgba(23,32,49,.12)}
+[data-theme=dark] .seg button.active{background:var(--line2)}
+#sec-technical>.seg{display:flex;width:max-content;margin:0 auto 14px}
+.swatches{display:flex;gap:8px;align-items:center}
+.swatch{all:unset;cursor:pointer;width:26px;height:26px;border-radius:50%;background:var(--sw);box-shadow:inset 0 0 0 2px rgba(255,255,255,.35);display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800}
+.swatch[aria-checked=true]{outline:2.5px solid var(--text);outline-offset:2px}
+.navfoot .swatches{justify-content:space-between}
+main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
+@keyframes enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#tour{position:fixed;inset:0;z-index:60}
+.tour-hl{position:fixed;border-radius:14px;box-shadow:0 0 0 9999px rgba(12,16,26,.58);transition:all .28s ease;pointer-events:none}
+.tour-pop{position:fixed;width:min(340px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 20px 50px rgba(12,16,26,.35);transition:left .28s ease,top .28s ease}
+.tour-pop h3{margin:0 0 6px;font-size:19px}.tour-pop p{margin:0 0 16px;font-size:15.5px}
+.tour-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tour-dots{display:flex;gap:5px}.tour-dots i{width:7px;height:7px;border-radius:50%;background:var(--line2)}.tour-dots i.on{background:var(--accent)}
 /* ---------- Responsive ---------- */
 .mobile-theme{display:none!important}
 @media (max-width:1100px){.plan{grid-template-columns:repeat(2,1fr)}.viz-layout,.sd-layout{grid-template-columns:1fr}}
@@ -288,13 +307,14 @@ ol.steps li.now{color:var(--text)}
  <button data-go="system"><span data-icon="system"></span><span class="lbl">System Design</span><span class="short">Design</span></button>
  <button data-go="behavioral"><span data-icon="behavioral"></span><span class="lbl">Behavioral</span><span class="short">Stories</span></button>
  <button data-go="technical"><span data-icon="technical"></span><span class="lbl">Technical Q&amp;A</span><span class="short">Q&amp;A</span></button>
- <div class="navfoot"><label>Animation speed<input type="range" id="speed" min="1" max="10" value="6"></label><button class="theme-btn" data-theme-toggle>Dark mode</button></div>
+ <button data-go="ai"><span data-icon="ai"></span><span class="lbl">AI &amp; ML</span><span class="short">AI</span></button>
+ <div class="navfoot"><label>Animation speed<input type="range" id="speed" min="1" max="10" value="6"></label><div class="swatches" role="radiogroup" aria-label="Accent colour"></div><button class="theme-btn" data-theme-toggle>Dark mode</button></div>
 </nav>
 <main>
 
 <!-- HOME -->
 <section id="sec-home">
- <div class="home-head"><div><h1 id="greet">Welcome back</h1><p class="sub" id="greet-sub"></p></div><button class="theme-btn mobile-theme" data-theme-toggle>Dark mode</button></div>
+ <div class="home-head"><div><h1 id="greet">Welcome back</h1><p class="sub" id="greet-sub"></p></div></div>
  <div class="today-grid" id="home-today"></div>
  <div class="card" style="margin-bottom:16px"><h3>A 4-week plan</h3>
    <ul class="plan">
@@ -305,11 +325,18 @@ ol.steps li.now{color:var(--text)}
    </ul></div>
  <h2 style="margin:28px 0 14px">Practice areas</h2>
  <div class="cards" id="home-cards"></div>
- <div class="card" style="margin-top:16px">
+ <div class="home-row" style="margin-top:16px">
+ <div class="card" id="appearance">
+  <h3>Appearance</h3>
+  <p class="muted" style="font-size:14.5px;margin:0 0 12px">Choose light or dark mode and an accent colour. New here? Take the quick tour.</p>
+  <div class="controls" style="margin:0;gap:14px"><button class="theme-btn" data-theme-toggle>Dark mode</button><div class="swatches" role="radiogroup" aria-label="Accent colour"></div><button class="btn sm" id="tour-replay">Take the tour</button></div>
+ </div>
+ <div class="card">
   <h3>Back up or move your progress</h3>
-  <p class="muted" style="font-size:14px;margin:0 0 10px">Progress is saved in this browser only. Export a backup file to keep it safe, or to move to another device and import it there. Importing replaces the progress in this browser.</p>
+  <p class="muted" style="font-size:14.5px;margin:0 0 12px">Progress is saved in this browser only. Export a backup to keep it safe or move it to another device. Importing replaces the progress here.</p>
   <div class="controls" style="margin:0"><button class="btn" id="bk-export">Export backup</button><label class="btn" for="bk-file">Import backup</label><input type="file" id="bk-file" accept=".json,application/json" hidden></div>
   <div class="say" id="bk-say" hidden></div>
+ </div>
  </div>
 </section>
 
@@ -444,7 +471,8 @@ ol.steps li.now{color:var(--text)}
 <!-- TECHNICAL -->
 <section id="sec-technical" hidden>
  <h1>Technical Q&amp;A</h1>
- <p class="sub">Flashcards on the CS fundamentals that come up in phone screens and technical rounds. Click a card to reveal the answer.</p>
+ <p class="sub">Flashcards for phone screens and technical rounds, in two decks. Click a card to reveal the answer.</p>
+ <div class="seg" id="fc-deck" role="tablist" aria-label="Deck"><button data-deck="swe">Software engineering</button><button data-deck="ai">AI &amp; ML</button></div>
  <div class="chips" id="fc-topics"></div>
  <div class="controls">
   <select id="fc-mode"><option value="all">All cards</option><option value="unknown">Cards I don't know yet</option><option value="due">Due for review</option></select>
@@ -457,6 +485,128 @@ ol.steps li.now{color:var(--text)}
   <button class="btn" id="fc-again">Review again</button>
   <button class="btn pri" id="fc-know">I know this ✓</button>
   <button class="btn" id="fc-next">Next →</button>
+ </div>
+</section>
+
+<!-- AI & ML -->
+<section id="sec-ai" hidden>
+ <h1>AI &amp; ML interviews</h1>
+ <p class="sub">For AI engineer, ML engineer and applied scientist roles. Build intuition with the visual labs, practise ML coding from scratch, design AI systems, and drill the concepts.</p>
+ <div class="tabs" data-tabs="ai">
+  <button data-tab="overview">Overview</button><button data-tab="gd">Gradient descent</button><button data-tab="sample">LLM sampling</button><button data-tab="pr">Precision &amp; recall</button><button data-tab="km">K-means</button><button data-tab="code">ML coding</button><button data-tab="design">AI system design</button>
+ </div>
+
+ <div class="pane" data-pane="ai:overview">
+  <div class="grid3">
+   <div class="card"><h3>AI engineer</h3><p class="muted" style="font-size:15px;margin-top:0">Builds products on top of foundation models: retrieval, agents, evaluation, latency and cost.</p><h4>Focus on</h4><ul style="padding-left:18px;margin:0;font-size:15px"><li>RAG and agent system design</li><li>LLM sampling, context, tokens and cost</li><li>Evaluating LLM output</li><li>Standard coding rounds (LeetCode medium)</li></ul></div>
+   <div class="card"><h3>ML engineer</h3><p class="muted" style="font-size:15px;margin-top:0">Trains, ships and monitors models: features, pipelines, ranking, serving and drift.</p><h4>Focus on</h4><ul style="padding-left:18px;margin:0;font-size:15px"><li>ML system design (recommendations, fraud)</li><li>ML coding from scratch in NumPy</li><li>Metrics, thresholds and experiments</li><li>Two coding rounds at SWE difficulty</li></ul></div>
+   <div class="card"><h3>Applied / research scientist</h3><p class="muted" style="font-size:15px;margin-top:0">Goes deeper on modeling: optimization, architectures, experiment design and papers.</p><h4>Focus on</h4><ul style="padding-left:18px;margin:0;font-size:15px"><li>Optimization and training dynamics</li><li>Transformers and attention in depth</li><li>Statistics and evaluation design</li><li>Discussing your past research in depth</li></ul></div>
+  </div>
+  <div class="card" style="margin-bottom:16px"><h3>What a typical loop looks like</h3>
+   <ol class="steps" style="color:var(--text)">
+    <li><b>Recruiter call and coding screen.</b> Usually a standard algorithms problem; some companies swap in an ML coding task.</li>
+    <li><b>ML coding.</b> Implement something from scratch in Python and NumPy: attention, k-means, logistic regression, sampling.</li>
+    <li><b>ML fundamentals or depth.</b> Bias and variance, metrics, optimization, transformers, and the details of your own projects.</li>
+    <li><b>ML or LLM system design.</b> "Design a recommendation feed", "Design a RAG assistant", "Design an agent that can take actions".</li>
+    <li><b>Behavioral and project deep dive.</b> A model you shipped, what went wrong in production, and how you measured impact.</li>
+   </ol></div>
+  <div class="cards">
+   <div class="card go" data-ai-go="gd" tabindex="0"><h3>Visual labs</h3><p class="muted" style="font-size:15px;margin:0">Gradient descent, LLM sampling, precision and recall, and k-means, all interactive.</p></div>
+   <div class="card go" data-ai-go="code" tabindex="0"><h3>16 ML coding problems</h3><p class="muted" style="font-size:15px;margin:0">From softmax to multi-head attention and BPE, each with hints and complexity targets.</p></div>
+   <div class="card go" data-ai-go="design" tabindex="0"><h3>5 AI system designs</h3><p class="muted" style="font-size:15px;margin:0">RAG, agents, recommendations, LLM serving and fraud detection, with guided practice.</p></div>
+   <div class="card go" data-ai-go="flash" tabindex="0"><h3>36 AI flashcards</h3><p class="muted" style="font-size:15px;margin:0">ML fundamentals, deep learning, transformers, RAG and agents, evaluation, and MLOps.</p></div>
+   <div class="card go" data-ai-go="beh" tabindex="0"><h3>AI behavioral questions</h3><p class="muted" style="font-size:15px;margin:0">Shipping models, offline vs online results, explaining models and responsible AI.</p></div>
+  </div>
+ </div>
+
+ <div class="pane" data-pane="ai:gd">
+  <div class="viz-layout">
+   <div class="card">
+    <div class="controls">
+     <select id="gd-f"><option value="bowl">Bowl (convex)</option><option value="ravine">Narrow valley</option><option value="two">Two valleys (non-convex)</option></select>
+     <select id="gd-opt"><option value="gd">Plain gradient descent</option><option value="mom">Momentum (β = 0.9)</option><option value="adam">Adam</option></select>
+     <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">Learning rate <input type="range" id="gd-lr" min="0" max="100" value="65" style="accent-color:var(--accent)"> <b id="gd-lrv" style="color:var(--text);min-width:42px">0.1</b></label>
+     <button class="btn pri" id="gd-run">▶ Run</button><button class="btn" id="gd-reset">Reset</button>
+    </div>
+    <svg id="gd-svg" class="vizsvg" viewBox="0 0 720 480" style="cursor:crosshair"></svg>
+    <div class="say" id="gd-say">Darker areas have lower loss. Pick a surface, an optimizer and a learning rate, then press Run.</div>
+   </div>
+   <div class="card side"><h3>Gradient descent</h3><p>Each step moves against the gradient: <code>w ← w − lr · ∇L(w)</code>. The learning rate decides how far.</p>
+    <svg id="gd-loss" viewBox="0 0 300 124" style="width:100%;height:auto"></svg>
+    <h4>Things to try</h4><ul><li>Narrow valley with plain descent: watch it zig-zag. Then switch to momentum.</li><li>Push the learning rate past about 0.5 on the narrow valley and it diverges.</li><li>Two valleys: start on either side of the middle and it lands in different minima.</li></ul>
+    <h4>Questions interviewers ask</h4><ul><li>Why does Adam often train faster than plain SGD?</li><li>How do you pick a learning rate? What does warmup do?</li><li>Why does SGD noise help find better minima?</li></ul></div>
+  </div>
+ </div>
+
+ <div class="pane" data-pane="ai:sample">
+  <div class="viz-layout">
+   <div class="card">
+    <p style="margin:0 0 12px;font-size:18px">Prompt: <b>"The cat sat on the …"</b> <span class="muted" style="font-size:14px">The model's raw scores (logits) for the next token are fixed. Your settings change how one gets picked.</span></p>
+    <div class="controls">
+     <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">Temperature <input type="range" id="sp-t" min="0.1" max="2" step="0.05" value="1" style="accent-color:var(--accent)"> <b id="sp-tv" style="color:var(--text);min-width:34px"></b></label>
+     <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">Top-k <input type="range" id="sp-k" min="0" max="10" step="1" value="0" style="accent-color:var(--accent)"> <b id="sp-kv" style="color:var(--text);min-width:24px"></b></label>
+     <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">Top-p <input type="range" id="sp-p" min="0.05" max="1" step="0.05" value="1" style="accent-color:var(--accent)"> <b id="sp-pv" style="color:var(--text);min-width:34px"></b></label>
+    </div>
+    <div class="controls"><button class="btn pri" id="sp-one">Sample one token</button><button class="btn" id="sp-many">Sample 20 times</button><span class="muted" style="font-size:14px">Presets:</span><button class="btn sm" id="sp-greedy">Greedy</button><button class="btn sm" id="sp-bal">Focused</button><button class="btn sm" id="sp-cre">Creative</button></div>
+    <svg id="sp-svg" class="vizsvg" viewBox="0 0 720 374"></svg>
+    <div class="stats" id="sp-stats"></div>
+    <div class="say" id="sp-say">Dashed outlines show the probabilities after temperature only. Filled bars show what is left after top-k and top-p, renormalized.</div>
+   </div>
+   <div class="card side"><h3>How decoding works</h3>
+    <table class="cx"><tr><td><b>Temperature</b></td><td>Divides the logits before the softmax. Below 1 sharpens the distribution; above 1 flattens it.</td></tr><tr><td><b>Top-k</b></td><td>Keeps only the k most likely tokens.</td></tr><tr><td><b>Top-p</b></td><td>Keeps the smallest set of top tokens whose probabilities add up to p (nucleus sampling).</td></tr></table>
+    <h4>Questions interviewers ask</h4><ul><li>Why can greedy decoding produce repetitive text?</li><li>When would you use temperature 0?</li><li>Why is top-p often preferred to a fixed top-k?</li><li>How does beam search differ from sampling?</li></ul></div>
+  </div>
+ </div>
+
+ <div class="pane" data-pane="ai:pr">
+  <div class="viz-layout">
+   <div class="card">
+    <div class="controls">
+     <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">Threshold <input type="range" id="pr-t" min="1" max="99" value="50" style="accent-color:var(--accent)"></label>
+     <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">How well the model separates classes <input type="range" id="pr-sep" min="0" max="100" value="55" style="accent-color:var(--accent)"></label>
+     <label class="muted" style="font-size:14px"><input type="checkbox" id="pr-imb"> Imbalanced (10% positive)</label>
+     <button class="btn" id="pr-new">New data</button>
+    </div>
+    <svg id="pr-svg" class="vizsvg" viewBox="0 0 720 292" style="touch-action:none;cursor:ew-resize"></svg>
+    <div class="legend"><span style="--c:var(--green)">actual positive</span><span style="--c:var(--red)">actual negative</span><span style="--c:var(--line2)">filled = predicted positive, hollow = predicted negative</span></div>
+    <div class="say" id="pr-say">Drag the threshold. Moving it right raises precision and lowers recall; moving it left does the opposite.</div>
+   </div>
+   <div class="card side"><h3>Confusion matrix</h3><div id="pr-cm"></div><svg id="pr-roc" viewBox="0 0 240 252" style="width:100%;max-width:280px;height:auto;margin-top:12px"></svg>
+    <h4>Questions interviewers ask</h4><ul><li>When do you care more about precision than recall? Give an example of each.</li><li>Why is accuracy misleading on imbalanced data?</li><li>ROC-AUC or PR-AUC for rare events?</li></ul></div>
+  </div>
+ </div>
+
+ <div class="pane" data-pane="ai:km">
+  <div class="viz-layout">
+   <div class="card">
+    <div class="controls">
+     <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">k <input type="range" id="km-k" min="2" max="6" value="3" style="accent-color:var(--accent)"> <b id="km-kv" style="color:var(--text)">3</b></label>
+     <select id="km-init"><option value="pp">k-means++ initialization</option><option value="rand">Random initialization</option></select>
+     <button class="btn pri" id="km-step">Step</button><button class="btn" id="km-run">▶ Run to convergence</button><button class="btn" id="km-new">New data</button>
+    </div>
+    <svg id="km-svg" class="vizsvg" viewBox="0 0 720 440"></svg>
+    <div class="stats" id="km-stats"></div>
+    <div class="say" id="km-say">Each step has two parts: assign every point to its nearest centroid, then move each centroid to the mean of its points.</div>
+   </div>
+   <div class="card side"><h3>K-means</h3><table class="cx"><tr><td>Time per iteration</td><td><code>O(n · k · d)</code></td></tr><tr><td>Objective</td><td>Minimize inertia: the sum of squared distances to the nearest centroid</td></tr></table>
+    <h4>Choosing k</h4><button class="btn sm" id="km-elbow-btn">Draw the elbow chart</button><svg id="km-elbow" viewBox="0 0 300 150" style="width:100%;height:auto;margin-top:8px"></svg>
+    <h4>Questions interviewers ask</h4><ul><li>Why can random initialization give a bad result? What does k-means++ change?</li><li>When does k-means fail (non-spherical clusters, different sizes)?</li><li>Why scale features before clustering?</li></ul></div>
+  </div>
+ </div>
+
+ <div class="pane" data-pane="ai:code">
+  <div class="card">
+   <div class="controls"><select id="aip-status"><option value="">All problems</option><option value="unsolved">Not solved yet</option><option value="due">Due for review</option></select><span class="muted" style="font-size:14px">Write these in Python and NumPy without ML libraries, the way most ML coding rounds ask.</span></div>
+   <div id="aip-progress" class="muted" style="font-size:14px"></div>
+   <div class="bar-bg" style="margin-bottom:12px"><div class="bar-fg" id="aip-bar" style="width:0"></div></div>
+   <div style="overflow:auto"><table class="probs"><thead><tr><th></th><th>Problem</th><th>Difficulty</th><th>Topic</th><th>Next review</th></tr></thead><tbody id="aip-body"></tbody></table></div>
+  </div>
+ </div>
+
+ <div class="pane" data-pane="ai:design">
+  <p class="muted" style="margin-top:0">The most common AI interview question today is some form of "design an LLM-based system for…". These five cover the main patterns. Each has a guided practice mode.</p>
+  <div class="tabs" data-tabs="aisd" id="aisd-tabs"></div>
+  <div id="aisd-panes"></div>
  </div>
 </section>
 
@@ -1021,20 +1171,20 @@ const RLAB={easy:'✅ solved easily',hard:'😓 solved with struggle',fail:'❌ 
 let solved=new Set(store.get('solved',[]));
 (function(){const pats=[...new Set(PROBS.map(p=>p[4]))].sort();pats.forEach(p=>$('#p-pat').append(new Option(p,p)));for(const [k,v] of Object.entries(CO))$('#p-co').append(new Option(v,k))})();
 function dueLabel(id){const o=SR[id];if(!o)return'<span class="muted">–</span>';if(o.due<=dkey())return'<span class="pill due">Due now</span>';const n=daysUntil(o.due);return`<span class="muted" style="font-size:13px">in ${n} day${n>1?'s':''}</span>`}
-function dueProblems(){return PROBS.filter(p=>isDue('p:'+p[0]))}
+function dueProblems(){return [...PROBS,...AIPROBS].filter(p=>isDue('p:'+p[0]))}
 function renderProbs(){const q=$('#p-q').value.toLowerCase(),d=$('#p-diff').value,p=$('#p-pat').value,co=$('#p-co').value,st=$('#p-status').value;
  const ok=r=>st==='unsolved'?!solved.has(r[0]):st==='solved'?solved.has(r[0]):st==='due'?isDue('p:'+r[0]):true;
  $('#p-body').innerHTML=PROBS.filter(r=>(!q||r[1].toLowerCase().includes(q)||String(r[0])===q)&&(!d||r[3]===d)&&(!p||r[4]===p)&&(!co||r[5].split(' ').includes(co))&&ok(r))
   .map(r=>`<tr class="${solved.has(r[0])&&!isDue('p:'+r[0])?'solved':''}"><td><input type="checkbox" data-pid="${r[0]}" ${solved.has(r[0])?'checked':''} aria-label="Mark solved"></td><td class="muted">${r[0]}</td><td><button class="linkbtn" data-open="${r[0]}">${r[1]}</button> <a href="https://leetcode.com/problems/${r[2]}/" target="_blank" rel="noopener" title="Open on LeetCode" style="text-decoration:none;font-size:13px">↗</a></td><td><span class="pill ${r[3]}">${r[3]}</span></td><td><span class="pill">${r[4]}</span></td><td>${dueLabel('p:'+r[0])}</td><td style="font-size:13px" class="muted">${r[5].split(' ').map(c=>CO[c]).join(', ')}</td></tr>`).join('')||'<tr><td colspan="7" class="muted">No matches.</td></tr>';
- const nd=dueProblems().length;$('#p-progress').textContent=`${solved.size} / ${PROBS.length} solved${nd?` · ${nd} due for review`:''}`;$('#p-bar').style.width=(solved.size/PROBS.length*100)+'%'}
+ const nd=dueProblems().length;const ns=PROBS.filter(x=>solved.has(x[0])).length;$('#p-progress').textContent=`${ns} / ${PROBS.length} solved${nd?`. ${nd} due for review`:''}`;$('#p-bar').style.width=(ns/PROBS.length*100)+'%'}
 $('#p-body').addEventListener('change',e=>{const id=+e.target.dataset.pid;if(!id)return;if(e.target.checked){solved.add(id);store.set('solved',[...solved]);renderProbs();openProblem(id)}else{solved.delete(id);store.set('solved',[...solved]);renderProbs()}});
 $('#p-body').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)openProblem(+b.dataset.open)});
 ['#p-q','#p-diff','#p-pat','#p-co','#p-status'].forEach(s=>$(s).addEventListener('input',renderProbs));
-function refreshViews(){if(!$('#sec-home').hidden)renderHome();if(!$('#sec-problems').hidden)renderProbs()}
-function openProblem(id){const r=PROBS.find(p=>p[0]===id);if(!r)return;const hn=HINTS[id]||['–','–',[]],o=SR['p:'+id],notes=store.get('notes',{}),target={Easy:15,Medium:25,Hard:40}[r[3]];
+function refreshViews(){if(!$('#sec-home').hidden)renderHome();if(!$('#sec-problems').hidden)renderProbs();if(!$('#sec-ai').hidden)renderAIProbs()}
+function openProblem(id){const r=[...PROBS,...AIPROBS].find(p=>String(p[0])===String(id));if(!r)return;id=r[0];const hn=HINTS[id]||['–','–',[]],o=SR['p:'+id],notes=store.get('notes',{}),target={Easy:15,Medium:25,Hard:40}[r[3]];
  clearInterval(pTimer);pTimer=null;let sec=0,shown=0;
  openModal(`<div class="muted" style="font-size:13px">#${id} · <span class="pill ${r[3]}">${r[3]}</span> <span class="pill">${r[4]}</span></div>
- <h2 style="margin:8px 0 4px">${esc(r[1])}</h2><a href="https://leetcode.com/problems/${r[2]}/" target="_blank" rel="noopener">Solve it on LeetCode ↗</a>
+ <h2 style="margin:8px 0 4px">${esc(r[1])}</h2>${r[5]&&!r[2]?`<p style="margin:0 0 6px">${esc(r[5])}</p>`:''}${r[2]?`<a href="https://leetcode.com/problems/${r[2]}/" target="_blank" rel="noopener">Solve it on LeetCode ↗</a>`:'<span class="muted" style="font-size:15px">Write it in Python and NumPy in a notebook or your editor, without ML libraries.</span>'}
  <div class="pm-grid"><div>
   <h4>Target complexity</h4><div style="font-size:14px">Time <code style="color:var(--green)">${hn[0]}</code> · Space <code style="color:var(--green)">${hn[1]}</code></div>
   <h4>Hints</h4><ol class="hints" id="pm-hints"></ol>${hn[2].length?`<button class="btn sm" id="pm-hint">Show hint 1 of ${hn[2].length}</button>`:''}
@@ -1057,8 +1207,8 @@ function openProblem(id){const r=PROBS.find(p=>p[0]===id);if(!r)return;const hn=
 /* =========================================================
    SYSTEM DESIGN
    ========================================================= */
-const TYPE_COLORS={client:'#8792A6',lb:'#4C72F0',service:'#16A075',cache:'#D69214',db:'#E0564B',queue:'#8B5FE6',storage:'#E5772C',cdn:'#1597AD',worker:'#16A075'};
-const TYPE_NAMES={client:'Client',lb:'Load balancer / gateway',service:'Service',cache:'Cache',db:'Database',queue:'Queue / stream',storage:'Object storage',cdn:'CDN',worker:'Async workers'};
+const TYPE_COLORS={client:'#8792A6',lb:'#4C72F0',service:'#16A075',cache:'#D69214',db:'#E0564B',queue:'#8B5FE6',storage:'#E5772C',cdn:'#1597AD',worker:'#16A075',model:'#C2368F'};
+const TYPE_NAMES={client:'Client',lb:'Load balancer / gateway',service:'Service',cache:'Cache',db:'Database',queue:'Queue / stream',storage:'Object storage',cdn:'CDN',worker:'Async workers',model:'ML model'};
 const SD={
  url:{name:'URL Shortener',
   nodes:{client:['Client','client',90,230,'Browser or app. Sends POST to create a short link and GET on the short link to be redirected.'],
@@ -1158,12 +1308,10 @@ const SD={
    ['CDN strategy','Pre-position the most popular content at edges and fetch the long tail from regional origins. Many large platforms also place cache servers inside ISP networks.'],
    ['Storage cost tiers','Hot (recent and popular), warm and cold (rarely watched). Keep fewer renditions for the long tail.']]}
 };
-(function buildSD(){const tabs=$('#sd-tabs'),host=$('#sd-panes');
- for(const [k,d] of Object.entries(SD)){tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));
-  host.append(h(`<div class="pane" data-pane="sd:${k}">
+function designPane(k,d,g){const types=[...new Set(Object.values(d.nodes).map(n=>n[1]))];return `<div class="pane" data-pane="${g}:${k}">
   <div class="sd-layout"><div class="card"><div class="controls">${d.flows.map((f,i)=>`<button class="btn ${i?'':'pri'}" data-flow="${k}:${i}">▶ ${f.n}</button>`).join('')}<button class="btn" data-flow="${k}:reset">Reset</button><button class="btn" data-practice="${k}" style="margin-left:auto">✎ Practice this design</button></div>
    <svg id="sd-svg-${k}" class="vizsvg" viewBox="0 0 900 460"></svg><ol class="steps" id="sd-steps-${k}"></ol></div>
-   <div class="card side" id="sd-info-${k}"><h3>Click any component</h3><p class="muted" style="font-size:14px">Each box shows why it exists and the trade-offs to mention in the interview.</p><h4>Legend</h4>${Object.entries(TYPE_NAMES).filter(([t])=>t!=='worker').map(([t,n])=>`<div style="font-size:13px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${TYPE_COLORS[t]};margin-right:6px"></span>${n}</div>`).join('')}</div></div>
+   <div class="card side" id="sd-info-${k}"><h3>Click any component</h3><p class="muted" style="font-size:14px">Each box shows why it exists and the trade-offs to mention in the interview.</p><h4>Legend</h4>${Object.entries(TYPE_NAMES).filter(([t])=>types.includes(t)).map(([t,n])=>`<div style="font-size:13px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${TYPE_COLORS[t]};margin-right:6px"></span>${n}</div>`).join('')}</div></div>
   <div class="grid3">
    <div class="card"><h3>Requirements</h3><h4 style="margin-top:0">Functional</h4><ul>${d.req[0].map(x=>`<li>${x}</li>`).join('')}</ul><h4>Non-functional</h4><ul>${d.req[1].map(x=>`<li>${x}</li>`).join('')}</ul></div>
    <div class="card"><h3>Back-of-the-envelope</h3><ul>${d.est.map(x=>`<li>${x}</li>`).join('')}</ul></div>
@@ -1171,7 +1319,11 @@ const SD={
   </div>
   ${d.extra==='tb'?`<div class="card" style="margin-bottom:16px"><h3>Try it: token bucket (capacity 5, refill 1 token/s)</h3><div class="tb-tokens" id="tb-tokens"></div><div class="controls"><button class="btn pri" id="tb-one">Send request</button><button class="btn" id="tb-burst">Burst of 8</button></div><div class="tb-log" id="tb-log"></div></div>`:''}
   <h3 style="margin:6px 0 10px">Deep dives &amp; trade-offs</h3>${d.deep.map(([t,x],i)=>`<details ${i?'':'open'}><summary>${t}</summary><p>${x}</p></details>`).join('')}
-  </div>`))}
+  </div>`}
+function wireDesignHost(host){host.addEventListener('click',e=>{const pr=e.target.closest('[data-practice]');if(pr){openPractice(pr.dataset.practice);return}const b=e.target.closest('[data-flow]');if(b){const [k,i]=b.dataset.flow.split(':');if(i==='reset'){if(!BUSY){drawSD(k);$('#sd-steps-'+k).innerHTML=''}}else run(()=>playFlow(k,+i));return}
+  const n=e.target.closest('[data-node]');if(n){const [k,id]=n.dataset.node.split(':');if(!BUSY)drawSD(k,new Set(),new Set(),id);sdInfo(k,id)}})}
+(function buildSD(){const tabs=$('#sd-tabs'),host=$('#sd-panes');
+ for(const [k,d] of Object.entries(SD)){if(d.ai)continue;tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));host.append(h(designPane(k,d,'sd')))}
  // Core concepts pane
  tabs.append(h('<button data-tab="concepts">Core Concepts</button>'));
  host.append(h(`<div class="pane" data-pane="sd:concepts">
@@ -1188,9 +1340,8 @@ const SD={
    <div class="controls"><button class="btn pri" id="ring-add">Add server</button><button class="btn" id="ring-rm">Remove server</button><label class="muted" style="font-size:14px"><input type="checkbox" id="ring-v"> Virtual nodes (×4)</label></div>
    <div class="say" id="ring-say">24 keys across 3 servers.</div><div id="ring-load" style="margin-top:10px;font-size:14px"></div></div></div></div>
   <div id="concepts"></div></div>`));
- host.addEventListener('click',e=>{const pr=e.target.closest('[data-practice]');if(pr){openPractice(pr.dataset.practice);return}const b=e.target.closest('[data-flow]');if(b){const [k,i]=b.dataset.flow.split(':');if(i==='reset'){if(!BUSY){drawSD(k);$('#sd-steps-'+k).innerHTML=''}}else run(()=>playFlow(k,+i));return}
-  const n=e.target.closest('[data-node]');if(n){const [k,id]=n.dataset.node.split(':');if(!BUSY)drawSD(k,new Set(),new Set(),id);sdInfo(k,id)}});
- for(const k of Object.keys(SD))TAB_HOOKS['sd:'+k]=()=>{if(!BUSY)drawSD(k)};
+ wireDesignHost(host);
+ for(const [k,d] of Object.entries(SD))if(!d.ai)TAB_HOOKS['sd:'+k]=()=>{if(!BUSY)drawSD(k)};
  TAB_HOOKS['sd:concepts']=()=>drawRing();
 })();
 function drawSD(k,act=new Set(),hot=new Set(),sel=null){const d=SD[k],s=svg('sd-svg-'+k),W=150,H=50;
@@ -1314,6 +1465,7 @@ const BQ=[
  ['Failure & Growth',['Tell me about a time you failed.','Describe the hardest feedback you have received and what you did with it.','Tell me about a mistake you made that affected users or customers.']],
  ['Delivery & Pressure',['Tell me about a time you missed a deadline.','Describe a time you had to juggle competing priorities.','Tell me about a time you had to deliver with very limited resources.']],
  ['Impact & Customer',['What is the most impactful project you have worked on?','Tell me about a time you went above and beyond for a customer.','Tell me about a time you used data to change a decision.']],
+ ['AI & ML projects',['Tell me about a model or AI feature you shipped to production. How did you measure its impact?','Describe a time a model looked good offline but disappointed in production. What did you do?','Tell me about a time you decided not to use machine learning or an LLM for a problem.','Describe how you explained a model’s behavior or limitations to non-technical stakeholders.','Tell me about a time you found a fairness, privacy or safety issue in an AI system. How did you handle it?']],
  ['Innovation & Simplification',['Tell me about a time you improved a process or system.','Describe a creative solution to a hard technical problem.','Tell me about a time you simplified something complex.']]
 ];
 const FLAT=BQ.flatMap(([c,qs])=>qs);
@@ -1385,9 +1537,12 @@ const FC={
   ['Name the key HTTP status codes.','200 OK, 201 Created, 204 No Content, 301/302 redirects, 304 Not Modified, 400 Bad Request, 401 Unauthenticated, 403 Forbidden, 404 Not Found, 409 Conflict, 429 Too Many Requests, 500 Server Error, 503 Unavailable.']]
 };
 let known=new Set(store.get('known',[])),fcTopic='All',fcIdx=0,fcFlip=false,fcOrder=null;
-function fcAll(){return Object.entries(FC).flatMap(([t,cs])=>cs.map((c,i)=>({id:t+':'+i,t,q:c[0],a:c[1]})))}
+let fcDeckName=store.get('fcdeck','swe');
+function deckObj(){return fcDeckName==='ai'?AIFC:FC}
+function fcAllDecks(){return [['swe',FC],['ai',AIFC]].flatMap(([dk,D])=>Object.entries(D).flatMap(([t,cs])=>cs.map((c,i)=>({id:t+':'+i,t,q:c[0],a:c[1],deck:dk}))))}
+function fcAll(){return Object.entries(deckObj()).flatMap(([t,cs])=>cs.map((c,i)=>({id:t+':'+i,t,q:c[0],a:c[1]})))}
 function fcDeck(){let d=fcAll().filter(c=>fcTopic==='All'||c.t===fcTopic);const m=$('#fc-mode').value;if(m==='unknown')d=d.filter(c=>!known.has(c.id));if(m==='due')d=d.filter(c=>isDue('f:'+c.id));if(fcOrder){const o=new Map(fcOrder.map((id,i)=>[id,i]));d.sort((a,b)=>(o.get(a.id)??0)-(o.get(b.id)??0))}return d}
-function renderFC(){$('#fc-topics').innerHTML=['All',...Object.keys(FC)].map(t=>`<button class="btn sm ${t===fcTopic?'pri':''}" data-topic="${esc(t)}">${t}</button>`).join('');
+function renderFC(){$$('#fc-deck button').forEach(b=>b.classList.toggle('active',b.dataset.deck===fcDeckName));$('#fc-topics').innerHTML=['All',...Object.keys(deckObj())].map(t=>`<button class="btn sm ${t===fcTopic?'pri':''}" data-topic="${esc(t)}">${t}</button>`).join('');
  const d=fcDeck();if(fcIdx>=d.length)fcIdx=0;const total=fcAll().filter(c=>fcTopic==='All'||c.t===fcTopic);
  $('#fc-count').textContent=`${d.length?fcIdx+1:0} / ${d.length} · ${total.filter(c=>known.has(c.id)).length} of ${total.length} known`;
  const c=d[fcIdx];$('#fc-card').innerHTML=c?`<div class="muted" style="font-size:12.5px;margin-bottom:8px">${c.t}${known.has(c.id)?' · ✓ known':''}</div><div class="q">${c.q}</div>${fcFlip?`<div class="a">${c.a}</div>`:'<div class="muted" style="font-size:13px;margin-top:14px">Click to reveal the answer</div>'}`:`<div class="q">${$('#fc-mode').value==='due'?'🎉 Nothing due for review right now. Come back tomorrow.':'🎉 You know every card in this set.'}</div>`}
@@ -1398,8 +1553,363 @@ $('#fc-prev').onclick=()=>{const n=fcDeck().length;if(n){fcIdx=(fcIdx-1+n)%n;fcF
 $('#fc-know').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.add(c.id);store.set('known',[...known]);srRate('f:'+c.id,'easy');if($('#fc-mode').value==='all')fcIdx++;fcFlip=false;renderFC()};
 $('#fc-again').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.delete(c.id);store.set('known',[...known]);srRate('f:'+c.id,'fail');if($('#fc-mode').value!=='due')fcIdx++;fcFlip=false;renderFC()};
 $('#fc-mode').onchange=()=>{fcIdx=0;fcFlip=false;renderFC()};
-function dueCards(){return fcAll().filter(c=>isDue('f:'+c.id))}
+function dueCards(){return fcAllDecks().filter(c=>isDue('f:'+c.id))}
+$('#fc-deck').addEventListener('click',e=>{const b=e.target.closest('[data-deck]');if(!b)return;fcDeckName=b.dataset.deck;store.set('fcdeck',fcDeckName);fcTopic='All';fcIdx=0;fcOrder=null;fcFlip=false;renderFC()});
 $('#fc-shuffle').onclick=()=>{fcOrder=fcAll().map(c=>c.id).sort(()=>Math.random()-.5);fcIdx=0;fcFlip=false;renderFC()};
+
+const AIFC={
+ 'ML Fundamentals':[
+  ['Explain the bias–variance trade-off.','Bias is error from overly simple assumptions (underfitting). Variance is error from being too sensitive to the training data (overfitting). More complex models lower bias but raise variance. The goal is the lowest total error on unseen data, chosen with validation data.'],
+  ['How do you detect and reduce overfitting?','Detect it when training performance keeps improving while validation performance stalls or gets worse. Reduce it with more data, data augmentation, regularization (L1/L2, dropout), a simpler model, early stopping, or ensembling.'],
+  ['L1 vs L2 regularization?','L1 adds the sum of |weights|: it pushes many weights to exactly zero, giving sparse models and implicit feature selection. L2 adds the sum of squared weights: it shrinks all weights smoothly and handles correlated features better. Elastic net combines both.'],
+  ['What is data leakage? Give two examples.','Information that would not be available at prediction time leaks into training, so offline results look great and production results do not. Examples: scaling with statistics computed on the full dataset, a feature derived from the label, or a random split on time-series data.'],
+  ['How do you handle class imbalance?','Use metrics that reflect it (precision, recall, PR-AUC), class weights or a focal loss, resampling (over-sample the minority or down-sample the majority, then recalibrate), more minority data, and a threshold tuned to the business cost.'],
+  ['Why use cross-validation, and when not k-fold?','It gives a more reliable estimate of generalization by training and testing on several splits. For time series, use forward-chaining splits (train on the past, test on the future). For grouped data such as several rows per user, split by group to avoid leakage.']],
+ 'Deep Learning':[
+  ['How does backpropagation work?','It applies the chain rule backwards through the network. The gradient of the loss with respect to each layer’s output is multiplied by that layer’s local derivative to get gradients for its weights and inputs, reusing intermediate values from the forward pass.'],
+  ['What causes vanishing or exploding gradients, and what fixes them?','Repeatedly multiplying by derivatives smaller (or larger) than 1 across many layers. Fixes: ReLU-family activations, careful initialization (He or Xavier), normalization layers, residual connections, gradient clipping, and gated units in RNNs.'],
+  ['Batch normalization vs layer normalization?','Batch norm normalizes each feature across the batch, so it depends on batch size and behaves differently in training and inference. Layer norm normalizes across features within each example, so it works with any batch size and sequence length, which is why transformers use it.'],
+  ['What does dropout do?','During training it randomly zeroes a fraction of activations, so the network cannot rely on any single unit. This acts like training an ensemble of sub-networks. It is turned off at inference (activations are scaled to compensate).'],
+  ['SGD vs momentum vs Adam?','SGD steps along the current gradient. Momentum adds a moving average of past gradients, which damps zig-zagging and speeds progress along consistent directions. Adam also scales each parameter’s step by a running estimate of its gradient magnitude, which makes it robust and fast to tune. Try the gradient descent lab.'],
+  ['Why ReLU over sigmoid in hidden layers?','Sigmoid saturates for large inputs, so its gradients vanish. ReLU has a constant gradient for positive inputs, is cheap to compute, and trains faster. Its downside is "dead" units stuck at zero, which variants such as Leaky ReLU or GELU address.']],
+ 'Transformers & LLMs':[
+  ['How does self-attention work?','Each token is projected into a query, a key and a value. A token’s output is a weighted sum of all values, where the weights are the softmax of its query’s dot products with every key. Multiple heads learn different relationships in parallel.'],
+  ['Why divide the attention scores by √d_k?','Dot products of random vectors grow with the dimension d_k. Large scores push the softmax into saturation, where gradients are tiny. Dividing by √d_k keeps their variance roughly constant.'],
+  ['How do transformers know word order?','Attention itself has no notion of order, so position information is added: originally fixed sinusoidal or learned position embeddings; today often rotary position embeddings (RoPE), which rotate queries and keys by an angle depending on position.'],
+  ['What is the KV cache and why does it matter?','During generation, the keys and values of earlier tokens do not change, so they are stored instead of recomputed at each step. This makes decoding much faster, but the cache uses memory that grows with batch size × context length, which limits how many requests a GPU can serve at once.'],
+  ['Pretraining vs fine-tuning vs preference tuning?','Pretraining learns language and knowledge by predicting the next token on huge text corpora. Supervised fine-tuning teaches it to follow instructions with example conversations. Preference tuning (RLHF or DPO) teaches it to prefer responses people rate as better and safer.'],
+  ['What are tokens, and why do they matter in practice?','Models read sub-word tokens produced by an algorithm such as byte-pair encoding, not characters or words. Cost, context limits and latency are all measured in tokens, and tokenization explains odd behaviors such as trouble counting letters in a word.']],
+ 'RAG & Agents':[
+  ['What is RAG and when would you use it instead of fine-tuning?','Retrieval-augmented generation fetches relevant documents at query time and puts them in the prompt. Use it for knowledge that changes, must be cited, or has access controls. Use fine-tuning for style, format or a specialized skill. The two combine well.'],
+  ['What are embeddings and how does vector search work?','Embeddings are vectors where similar meanings are close together. Documents are embedded once and indexed; a query is embedded and its nearest neighbors are found. At scale, approximate indexes such as HNSW or IVF trade a little recall for big speed gains.'],
+  ['Why combine keyword search with vector search, and why rerank?','Vector search handles paraphrases but misses exact terms such as IDs and error codes, which keyword search (BM25) catches. Hybrid search merges both. A cross-encoder reranker then scores each query–document pair jointly, which is more precise but too slow to run on everything.'],
+  ['How would you debug a RAG system that gives wrong answers?','First check retrieval: was the right chunk retrieved at all (recall@k)? If not, fix chunking, embeddings, hybrid search or filters. If it was retrieved but the answer is still wrong, fix the prompt, ordering, context length or the model, and check whether the source itself is outdated.'],
+  ['How does an agent with tools work?','In a loop: the model receives the goal, the conversation and a list of tool schemas, then either answers or emits a structured tool call. Your code validates and runs the tool, and returns the result. The loop repeats until the task is done or a step limit is reached.'],
+  ['What is prompt injection and how do you defend against it?','Untrusted text (a web page, email or document) contains instructions that hijack the model. Defenses: treat retrieved and user content as data, give tools least privilege, enforce permissions in code, require confirmation for risky actions, filter outputs, and test with adversarial examples.']],
+ 'Evaluation & Safety':[
+  ['How do you evaluate an LLM feature before launch?','Build a test set from real or realistic inputs with expected outcomes or grading rubrics. Score it automatically where possible (exact checks, code tests, an LLM judge validated against human labels) and with human review for nuance. Rerun it on every prompt or model change, like regression tests.'],
+  ['What are the pitfalls of using an LLM as a judge?','It can prefer longer answers, the first option shown, or its own style, and it can be confidently wrong. Mitigate with clear rubrics, pairwise comparisons in randomized order, checking agreement with human labels, and spot-checking regularly.'],
+  ['How do you reduce hallucinations?','Ground answers in retrieved sources and ask for citations, let the model say "I don’t know", lower the temperature for factual tasks, check that claims are supported by the context, and use tools (search, calculators, databases) for facts and arithmetic.'],
+  ['Offline metrics improved but the A/B test was flat. Why?','Possible causes: the offline metric does not reflect what users value, training–serving skew, leakage made offline results optimistic, novelty or seasonal effects, too little statistical power, or the change affects only a small share of traffic.'],
+  ['What is perplexity, and what are its limits?','Perplexity is the exponential of the average negative log-likelihood per token: lower means the model predicts the text better. It is useful for comparing language models on the same data and tokenizer, but says little about helpfulness, accuracy or safety.'],
+  ['What is red teaming, and what are guardrails?','Red teaming means deliberately trying to make a system fail or cause harm (jailbreaks, data leaks, unsafe advice) before users do. Guardrails are the checks around the model, such as input and output classifiers, policy filters, rate limits and human review, that catch what gets through.']],
+ 'MLOps & Production':[
+  ['What is training–serving skew and how do you prevent it?','Features are computed differently in training and in production, so the model sees different inputs than it learned from. Prevent it with shared feature code (a feature store), logging the features used at serving time and training on them, and monitoring feature distributions.'],
+  ['Data drift vs concept drift?','Data drift: the input distribution changes (new users, new devices). Concept drift: the relationship between inputs and the label changes (fraud tactics evolve). Monitor input statistics and prediction distributions, track delayed labels, and retrain on a schedule or when alerts fire.'],
+  ['How do you safely deploy a new model?','Validate offline on recent data, then shadow it (scores logged but not used), then a canary or A/B test on a small share of traffic with guardrail metrics. Keep the previous version ready for instant rollback and version the data, code and model together.'],
+  ['How can you make LLM inference cheaper and faster?','Use a smaller or distilled model where possible, quantize weights, batch requests (continuous batching), cache prompt prefixes and repeated answers, shorten prompts, cap output length, stream responses, and route requests by difficulty.'],
+  ['What should you monitor for a model in production?','System health (latency, errors, throughput, cost), data quality (missing values, schema changes, drift), model outputs (score distributions, prediction rates), business metrics, and, when labels arrive, actual accuracy. For LLMs also track user feedback and safety flags.'],
+  ['Batch vs real-time inference?','Batch precomputes predictions on a schedule: cheaper and simpler, but stale. Real-time computes on request: fresh and personalized, but needs low-latency features and serving infrastructure. Many systems mix them, for example batch candidate generation with real-time ranking.']]
+};
+
+/* =========================================================
+   AI & ML TRACK
+   ========================================================= */
+/* ---- Gradient descent lab ---- */
+const GDF={
+ bowl:{n:'Bowl (convex)',f:(x,y)=>x*x+y*y,g:(x,y)=>[2*x,2*y],start:[-2.4,1.5]},
+ ravine:{n:'Narrow valley',f:(x,y)=>0.1*x*x+2*y*y,g:(x,y)=>[0.2*x,4*y],start:[-2.6,1.4]},
+ two:{n:'Two valleys (non-convex)',f:(x,y)=>(x*x-1)**2+0.5*y*y,g:(x,y)=>[4*x*(x*x-1),y],start:[-0.15,1.6]}
+};
+const GW=720,GH=480,GX0=-3,GX1=3,GY0=-2,GY1=2;
+const gpx=x=>(x-GX0)/(GX1-GX0)*GW,gpy=y=>GH-(y-GY0)/(GY1-GY0)*GH;
+let gdStart=null,gdPath=[],gdBgCache={};
+function gdLR(){return 0.001*Math.pow(1200,+$('#gd-lr').value/100)}
+function gdBg(key){if(gdBgCache[key])return gdBgCache[key];const F=GDF[key].f,c=15;let fmax=0;const vals=[];
+ for(let py=0;py<GH;py+=c)for(let px=0;px<GW;px+=c){const x=GX0+(px+c/2)/GW*(GX1-GX0),y=GY0+(GH-py-c/2)/GH*(GY1-GY0),v=F(x,y);vals.push([px,py,v]);fmax=Math.max(fmax,v)}
+ const out=vals.map(([px,py,v])=>`<rect x="${px}" y="${py}" width="${c}" height="${c}" fill="var(--accent)" fill-opacity="${(0.42*(1-Math.log1p(v)/Math.log1p(fmax))).toFixed(3)}"/>`).join('');
+ return gdBgCache[key]=out}
+function drawGD(){const key=$('#gd-f').value,s=$('#gd-svg');if(!gdStart)gdStart=GDF[key].start.slice();
+ let html=gdBg(key);
+ if(gdPath.length>1)html+=`<polyline points="${gdPath.map(p=>gpx(p[0]).toFixed(1)+','+gpy(p[1]).toFixed(1)).join(' ')}" fill="none" style="stroke:var(--orange)" stroke-width="2.5" stroke-linejoin="round"/>`+gdPath.slice(1,-1).map(p=>`<circle cx="${gpx(p[0])}" cy="${gpy(p[1])}" r="2.6" style="fill:var(--orange)"/>`).join('');
+ const st=gdStart,cur=gdPath.length?gdPath[gdPath.length-1]:st;
+ html+=`<circle cx="${gpx(st[0])}" cy="${gpy(st[1])}" r="7" style="fill:var(--panel);stroke:var(--text)" stroke-width="2.5"/>`;
+ if(gdPath.length>1&&isFinite(cur[0]))html+=`<circle cx="${gpx(Math.max(GX0,Math.min(GX1,cur[0])))}" cy="${gpy(Math.max(GY0,Math.min(GY1,cur[1])))}" r="8" style="fill:var(--orange);stroke:var(--panel)" stroke-width="2.5"/>`;
+ html+=`<text x="12" y="22" class="lbl">Click anywhere to choose a starting point</text>`;
+ s.innerHTML=html;drawGDLoss()}
+function drawGDLoss(){const s=$('#gd-loss'),F=GDF[$('#gd-f').value].f;if(!s)return;const L=gdPath.map(p=>F(p[0],p[1])).filter(isFinite);
+ if(L.length<2){s.innerHTML='<text x="150" y="60" class="lbl" text-anchor="middle">Run to see the loss curve</text>';return}
+ const lg=L.map(v=>Math.log10(v+1e-6)),mx=Math.max(...lg),mn=Math.min(...lg),rng=mx-mn||1;
+ s.innerHTML=`<line x1="30" y1="100" x2="290" y2="100" class="edge"/><line x1="30" y1="10" x2="30" y2="100" class="edge"/><text x="160" y="116" class="lbl" text-anchor="middle">step</text><text x="12" y="56" class="lbl" text-anchor="middle" transform="rotate(-90 12 56)">loss (log)</text>`+
+ `<polyline points="${lg.map((v,i)=>(30+i/(lg.length-1)*260).toFixed(1)+','+(100-(v-mn)/rng*88).toFixed(1)).join(' ')}" fill="none" style="stroke:var(--orange)" stroke-width="2"/>`}
+async function gdRun(){const key=$('#gd-f').value,{f,g}=GDF[key],opt=$('#gd-opt').value,lr=gdLR();let [x,y]=gdStart;gdPath=[[x,y]];
+ let vx=0,vy=0,mx=0,my=0,sx=0,sy=0;const b1=0.9,b2=0.999;let msg='';
+ for(let t=1;t<=120;t++){const [gx,gy]=g(x,y);
+  if(Math.hypot(gx,gy)<1e-3){msg=`<b>Converged</b> after ${t-1} steps at (${x.toFixed(2)}, ${y.toFixed(2)}), loss ${f(x,y).toExponential(1)}.`;break}
+  if(opt==='gd'){x-=lr*gx;y-=lr*gy}
+  else if(opt==='mom'){vx=0.9*vx+gx;vy=0.9*vy+gy;x-=lr*vx;y-=lr*vy}
+  else{mx=b1*mx+(1-b1)*gx;my=b1*my+(1-b1)*gy;sx=b2*sx+(1-b2)*gx*gx;sy=b2*sy+(1-b2)*gy*gy;const c1=1-b1**t,c2=1-b2**t;x-=lr*(mx/c1)/(Math.sqrt(sx/c2)+1e-8);y-=lr*(my/c1)/(Math.sqrt(sy/c2)+1e-8)}
+  gdPath.push([x,y]);drawGD();say('gd',`Step ${t}: loss = ${f(x,y).toFixed(4)}, position (${x.toFixed(2)}, ${y.toFixed(2)})`);
+  if(!isFinite(x)||Math.abs(x)>60||Math.abs(y)>60){msg=`<b>Diverged</b> after ${t} steps. The learning rate (${lr.toFixed(3)}) is too large for how steep this surface is, so each step overshoots further.`;break}
+  await sleep(Math.max(25,SPEED/10))}
+ if(!msg){const L=f(x,y);msg=L<1e-3?`<b>Converged</b> to (${x.toFixed(2)}, ${y.toFixed(2)}) with loss ${L.toExponential(1)}.`:`Stopped after 120 steps with loss ${L.toFixed(4)}. Still descending: try a larger learning rate${opt==='gd'?' or momentum':''}.`}
+ const div=msg.startsWith('<b>Diverged');
+ if(!div&&key==='two'&&isFinite(x)&&Math.abs(y)<0.2)msg+=` It settled in the ${x>0?'right':'left'} valley. Start on the other side of x = 0 and it finds the other one: with non-convex losses, initialization matters.`;
+ if(!div&&key==='ravine'&&opt==='gd')msg+=' Notice the zig-zag across the narrow direction: the gradient points across the valley, not along it. Compare with momentum or Adam.';
+ drawGD();say('gd',msg)}
+function gdLabel(){$('#gd-lrv').textContent=gdLR().toFixed(3)}
+
+/* ---- LLM sampling lab ---- */
+const TOK=[['mat',3.2],['floor',2.6],['sofa',2.3],['bed',2.0],['roof',1.4],['table',1.2],['moon',0.3],['keyboard',0.1],['idea',-0.8],['banana',-1.5]];
+function spDist(){const T=+$('#sp-t').value,k=+$('#sp-k').value,p=+$('#sp-p').value;
+ const z=TOK.map(t=>t[1]/T),m=Math.max(...z),e=z.map(v=>Math.exp(v-m)),S=e.reduce((a,b)=>a+b,0),base=e.map(v=>v/S);
+ const order=base.map((v,i)=>i).sort((a,b)=>base[b]-base[a]);let kept=k>0?order.slice(0,k):order.slice();
+ const keptSum=kept.reduce((a,i)=>a+base[i],0);let cum=0;const nucleus=[];for(const i of kept){nucleus.push(i);cum+=base[i]/keptSum;if(cum>=p-1e-9)break}
+ const keep=new Set(nucleus),ks=nucleus.reduce((a,i)=>a+base[i],0),fin=base.map((v,i)=>keep.has(i)?v/ks:0);
+ const H=-fin.reduce((a,v)=>a+(v>0?v*Math.log2(v):0),0);return{base,fin,keep,H,T,k,p}}
+let spCounts={};
+function drawSP(){const d=spDist(),s=$('#sp-svg'),W=720,rowH=36,x0=110,bw=520;let html='';
+ TOK.forEach(([w],i)=>{const y=14+i*rowH,kept=d.keep.has(i);
+  html+=`<text x="${x0-12}" y="${y+12}" class="${kept?'t':'lbl'}" text-anchor="end" dominant-baseline="central">${w}</text>`;
+  html+=`<rect x="${x0}" y="${y}" width="${Math.max(1,d.base[i]*bw)}" height="24" rx="4" fill="none" style="stroke:var(--edge)" stroke-dasharray="4 3"/>`;
+  if(kept)html+=`<rect x="${x0}" y="${y}" width="${Math.max(2,d.fin[i]*bw)}" height="24" rx="4" class="bar ${spLast===i?'pivot':'done'}"/>`;
+  html+=`<text x="${x0+Math.max(d.base[i],d.fin[i])*bw+8}" y="${y+12}" class="lbl" dominant-baseline="central">${kept?(d.fin[i]*100).toFixed(1)+'%':'filtered out'}${spCounts[w]?` · sampled ${spCounts[w]}×`:''}</text>`});
+ s.setAttribute('viewBox',`0 0 ${W} ${14+TOK.length*rowH}`);s.innerHTML=html;
+ $('#sp-tv').textContent=d.T.toFixed(2);$('#sp-kv').textContent=d.k?d.k:'off';$('#sp-pv').textContent=d.p.toFixed(2);
+ $('#sp-stats').innerHTML=`<span>Tokens that can be picked: <b>${d.keep.size}</b></span><span>Entropy: <b>${d.H.toFixed(2)} bits</b> (higher = more random)</span>`}
+let spLast=-1;
+function spSample(n){const d=spDist();let w;for(let j=0;j<n;j++){let r=Math.random(),i=0;for(;i<d.fin.length;i++){r-=d.fin[i];if(r<=0)break}i=Math.min(i,d.fin.length-1);while(d.fin[i]===0&&i>0)i--;spLast=i;w=TOK[i][0];spCounts[w]=(spCounts[w]||0)+1}
+ drawSP();say('sp',n===1?`The cat sat on the <b>${w}</b>.`:`Sampled ${n} times. Counts are shown next to each bar. Lower the temperature and the samples pile onto "mat".`)}
+function spPreset(T,k,p){$('#sp-t').value=T;$('#sp-k').value=k;$('#sp-p').value=p;spCounts={};spLast=-1;drawSP()}
+
+/* ---- Precision / recall lab ---- */
+let prPts=[],prT=0.5;
+function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+function prGen(){const sep=+$('#pr-sep').value/100,imb=$('#pr-imb').checked,n=120,pos=imb?0.1:0.5,d=0.04+0.26*sep;
+ prPts=Array.from({length:n},(_,i)=>{const y=Math.random()<pos?1:0;return{y,s:Math.min(0.99,Math.max(0.01,(y?0.5+d:0.5-d)+0.15*randn())),j:Math.random()}});drawPR()}
+function prMetrics(t){let TP=0,FP=0,FN=0,TN=0;for(const p of prPts){const pr=p.s>=t;if(p.y&&pr)TP++;else if(!p.y&&pr)FP++;else if(p.y)FN++;else TN++}
+ const P=TP+FP?TP/(TP+FP):0,R=TP+FN?TP/(TP+FN):0,F1=P+R?2*P*R/(P+R):0;return{TP,FP,FN,TN,P,R,F1,acc:(TP+TN)/prPts.length,fpr:FP+TN?FP/(FP+TN):0}}
+function drawPR(){const s=$('#pr-svg'),X=v=>100+v*590,m=prMetrics(prT);let html='';
+ html+=`<text x="12" y="80" class="lbl">actual</text><text x="12" y="96" class="lbl">positive</text><text x="12" y="190" class="lbl">actual</text><text x="12" y="206" class="lbl">negative</text>`;
+ html+=`<line x1="100" y1="250" x2="690" y2="250" class="edge"/>`+[0,0.25,0.5,0.75,1].map(v=>`<text x="${X(v)}" y="266" class="lbl" text-anchor="middle">${v}</text>`).join('')+`<text x="395" y="284" class="lbl" text-anchor="middle">model score</text>`;
+ html+=`<rect x="${X(prT)}" y="30" width="${690-X(prT)}" height="208" fill="var(--accent)" fill-opacity="0.07"/><text x="${Math.min(X(prT)+8,600)}" y="44" class="lblA">predicted positive →</text>`;
+ for(const p of prPts){const pr=p.s>=prT,cy=(p.y?88:198)+(p.j-0.5)*56,col=p.y?'var(--green)':'var(--red)';html+=`<circle cx="${X(p.s)}" cy="${cy}" r="5.5" style="stroke:${col};fill:${pr?col:'var(--panel)'}" stroke-width="2"/>`}
+ html+=`<line x1="${X(prT)}" y1="24" x2="${X(prT)}" y2="246" style="stroke:var(--accent)" stroke-width="3"/><rect x="${X(prT)-30}" y="2" width="60" height="22" rx="6" fill="var(--accent)"/><text x="${X(prT)}" y="13" text-anchor="middle" dominant-baseline="central" style="fill:var(--on-accent);font:700 12.5px 'Atkinson Hyperlegible'">${prT.toFixed(2)}</text>`;
+ s.innerHTML=html;
+ $('#pr-cm').innerHTML=`<table class="cx"><tr><th></th><th>Predicted +</th><th>Predicted −</th></tr><tr><th>Actual +</th><td><b class="ok">${m.TP}</b> TP</td><td><b>${m.FN}</b> FN</td></tr><tr><th>Actual −</th><td><b class="bad">${m.FP}</b> FP</td><td><b>${m.TN}</b> TN</td></tr></table>
+ <table class="cx" style="margin-top:10px"><tr><td>Precision <span class="muted">TP / (TP+FP)</span></td><td><code>${m.P.toFixed(2)}</code></td></tr><tr><td>Recall <span class="muted">TP / (TP+FN)</span></td><td><code>${m.R.toFixed(2)}</code></td></tr><tr><td>F1</td><td><code>${m.F1.toFixed(2)}</code></td></tr><tr><td>Accuracy</td><td><code>${m.acc.toFixed(2)}</code></td></tr></table>`;
+ drawROC(m)}
+function drawROC(m){const s=$('#pr-roc'),ts=[...new Set(prPts.map(p=>p.s))].sort((a,b)=>b-a),pts=[[0,0]];for(const t of ts){const q=prMetrics(t);pts.push([q.fpr,q.R])}pts.push([1,1]);
+ let auc=0;for(let i=1;i<pts.length;i++)auc+=(pts[i][0]-pts[i-1][0])*(pts[i][1]+pts[i-1][1])/2;
+ const X=v=>30+v*200,Y=v=>220-v*200;
+ s.innerHTML=`<rect x="30" y="20" width="200" height="200" fill="none" class="edge"/><line x1="30" y1="220" x2="230" y2="20" style="stroke:var(--edge)" stroke-dasharray="4 4"/>
+ <polyline points="${pts.map(p=>X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1)).join(' ')}" fill="none" style="stroke:var(--accent)" stroke-width="2.5"/>
+ <circle cx="${X(m.fpr)}" cy="${Y(m.R)}" r="6" style="fill:var(--orange);stroke:var(--panel)" stroke-width="2"/>
+ <text x="130" y="244" class="lbl" text-anchor="middle">false positive rate</text><text x="12" y="120" class="lbl" text-anchor="middle" transform="rotate(-90 12 120)">true positive rate</text><text x="130" y="12" class="lblA" text-anchor="middle">ROC curve · AUC ${auc.toFixed(2)}</text>`}
+function prDrag(e){const s=$('#pr-svg'),pt=s.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(s.getScreenCTM().inverse());prT=Math.min(0.99,Math.max(0.01,(p.x-100)/590));$('#pr-t').value=Math.round(prT*100);drawPR()}
+
+/* ---- K-means lab ---- */
+const KCOL=['#4C72F0','#16A075','#D69214','#E0564B','#8B5FE6','#1597AD'];
+let km={pts:[],c:[],a:[],it:0,done:false};
+function kmGen(){const nb=rnd(3,5),cs=Array.from({length:nb},()=>[rnd(100,620),rnd(80,360)]);km.pts=[];cs.forEach(([cx,cy])=>{for(let i=0;i<36;i++)km.pts.push([Math.min(705,Math.max(15,cx+randn()*38)),Math.min(425,Math.max(15,cy+randn()*34))])});kmInit()}
+function d2(a,b){return(a[0]-b[0])**2+(a[1]-b[1])**2}
+function kmInitCentroids(pts,k,pp){if(!pp)return[...pts].sort(()=>Math.random()-.5).slice(0,k).map(p=>p.slice());
+ const c=[pts[rnd(0,pts.length-1)].slice()];while(c.length<k){const D=pts.map(p=>Math.min(...c.map(q=>d2(p,q)))),S=D.reduce((a,b)=>a+b,0);let r=Math.random()*S,i=0;for(;i<pts.length;i++){r-=D[i];if(r<=0)break}c.push(pts[Math.min(i,pts.length-1)].slice())}return c}
+function kmInit(){const k=+$('#km-k').value;km.c=kmInitCentroids(km.pts,k,$('#km-init').value==='pp');km.a=km.pts.map(()=>-1);km.it=0;km.done=false;drawKM();say('km',`${k} centroids placed ${$('#km-init').value==='pp'?'with k-means++ (spread out, far from each other)':'on random points'}. Press Step to assign points, then move centroids.`)}
+function kmAssign(){let ch=0;km.a=km.pts.map((p,i)=>{let b=0,bd=Infinity;km.c.forEach((c,j)=>{const d=d2(p,c);if(d<bd){bd=d;b=j}});if(b!==km.a[i])ch++;return b});return ch}
+function kmUpdate(){km.c=km.c.map((c,j)=>{const m=km.pts.filter((_,i)=>km.a[i]===j);return m.length?[m.reduce((a,p)=>a+p[0],0)/m.length,m.reduce((a,p)=>a+p[1],0)/m.length]:c})}
+function kmInertia(pts=km.pts,c=km.c,a=km.a){return pts.reduce((s,p,i)=>s+(a[i]>=0?d2(p,c[a[i]]):0),0)}
+function drawKM(){const s=$('#km-svg');let html='';km.pts.forEach((p,i)=>{const a=km.a[i];html+=`<circle cx="${p[0]}" cy="${p[1]}" r="5" style="fill:${a>=0?KCOL[a%6]:'var(--node-stroke)'};fill-opacity:${a>=0?.75:.6}"/>`});
+ km.c.forEach((c,j)=>{html+=`<g transform="translate(${c[0]},${c[1]})"><rect x="-11" y="-11" width="22" height="22" rx="4" transform="rotate(45)" style="fill:${KCOL[j%6]};stroke:var(--panel)" stroke-width="3"/></g>`});
+ s.innerHTML=html;$('#km-stats').innerHTML=`<span>Iteration: <b>${km.it}</b></span><span>Inertia (sum of squared distances): <b>${km.a[0]>=0?Math.round(kmInertia()).toLocaleString():'–'}</b></span>`}
+async function kmStep(){if(km.done)return say('km','Converged: no point changed cluster. Try a different k or initialization.');const ch=kmAssign();drawKM();say('km',`<b>Assign:</b> each point joins its nearest centroid (${ch} changed).`);await sleep(SPEED);
+ if(ch===0&&km.it>0){km.done=true;return say('km',`<b>Converged</b> after ${km.it} iterations. Inertia ${Math.round(kmInertia()).toLocaleString()}.`)}
+ kmUpdate();km.it++;drawKM();say('km',`<b>Update:</b> each centroid moves to the mean of its points. Iteration ${km.it}.`);await sleep(SPEED*0.6)}
+async function kmRun(){for(let i=0;i<40&&!km.done;i++)await kmStep()}
+function kmElbow(){const out=[];for(let k=1;k<=8;k++){let best=Infinity;for(let r=0;r<4;r++){let c=kmInitCentroids(km.pts,k,true),a=km.pts.map(()=>-1);for(let it=0;it<50;it++){const na=km.pts.map(p=>{let b=0,bd=Infinity;c.forEach((q,j)=>{const d=d2(p,q);if(d<bd){bd=d;b=j}});return b});const same=na.every((v,i)=>v===a[i]);a=na;c=c.map((q,j)=>{const m=km.pts.filter((_,i)=>a[i]===j);return m.length?[m.reduce((s,p)=>s+p[0],0)/m.length,m.reduce((s,p)=>s+p[1],0)/m.length]:q});if(same)break}best=Math.min(best,kmInertia(km.pts,c,a))}out.push(best)}
+ const mx=out[0],X=k=>30+(k-1)/7*250,Y=v=>110-v/mx*95;
+ $('#km-elbow').innerHTML=`<line x1="30" y1="110" x2="280" y2="110" class="edge"/><line x1="30" y1="10" x2="30" y2="110" class="edge"/><polyline points="${out.map((v,i)=>X(i+1)+','+Y(v)).join(' ')}" fill="none" style="stroke:var(--accent)" stroke-width="2.5"/>${out.map((v,i)=>`<circle cx="${X(i+1)}" cy="${Y(v)}" r="4" style="fill:var(--accent)"/><text x="${X(i+1)}" y="126" class="lbl" text-anchor="middle">${i+1}</text>`).join('')}<text x="155" y="142" class="lbl" text-anchor="middle">k</text>`;
+ say('km','Elbow chart drawn: inertia always falls as k grows, so look for the "elbow" where adding clusters stops helping much.')}
+
+/* ---- ML coding problems ---- */
+const AIPROBS=[
+ ['ai-softmax','Numerically stable softmax','','Easy','Math & NumPy','Implement softmax over a vector and over each row of a matrix.'],
+ ['ai-xent','Cross-entropy loss from logits','','Easy','Math & NumPy','Compute mean cross-entropy for a batch of logits and integer labels.'],
+ ['ai-linreg','Linear regression: closed form and gradient descent','','Easy','Classic ML','Fit weights with the normal equation, then with gradient descent.'],
+ ['ai-logreg','Logistic regression from scratch','','Medium','Classic ML','Train a binary classifier with gradient descent and L2 regularization.'],
+ ['ai-knn','k-nearest neighbors classifier','','Easy','Classic ML','Predict labels by majority vote of the k closest training points.'],
+ ['ai-kmeans','K-means clustering','','Medium','Classic ML','Cluster points into k groups. Handle initialization and empty clusters.'],
+ ['ai-metrics','Precision, recall, F1 and ROC-AUC','','Medium','Evaluation','Compute classification metrics from labels and scores without sklearn.'],
+ ['ai-mlp','Two-layer neural network with backprop','','Hard','Deep learning','Forward pass, loss, manual gradients and SGD updates for an MLP.'],
+ ['ai-attn','Scaled dot-product attention','','Medium','Transformers','Implement attention with an optional causal mask in NumPy.'],
+ ['ai-mha','Multi-head attention','','Hard','Transformers','Split into heads, attend in parallel, and recombine with a projection.'],
+ ['ai-sample','Temperature, top-k and top-p sampling','','Medium','LLM decoding','Sample the next token from logits with the three common controls.'],
+ ['ai-beam','Beam search decoding','','Medium','LLM decoding','Keep the B most likely partial sequences at each step.'],
+ ['ai-bpe','Byte-pair encoding tokenizer','','Hard','Tokenization','Learn merges from a corpus, then encode new text with them.'],
+ ['ai-cosine','Top-k cosine similarity search','','Easy','Retrieval','Return the k most similar documents to a query embedding.'],
+ ['ai-chunk','Chunk text for RAG with overlap','','Easy','Retrieval','Split documents into overlapping chunks that respect sentence boundaries.'],
+ ['ai-nms','Intersection over union and non-max suppression','','Medium','Vision','Remove overlapping detection boxes, keeping the highest-scoring ones.']
+];
+Object.assign(HINTS,{
+ 'ai-softmax':['O(n)','O(n)',['exp() of large logits overflows. Softmax is unchanged if you subtract a constant from every input.','Subtract the max first: e = exp(x − max(x)), then divide by e.sum().','For a matrix, use axis=-1 and keepdims=True so broadcasting works row by row.']],
+ 'ai-xent':['O(n · C)','O(n · C)',['Don’t compute softmax and then log: log of tiny probabilities becomes −inf.','Use log-softmax: x − logsumexp(x), where logsumexp(x) = max + log(Σ exp(x − max)).','Pick the true-class entry with fancy indexing, logp[np.arange(n), y], negate and average.']],
+ 'ai-linreg':['O(n·d² + d³) / O(n·d) per step','O(d²)',['Closed form: w = (XᵀX)⁻¹Xᵀy. Add a column of ones for the bias.','Prefer np.linalg.solve or lstsq over computing an explicit inverse. Add λI (ridge) if XᵀX is near-singular.','Gradient of mean squared error: (2/n)·Xᵀ(Xw − y). Scale features first or gradient descent converges slowly.']],
+ 'ai-logreg':['O(n·d) per epoch','O(d)',['Prediction: p = sigmoid(Xw + b). Loss: binary cross-entropy.','The gradient is surprisingly simple: Xᵀ(p − y) / n, and mean(p − y) for the bias.','Add λ·w to the weight gradient for L2. Clip or use a stable sigmoid to avoid overflow for large |z|.']],
+ 'ai-knn':['O(n·d) per query','O(n·d)',['Compute distances from the query to every training point (vectorize with broadcasting).','Use np.argpartition to get the k smallest in O(n) instead of sorting everything.','Take the majority label, breaking ties by the nearest neighbor. At scale, mention KD-trees or approximate nearest neighbor search.']],
+ 'ai-kmeans':['O(n·k·d) per iteration','O(n + k·d)',['Initialize with k-means++: pick each new centroid with probability proportional to squared distance from the nearest existing one.','Alternate: assign each point to its nearest centroid, then move each centroid to the mean of its points.','Stop when assignments stop changing. If a cluster becomes empty, re-seed it with the farthest point. Run several restarts and keep the lowest inertia.']],
+ 'ai-metrics':['O(n log n)','O(n)',['Precision = TP / (TP + FP), recall = TP / (TP + FN), F1 = harmonic mean. Guard against division by zero.','For ROC: sort by score descending, sweep the threshold and record (FPR, TPR) at each distinct score.','AUC is the area under that curve (trapezoid rule), or equivalently the probability a random positive scores above a random negative.']],
+ 'ai-mlp':['O(n·(d·h + h·C)) per batch','O(d·h + h·C)',['Forward: z1 = XW1 + b1, a1 = ReLU(z1), z2 = a1W2 + b2, then softmax cross-entropy.','Backward: dz2 = (softmax − onehot) / n; dW2 = a1ᵀdz2; da1 = dz2W2ᵀ; dz1 = da1 · (z1 > 0); dW1 = Xᵀdz1.','Check shapes at every line, initialize weights with small random values (He initialization), and verify gradients numerically on a tiny example.']],
+ 'ai-attn':['O(n² · d)','O(n²)',['scores = Q Kᵀ / √d_k. Dividing by √d_k keeps the softmax from saturating when d_k is large.','For a causal mask, set scores above the diagonal to −inf (np.triu with k=1) before the softmax.','Apply a stable softmax over the last axis, then multiply by V. Output shape is (n, d_v).']],
+ 'ai-mha':['O(n² · d)','O(h · n²)',['Project X to Q, K, V with three weight matrices of shape (d_model, d_model).','Reshape to (batch, heads, seq, d_head) with d_head = d_model / heads, and attend in every head at once.','Transpose back, merge the heads to (batch, seq, d_model), and apply the output projection W_o.']],
+ 'ai-sample':['O(V log V)','O(V)',['Divide logits by the temperature, then softmax. Temperature → 0 approaches greedy decoding.','Top-k: keep the k largest probabilities. Top-p: sort descending, keep the smallest prefix whose cumulative sum reaches p.','Renormalize what you kept, then sample with np.random.choice or by searching a cumulative sum with a uniform random number.']],
+ 'ai-beam':['O(T · B · V log(B·V))','O(B · T)',['Keep B hypotheses, each with its tokens and its total log-probability (add logs instead of multiplying probabilities).','At each step, expand every hypothesis with the vocabulary and keep the best B of the B × V candidates.','Move hypotheses that emit end-of-sequence to a finished list. Normalize scores by length, or beam search favors short outputs.']],
+ 'ai-bpe':['O(merges · corpus size)','O(vocab + corpus)',['Start with every word split into characters (plus an end-of-word marker), with word frequencies.','Repeat: count adjacent symbol pairs weighted by word frequency, merge the most frequent pair everywhere, and record the merge.','To encode new text, apply the learned merges in the same order they were learned.']],
+ 'ai-cosine':['O(n · d)','O(n)',['Cosine similarity = (a · b) / (|a| |b|).','Normalize every document vector once in advance. Then similarity is just the matrix-vector product D q.','np.argpartition gets the top k in O(n). For millions of vectors, mention approximate indexes such as HNSW or IVF.']],
+ 'ai-chunk':['O(n)','O(n)',['Decide on a size limit in tokens (e.g. ~500) and an overlap (e.g. ~50) so facts split across a boundary still appear whole in one chunk.','Split on sentences or paragraphs first, then pack them into chunks until the next one would exceed the limit.','Keep metadata with each chunk: document id, title, position. Very long sentences need a hard split as a fallback.']],
+ 'ai-nms':['O(n²)','O(n)',['IoU = intersection area / union area. Intersection width = max(0, min(x2) − max(x1)), and the same for height.','Sort boxes by score. Take the best, remove every remaining box with IoU above the threshold, and repeat.','Run it per class. Vectorize the IoU of one box against all remaining boxes with NumPy.']]
+});
+function renderAIProbs(){const ok=$('#aip-status')?$('#aip-status').value:'';
+ $('#aip-body').innerHTML=AIPROBS.filter(r=>ok==='unsolved'?!solved.has(r[0]):ok==='due'?isDue('p:'+r[0]):true).map(r=>`<tr class="${solved.has(r[0])&&!isDue('p:'+r[0])?'solved':''}"><td><input type="checkbox" data-aipid="${r[0]}" ${solved.has(r[0])?'checked':''} aria-label="Mark solved"></td><td><button class="linkbtn" data-open="${r[0]}">${r[1]}</button><div class="muted" style="font-size:14px">${r[5]}</div></td><td><span class="pill ${r[3]}">${r[3]}</span></td><td><span class="pill">${r[4]}</span></td><td>${dueLabel('p:'+r[0])}</td></tr>`).join('')||'<tr><td colspan="5" class="muted">Nothing here yet.</td></tr>';
+ const n=AIPROBS.filter(r=>solved.has(r[0])).length;$('#aip-progress').textContent=`${n} / ${AIPROBS.length} solved`;$('#aip-bar').style.width=(n/AIPROBS.length*100)+'%'}
+
+/* ---- AI system designs ---- */
+Object.assign(SD,{
+ rag:{ai:true,name:'RAG assistant',
+  nodes:{docs:['Doc sources','storage',85,60,'Wikis, drives, tickets and PDFs. Connectors pull new and changed documents on a schedule or via webhooks.'],
+   ingest:['Ingestion pipeline','worker',290,60,'Cleans text, splits it into chunks, embeds each chunk and writes it to the index with metadata and permissions.'],
+   emb:['Embedding model','model',500,60,'Turns text into vectors. The same model must embed documents at ingestion time and questions at query time.'],
+   cache:['Semantic cache','cache',710,60,'Returns a stored answer when a new question is nearly identical in meaning to a recent one. Must still respect permissions.'],
+   user:['User','client',85,230,'Asks questions in a chat UI. Answers stream back with citations.'],
+   api:['Chat orchestrator','service',290,230,'Runs the pipeline: rewrite the question, retrieve, rerank, build the prompt, call the LLM, check the output, stream the answer.'],
+   vdb:['Search index','db',500,230,'Chunk embeddings with metadata and access lists. Hybrid search combines approximate nearest neighbor search with BM25 keyword search.'],
+   rerank:['Reranker','model',710,150,'A cross-encoder that scores each (question, chunk) pair. Slower but much more precise than vector similarity, so it only sees the top ~50 candidates.'],
+   guard:['Guardrails','service',290,400,'Input checks (prompt injection, PII) and output checks (policy, and whether every claim is supported by a retrieved chunk).'],
+   llm:['LLM','model',500,400,'Generates the answer from instructions + top chunks + question. Told to cite sources and to say when the context does not contain the answer.'],
+   evals:['Tracing & evals','queue',710,400,'Logs each step (chunks, prompt, answer, latency, cost, user feedback) and feeds offline evaluation sets.']},
+  edges:[['docs','ingest'],['ingest','emb'],['ingest','vdb'],['user','api'],['api','cache'],['api','emb'],['api','vdb'],['api','rerank'],['api','guard'],['api','llm'],['api','evals']],
+  flows:[{n:'Ingest documents',s:[['docs','ingest','New or changed documents arrive'],['ingest','emb','Split into ~300–800 token chunks with overlap and embed each one'],['ingest','vdb','Upsert vectors with metadata: source, section, permissions, updated_at']]},
+   {n:'Answer a question',s:[['user','api','"What is our parental leave policy?"'],['api','guard','Check the input for prompt injection and personal data'],['api','cache','Semantic cache lookup: miss'],['api','emb','Embed the (rewritten) question'],['api','vdb','Hybrid search: top 50 chunks this user may see'],['api','rerank','Rerank and keep the best 5'],['api','llm','Prompt = instructions + 5 chunks + question. Stream the answer'],['api','guard','Check the answer is grounded in the chunks'],['api','evals','Log the full trace with latency and cost'],['api','user','Answer with citations to the source documents']]}],
+  req:[['Answer questions from internal documents','Cite sources for every answer','Respect document permissions','Stay current as documents change'],['First token in under 1–2 s','Low hallucination rate','Cost per question within budget','No data leaking between users']],
+  est:['10K employees × 10 questions/day = 100K/day ≈ <b>1–2 QPS</b> average, ~10 QPS peak','1M chunks × 1,024-dim float32 vectors ≈ <b>4 GB</b>, which fits in memory','~4K prompt tokens + ~300 output tokens per answer, so <b>prompt size drives cost</b>','Retrieval ~50–150 ms and reranking ~100 ms; generation dominates latency'],
+  api:['POST /chat {conversationId, message} → streamed answer + citations','POST /feedback {messageId, rating, comment}','upsert(chunkId, vector, metadata)','search(queryVector, filters, k)'],
+  deep:[['Chunking strategy','Too small loses context; too large dilutes relevance and wastes tokens. Split on structure (headings, paragraphs), about 300–800 tokens with 10–20% overlap, and keep a link to the parent section so you can expand context after retrieval.'],
+   ['Why hybrid search and reranking?','Vector search finds paraphrases but misses exact strings such as error codes and product names, which keyword search catches. Merge both (e.g. reciprocal rank fusion), then rerank the top candidates with a cross-encoder. This is often the single biggest quality win.'],
+   ['How do you evaluate it?','Build a golden set of questions with the documents that answer them. Measure retrieval (recall@k, MRR) separately from generation (faithfulness to the context, correctness), using human labels plus an LLM judge that you have checked against those labels. Track user feedback in production.'],
+   ['RAG or fine-tuning?','RAG for knowledge that changes, must be cited, or has permissions. Fine-tuning for style, format or a narrow skill. They combine well: a model tuned to use retrieved context faithfully.'],
+   ['Security','Filter by permissions at retrieval time, never after generation. Treat retrieved text as untrusted, because documents can contain injected instructions.']]},
+ agent:{ai:true,name:'Support agent with tools',
+  nodes:{user:['Customer','client',85,230,'Chats with the support agent on the web or in the app.'],
+   agent:['Agent loop','service',300,230,'Plan → act → observe: asks the LLM for the next step, runs the chosen tool, feeds back the result, and stops when the task is done or a step limit is reached.'],
+   llm:['LLM (tool calling)','model',300,60,'Returns either a final answer or a structured tool call (a name plus JSON arguments matching a declared schema).'],
+   mem:['Conversation state','cache',85,400,'Messages, tool results, and a running summary when the context gets long. Long-term facts are stored separately and retrieved when relevant.'],
+   policy:['Policy checks','service',520,60,'Plain code, not the model, decides whether an action is allowed: refund limits, identity checks, rate limits. Risky actions need a human to approve.'],
+   tools:['Tool router','service',520,230,'Validates arguments against the schema, calls the right API with timeouts and retries, and returns a compact result.'],
+   orders:['Orders & refunds API','db',740,150,'Existing internal systems, wrapped in narrow tools such as get_order(id) and issue_refund(order_id, amount).'],
+   kb:['Help center (RAG)','db',740,310,'Retrieval over policies and FAQs, so answers follow the current rules.'],
+   human:['Human agent queue','worker',520,400,'Takes over when the agent is unsure, the customer asks for a person, or an action is over its limits. The full context is handed over.'],
+   trace:['Tracing & evals','queue',740,430,'Every step, tool call, cost and outcome, for debugging and for building regression tests.']},
+  edges:[['user','agent'],['agent','llm'],['agent','mem'],['agent','policy'],['agent','tools'],['tools','orders'],['tools','kb'],['agent','human'],['agent','trace']],
+  flows:[{n:'Handle a refund',s:[['user','agent','"My blender arrived broken, order #4821"'],['agent','mem','Load the conversation and customer profile'],['agent','llm','The LLM chooses a tool: get_order(4821)'],['agent','tools','Validate the arguments and call the orders API'],['tools','orders','Order found: delivered 3 days ago, $79'],['agent','llm','The LLM reads the result and proposes issue_refund(4821, 79)'],['agent','policy','Allowed: under the $100 auto-approve limit, identity verified'],['agent','tools','Run the refund with an idempotency key'],['agent','trace','Log every step, tool call and cost'],['agent','user','"Done. $79 is on its way back to your card."']]},
+   {n:'Escalate to a human',s:[['user','agent','"Cancel my plan and refund the last 6 months"'],['agent','tools','Look up the refund policy'],['tools','kb','Refunds older than 30 days need approval'],['agent','policy','Over the auto-approve limit: approval required'],['agent','human','Hand off with a summary and the order history'],['agent','user','"A teammate will reply within the hour."']]}],
+  req:[['Answer questions and take actions (refunds, address changes)','Use existing internal APIs','Hand off to humans when needed','Keep a full audit trail'],['Never take an unauthorized action','Resolve most chats without a human','A few seconds per step','Predictable cost per conversation']],
+  est:['50K conversations/day × ~4 LLM calls = 200K calls/day ≈ <b>2–3 calls/s</b> average','~3K tokens per call → 600M tokens/day, so <b>model choice and caching drive cost</b>','Cap steps per task (e.g. 8) to bound cost and latency','Track the share of chats resolved without a human every week'],
+  api:['POST /conversations/{id}/messages','get_order(order_id) → {status, total, items}','issue_refund(order_id, amount, reason) → {refund_id}','POST /handoff {conversation_id, summary}'],
+  deep:[['Guardrails for actions','Permissions live in code, not in the prompt. Use narrow tools, argument validation, spending limits, idempotency keys and human approval for risky actions. Assume the model will sometimes choose wrongly, and make that safe.'],
+   ['Prompt injection','Text from customers, emails or web pages can contain instructions. Keep untrusted content separate, never let it widen the agent’s permissions, and confirm actions it triggers.'],
+   ['When is an agent the wrong choice?','If the steps are known in advance, a fixed workflow (a chain of LLM calls and code) is cheaper, faster and easier to test. Use an open-ended loop only when the path depends on what the agent discovers.'],
+   ['Evaluating agents','Replay realistic conversations in a sandbox with mocked tools. Score task success, correct tool use, policy violations, number of steps and cost. Turn every failure you find into a new test case.'],
+   ['Memory in long conversations','Summarize older turns, keep tool results short, and retrieve long-term facts on demand instead of filling the context window.']]},
+ recsys:{ai:true,name:'Recommendation feed',
+  nodes:{client:['App','client',85,230,'Requests a page of the feed and sends back events: impressions, watch time, likes, skips.'],
+   api:['Feed service','service',290,230,'Runs the funnel (candidates → ranking → re-ranking) within a latency budget of about 100–200 ms.'],
+   cand:['Candidate generation','model',500,90,'Narrows millions of items to ~1,000 with cheap retrievers: a two-tower embedding model with ANN search, plus "trending" and "from accounts you follow".'],
+   ann:['ANN index','db',720,90,'Item embeddings indexed for approximate nearest neighbor search, updated as new items arrive.'],
+   rank:['Ranking model','model',500,230,'A heavier model scores each candidate, often with several heads (click, watch time, like) combined into one score.'],
+   fs:['Feature store','cache',720,230,'Serves fresh user and item features online, using the same definitions as training to avoid training–serving skew.'],
+   rerank:['Re-ranking','service',500,370,'Rules on top of the scores: diversity, freshness, removing seen items, safety and policy filters.'],
+   events:['Event stream','queue',290,400,'Every impression and interaction, used for real-time features and training labels.'],
+   train:['Training pipeline','worker',720,370,'Retrains daily or continuously on logged data, checks offline metrics, then ships through an A/B test.']},
+  edges:[['client','api'],['api','cand'],['cand','ann'],['api','rank'],['rank','fs'],['api','rerank'],['client','events'],['events','train'],['train','rank']],
+  flows:[{n:'Serve the feed',s:[['client','api','GET /feed for user 42'],['api','cand','Fetch ~1,000 candidates from several retrievers'],['cand','ann','Nearest neighbors of the user embedding'],['api','rank','Score every candidate'],['rank','fs','Look up features for the user and each item'],['api','rerank','Apply diversity, freshness and policy rules'],['api','client','Return the top 20 with a cursor']]},
+   {n:'Learn from feedback',s:[['client','events','Impressions, watch time, likes, skips'],['events','fs','Update real-time features such as recent watches'],['events','train','Join events with logged features to build training data'],['train','rank','Ship the new model after offline checks and an A/B test']]}],
+  req:[['A personalized feed for every user','New content shows up quickly','Respect blocks, safety and policy filters','A/B test new models'],['p99 latency under 200 ms','Hundreds of millions of users','Retrain at least daily','Avoid feedback loops and filter bubbles']],
+  est:['200M DAU × 20 feed requests = 4B/day ≈ <b>46K QPS</b>','1,000 candidates × 46K QPS ≈ <b>46M model scores/s</b>, so ranking must be cheap or distilled','Billions of events per day for training labels','Funnel: millions → ~1,000 → ~20'],
+  api:['GET /feed?cursor=…','POST /events (batched impressions and actions)','retrieve(user_id, k)','score(user_id, item_ids[]) → scores'],
+  deep:[['Why a multi-stage funnel?','You cannot run an expensive model over millions of items in 100 ms. Cheap retrieval narrows the set, a heavy ranker orders it, and re-ranking applies rules. Each stage trades accuracy for speed.'],
+   ['What do you optimize?','Clicks alone reward clickbait. Combine several predicted outcomes (watch time, likes, shares, "not interested") with tuned weights, and judge models on long-term metrics such as retention in A/B tests.'],
+   ['Cold start','New users: onboarding choices, location and popular items, then learn quickly from early sessions. New items: content embeddings from text, images or audio, plus a little exploration traffic.'],
+   ['Training–serving skew','Compute features with the same code online and offline (a feature store), log features at serving time, and train on those logs.'],
+   ['Offline vs online evaluation','Offline: AUC, NDCG, recall@k on held-out data. Online: A/B tests on engagement and retention. Offline wins often fail to transfer, so the A/B test decides.']]},
+ serving:{ai:true,name:'LLM serving platform',
+  nodes:{client:['Client apps','client',85,230,'Send chat requests and read the response as a stream of tokens.'],
+   gw:['API gateway','lb',275,230,'Authentication, per-customer rate limits and token quotas, request logging.'],
+   router:['Model router','service',465,230,'Sends each request to the right model and replica: a small fast model for easy tasks, a large one for hard tasks, with fallbacks when a pool is overloaded.'],
+   small:['Small model pool','model',465,70,'A cheaper, faster model for classification, extraction and simple chat.'],
+   srv:['Inference servers','model',680,230,'GPU workers running an inference engine with continuous batching and a paged KV cache to keep the hardware busy.'],
+   kv:['Prefix / KV cache','cache',680,70,'Reuses attention keys and values for shared prompt prefixes (system prompts, long documents), cutting time to first token and cost.'],
+   mon:['Metrics','queue',275,400,'Time to first token, tokens per second, queue time, errors and cost per 1K tokens, per model and per customer.'],
+   autos:['Autoscaler','worker',465,400,'Scales on queue depth and GPU utilization. New replicas take minutes to load, so it keeps headroom and uses forecasts.'],
+   reg:['Model weights store','storage',680,400,'Versioned weights loaded onto new replicas. Large models load slowly, so keep warm spares.']},
+  edges:[['client','gw'],['gw','router'],['router','small'],['router','srv'],['srv','kv'],['gw','mon'],['mon','autos'],['autos','reg'],['autos','srv']],
+  flows:[{n:'Stream a completion',s:[['client','gw','POST /v1/chat with stream=true'],['gw','router','Authenticated and within quota'],['router','srv','Large model, least-loaded replica'],['srv','kv','Prefix cache hit on the shared system prompt'],['srv','gw','Prefill the prompt, then decode tokens batched with other requests'],['gw','client','Stream tokens as they are generated'],['gw','mon','Record time to first token, tokens/s and tokens used']]},
+   {n:'Handle a traffic spike',s:[['client','gw','Requests jump 3×'],['gw','router','Queues grow on the large-model pool'],['router','small','Send simple requests to the small model'],['mon','autos','Queue depth over target for 2 minutes'],['autos','reg','Load weights onto new GPU replicas'],['autos','srv','New replicas join once they are warm']]}],
+  req:[['Several models behind one API','Streaming responses','Per-customer quotas and billing','Safe rollout of new model versions'],['Time to first token under ~500 ms','High throughput per GPU (cost)','99.9% availability','Graceful degradation under load']],
+  est:['1,000 requests/s × 800 output tokens ≈ <b>800K tokens/s</b> to generate','At ~2K tokens/s per replica with batching, that is <b>~400 replicas</b> plus headroom','Decoding is limited by memory bandwidth, so batching many requests is the main throughput lever','KV cache memory grows with batch size × context length, which caps concurrency'],
+  api:['POST /v1/chat {model, messages, max_tokens, stream}','Server-sent events, one chunk per group of tokens','Header: x-ratelimit-remaining-tokens','deploy(model, version, traffic_percent)'],
+  deep:[['Prefill vs decode','Prefill processes the whole prompt in parallel and is compute-bound. Decode produces one token at a time and is memory-bandwidth-bound. Long prompts hurt time to first token; long outputs hurt total latency.'],
+   ['Continuous batching','New requests join and finished ones leave at every decoding step, instead of waiting for a whole batch to finish. This keeps GPUs busy and raises throughput several-fold.'],
+   ['Making it cheaper','Quantize weights (8- or 4-bit), route easy requests to smaller or distilled models, cache prefixes, use speculative decoding, and cap max output tokens.'],
+   ['Safe rollouts','Run evals and shadow traffic first, then a small canary. Compare quality, latency and cost, and keep the old version warm for instant rollback.'],
+   ['Fairness between customers','Per-customer token quotas and priority queues, so one heavy user cannot starve everyone else.']]},
+ fraud:{ai:true,name:'Real-time fraud detection',
+  nodes:{pay:['Checkout','client',85,230,'A card payment is submitted. The decision must come back inside the payment flow.'],
+   api:['Payments API','service',275,230,'Calls the risk service before authorizing, and falls back to rules if it times out.'],
+   risk:['Risk scoring service','service',480,230,'Combines hard rules with the model score into approve, decline or review, within about 50–100 ms.'],
+   rules:['Rules engine','service',480,70,'Fast, explainable checks such as blocked cards, impossible travel and velocity limits. Analysts can update them quickly.'],
+   model:['Fraud model','model',690,150,'Gradient-boosted trees or a neural network that outputs a fraud probability. It must be calibrated so thresholds map to business cost.'],
+   fs:['Online features','cache',690,310,'Real-time aggregates such as "payments from this card in the last hour", plus device and merchant features.'],
+   stream:['Event stream','queue',275,400,'All payments and outcomes, used for real-time features and training data.'],
+   review:['Manual review','worker',480,400,'Analysts check borderline cases. Their decisions are fast labels.'],
+   labels:['Labels & retraining','worker',690,430,'Joins chargebacks and analyst decisions to past payments and retrains the model.']},
+  edges:[['pay','api'],['api','risk'],['risk','rules'],['risk','model'],['model','fs'],['risk','review'],['api','stream'],['review','labels']],
+  flows:[{n:'Score a payment',s:[['pay','api','Card payment of $420 from a new device'],['api','risk','Score this payment within 100 ms'],['risk','rules','No hard rule fires'],['risk','model','Request a fraud score'],['model','fs','6 payments on this card in the last hour; device first seen today'],['risk','review','Score 0.71 is between the thresholds, so hold for review'],['api','stream','Publish the payment and the decision']]},
+   {n:'Learn from outcomes',s:[['review','labels','An analyst marks it as fraud'],['stream','labels','Chargebacks arrive weeks later and are joined to the original payment'],['labels','model','Retrain, compare on recent data, and shadow-test before switching']]}],
+  req:[['Approve, decline or review each payment','Explain decisions to analysts','Let analysts add rules quickly','Adapt to new fraud patterns'],['Decision in under 100 ms','Never block checkout if scoring fails','Few false declines','Auditable decisions']],
+  est:['~5K payments/s at peak','Fraud rate ~0.1%, so data is <b>heavily imbalanced</b> and accuracy is meaningless','Chargeback labels arrive 30–90 days late','Feature lookups must take ~10 ms to fit the budget'],
+  api:['POST /risk/score {payment, card, device, merchant} → {decision, score, reasons}','POST /risk/feedback {payment_id, label}','PUT /rules/{id}'],
+  deep:[['Choosing the threshold','Use costs, not accuracy: missed fraud costs the payment amount, a false decline costs margin and trust. Two thresholds create a manual-review band in the middle. Try the precision and recall lab to see the trade-off.'],
+   ['Imbalanced data','Look at precision–recall curves rather than accuracy, use class weights or down-sample negatives (then recalibrate), and split train and test by time.'],
+   ['Delayed and biased labels','Chargebacks arrive weeks later, and you never learn the outcome for declined payments. Keep a small random holdout that bypasses the model to measure true performance.'],
+   ['Drift and adversaries','Fraudsters adapt. Monitor score and feature distributions, retrain often, and let analysts add rules for brand-new patterns until the model catches up.'],
+   ['Explainability','Return the top contributing features (e.g. SHAP values) with each score so analysts and customers get a reason.']]}
+});
+
+/* ---- Build AI section ---- */
+(function buildAI(){
+ const tabs=$('#aisd-tabs'),host=$('#aisd-panes');
+ for(const [k,d] of Object.entries(SD)){if(!d.ai)continue;tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));host.append(h(designPane(k,d,'aisd')));TAB_HOOKS['aisd:'+k]=()=>{if(!BUSY)drawSD(k)}}
+ wireDesignHost(host);
+ TAB_HOOKS['ai:design']=()=>{const b=$('[data-tabs=aisd] button.active');if(b)b.click()};
+ TAB_HOOKS['ai:gd']=()=>{gdLabel();drawGD()};
+ TAB_HOOKS['ai:sample']=()=>drawSP();
+ TAB_HOOKS['ai:pr']=()=>{if(!prPts.length)prGen();else drawPR()};
+ TAB_HOOKS['ai:km']=()=>{if(!km.pts.length)kmGen();else drawKM()};
+ TAB_HOOKS['ai:code']=()=>renderAIProbs();
+ $('#gd-f').onchange=()=>{gdStart=null;gdPath=[];drawGD();say('gd',GDF[$('#gd-f').value].n+'. Press Run.')};
+ $('#gd-opt').onchange=()=>{gdPath=[];drawGD()};
+ $('#gd-lr').oninput=gdLabel;
+ $('#gd-run').onclick=()=>run(gdRun);
+ $('#gd-reset').onclick=()=>{if(BUSY)return;gdStart=null;gdPath=[];drawGD();say('gd','Reset to the default starting point.')};
+ $('#gd-svg').addEventListener('click',e=>{if(BUSY)return;const s=$('#gd-svg'),pt=s.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const p=pt.matrixTransform(s.getScreenCTM().inverse());gdStart=[GX0+p.x/GW*(GX1-GX0),GY0+(GH-p.y)/GH*(GY1-GY0)];gdPath=[];drawGD();say('gd',`Start set to (${gdStart[0].toFixed(2)}, ${gdStart[1].toFixed(2)}). Press Run.`)});
+ ['#sp-t','#sp-k','#sp-p'].forEach(id=>$(id).oninput=()=>{spCounts={};spLast=-1;drawSP()});
+ $('#sp-one').onclick=()=>spSample(1);$('#sp-many').onclick=()=>spSample(20);
+ $('#sp-greedy').onclick=()=>{spPreset(1,1,1);say('sp','<b>Greedy:</b> top-k = 1 always picks the most likely token. Deterministic, but repetitive in long outputs.')};
+ $('#sp-bal').onclick=()=>{spPreset(0.7,0,0.9);say('sp','<b>Focused:</b> temperature 0.7 with top-p 0.9, a common default for assistants.')};
+ $('#sp-cre').onclick=()=>{spPreset(1.3,0,0.98);say('sp','<b>Creative:</b> a high temperature flattens the distribution, so unlikely tokens get picked more often.')};
+ $('#pr-t').oninput=e=>{prT=+e.target.value/100;drawPR()};
+ $('#pr-sep').oninput=prGen;$('#pr-imb').onchange=()=>{prGen();say('pr',$('#pr-imb').checked?'Only 10% of examples are positive now. Accuracy stays high even when recall is poor, which is why accuracy misleads on imbalanced data.':'Back to a 50/50 class balance.')};
+ $('#pr-new').onclick=prGen;
+ let prDown=false;$('#pr-svg').addEventListener('pointerdown',e=>{prDown=true;prDrag(e)});$('#pr-svg').addEventListener('pointermove',e=>{if(prDown)prDrag(e)});window.addEventListener('pointerup',()=>prDown=false);
+ $('#km-new').onclick=()=>{if(!BUSY)kmGen()};$('#km-k').oninput=()=>{$('#km-kv').textContent=$('#km-k').value;if(!BUSY)kmInit()};$('#km-init').onchange=()=>{if(!BUSY)kmInit()};
+ $('#km-step').onclick=()=>run(kmStep);$('#km-run').onclick=()=>run(kmRun);$('#km-elbow-btn').onclick=kmElbow;
+ $('#aip-body').addEventListener('change',e=>{const id=e.target.dataset.aipid;if(!id)return;if(e.target.checked){solved.add(id);store.set('solved',[...solved]);renderAIProbs();openProblem(id)}else{solved.delete(id);store.set('solved',[...solved]);renderAIProbs()}});
+ $('#aip-body').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)openProblem(b.dataset.open)});
+ $('#aip-status').oninput=renderAIProbs;
+ $('#sec-ai').addEventListener('click',e=>{const g=e.target.closest('[data-ai-go]');if(!g)return;const v=g.dataset.aiGo;
+  if(v==='flash'){fcDeckName='ai';store.set('fcdeck','ai');fcTopic='All';fcIdx=0;location.hash='technical'}
+  else if(v==='beh'){bCur=FLAT.indexOf(BQ.find(c=>c[0]==='AI & ML projects')[1][0]);location.hash='behavioral'}
+  else{const t=$(`[data-tabs=ai] button[data-tab="${v}"]`);if(t)t.click();window.scrollTo(0,0)}});
+})();
 
 const ICONS={
  logo:'<path d="M4 6h7M4 12h10M4 18h6"/><circle cx="18" cy="7" r="2.5"/><circle cx="18" cy="17" r="2.5"/><path d="M18 9.5v5"/>',
@@ -1409,14 +1919,45 @@ const ICONS={
  problems:'<rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="m8 12.2 2.8 2.8L16 9.3"/>',
  system:'<rect x="9" y="3" width="6" height="5" rx="1.2"/><rect x="3" y="16" width="6" height="5" rx="1.2"/><rect x="15" y="16" width="6" height="5" rx="1.2"/><path d="M12 8v4M6 16v-2.5h12V16"/>',
  behavioral:'<path d="M4 5.5h16v10.5H10l-5 4v-4H4z"/><path d="M8 10h8"/>',
- technical:'<rect x="3" y="6.5" width="13.5" height="14" rx="2"/><path d="M7.5 3.5H19a2 2 0 0 1 2 2V17"/>'
+ technical:'<rect x="3" y="6.5" width="13.5" height="14" rx="2"/><path d="M7.5 3.5H19a2 2 0 0 1 2 2V17"/>',
+ ai:'<path d="M11 3.5l1.9 4.9 4.9 1.9-4.9 1.9L11 17.1l-1.9-4.9-4.9-1.9 4.9-1.9z"/><path d="M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>'
 };
 function icon(k){return `<svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]||''}</svg>`}
 $$('[data-icon]').forEach(e=>e.innerHTML=icon(e.dataset.icon));
 $('.brand .logo svg').style.cssText='fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round';
-function applyTheme(t){document.documentElement.dataset.theme=t;store.set('theme',t);$$('[data-theme-toggle]').forEach(b=>b.textContent=t==='dark'?'☀ Light mode':'☾ Dark mode')}
+function applyTheme(t){document.documentElement.dataset.theme=t;store.set('theme',t);try{applyAccent(accentName)}catch(e){}$$('[data-theme-toggle]').forEach(b=>b.textContent=t==='dark'?'☀ Light mode':'☾ Dark mode')}
 $$('[data-theme-toggle]').forEach(b=>b.onclick=()=>applyTheme(document.documentElement.dataset.theme==='dark'?'light':'dark'));
 applyTheme(document.documentElement.dataset.theme||'light');
+
+/* ---- Accent colours ---- */
+const ACCENTS={blue:['Blue','#2F5BEA','#E6ECFE','#86A2FF','#24304F'],violet:['Violet','#6D4AE0','#EEE9FD','#B39CFF','#2E2650'],teal:['Teal','#0E7F75','#DDF3F0','#4FD1C1','#173F3B'],rose:['Rose','#C93565','#FCE6EE','#FF8FB1','#4A2232'],orange:['Orange','#C4560F','#FDEBDD','#FFA06A','#4A2D1B']};
+let accentName=store.get('accent','blue');if(!ACCENTS[accentName])accentName='blue';
+function applyAccent(n){accentName=n;store.set('accent',n);const a=ACCENTS[n],dk=document.documentElement.dataset.theme==='dark',r=document.documentElement.style;r.setProperty('--accent',dk?a[3]:a[1]);r.setProperty('--accent-soft',dk?a[4]:a[2]);
+ $$('.swatch').forEach(b=>b.setAttribute('aria-checked',b.dataset.accent===n));gdBgCache={}}
+$$('.swatches').forEach(w=>w.innerHTML=Object.entries(ACCENTS).map(([k,a])=>`<button class="swatch" role="radio" data-accent="${k}" aria-label="${a[0]}" title="${a[0]}" style="--sw:${a[1]}"></button>`).join(''));
+document.addEventListener('click',e=>{const b=e.target.closest('.swatch');if(b)applyAccent(b.dataset.accent)});
+/* ---- Guided tour ---- */
+const TOUR=[{t:null,h:'Welcome to Interview Prep Lab',b:'A quick tour of where everything is. It takes about 20 seconds, and you can skip it at any time.'},
+ {t:'#home-today',h:'Start here every day',b:'Your problem of the day, your streak, and anything that is due for review today.'},
+ {t:'#nav',h:'Practice areas',b:'Data structures, algorithms, top problems, system design, behavioral stories and technical flashcards.'},
+ {t:'#nav [data-go=ai]',h:'AI & ML track',b:'Visual labs, ML coding problems, AI system designs and flashcards for AI engineer and ML engineer interviews.'},
+ {t:'#appearance',h:'Make it yours',b:'Switch between light and dark mode and pick an accent colour. Your progress is saved in this browser.'}];
+let tourI=0;
+function startTour(){if(location.hash.slice(1)&&location.hash!=='#home'){location.hash='home'}tourI=0;let el=$('#tour');
+ if(!el){el=h(`<div id="tour" role="dialog" aria-modal="true" aria-labelledby="tour-h"><div class="tour-hl"></div><div class="tour-pop"><h3 id="tour-h"></h3><p id="tour-b"></p><div class="tour-foot"><div class="tour-dots" id="tour-dots"></div><span><button class="btn sm" id="tour-skip">Skip</button> <button class="btn sm pri" id="tour-next">Next</button></span></div></div></div>`);document.body.append(el);
+  $('#tour-skip').onclick=endTour;$('#tour-next').onclick=()=>{tourI++;tourI>=TOUR.length?endTour():tourStep()};el.addEventListener('click',e=>{if(e.target===el)endTour()})}
+ el.hidden=false;setTimeout(tourStep,50);setTimeout(()=>$('#tour-next').focus(),80)}
+function endTour(){const el=$('#tour');if(el)el.hidden=true;store.set('toured',1)}
+function tourStep(){const st=TOUR[tourI],hl=$('.tour-hl'),pop=$('.tour-pop');$('#tour-h').textContent=st.h;$('#tour-b').textContent=st.b;
+ $('#tour-dots').innerHTML=TOUR.map((_,i)=>`<i class="${i===tourI?'on':''}"></i>`).join('');$('#tour-next').textContent=tourI===TOUR.length-1?'Finish':'Next';
+ const t=st.t&&$(st.t);const pw=pop.offsetWidth,ph=pop.offsetHeight;
+ if(t&&t.offsetParent!==null){t.scrollIntoView({block:'nearest'});const r=t.getBoundingClientRect(),pad=6;Object.assign(hl.style,{left:r.left-pad+'px',top:r.top-pad+'px',width:r.width+2*pad+'px',height:r.height+2*pad+'px'});
+  let x,y;if(r.right+pw+24<innerWidth){x=r.right+18;y=Math.min(Math.max(12,r.top),innerHeight-ph-12)}else if(r.bottom+ph+24<innerHeight){x=Math.min(Math.max(12,r.left),innerWidth-pw-12);y=r.bottom+16}else{x=Math.min(Math.max(12,r.left),innerWidth-pw-12);y=Math.max(12,r.top-ph-16)}
+  pop.style.left=x+'px';pop.style.top=y+'px'}
+ else{Object.assign(hl.style,{left:innerWidth/2+'px',top:innerHeight/2+'px',width:'0px',height:'0px'});pop.style.left=(innerWidth-pw)/2+'px';pop.style.top=(innerHeight-ph)/2+'px'}}
+document.addEventListener('keydown',e=>{const el=$('#tour');if(el&&!el.hidden&&e.key==='Escape')endTour()});
+window.addEventListener('resize',()=>{const el=$('#tour');if(el&&!el.hidden)tourStep()});
+$('#tour-replay').onclick=startTour;
 function renderGreeting(){const d=new Date(),hr=d.getHours(),n=dueProblems().length+dueCards().length;
  $('#greet').textContent=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
  $('#greet-sub').textContent=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'. '+(n?`You have ${n} review${n>1?'s':''} due today.`:'Start with the problem of the day, or pick an area below.')}
@@ -1425,13 +1966,13 @@ $('#home-cards').addEventListener('keydown',e=>{if(e.key==='Enter'){const c=e.ta
 /* =========================================================
    HOME + ROUTER + TABS
    ========================================================= */
-function renderHome(){const nStories=FLAT.filter(hasStory).length,nCards=fcAll().length;
+function renderHome(){const nStories=FLAT.filter(hasStory).length,nCards=fcAllDecks().length;
  const stat=(v,t,k)=>`<div class="stat"><div class="v">${v}<span class="muted" style="font-size:15px;font-weight:600"> / ${t}</span></div><div class="k">${k}</div><div class="bar-bg"><div class="bar-fg" style="width:${v/t*100}%"></div></div></div>`;
  renderToday();renderGreeting();
- $('#home-stats').innerHTML=stat(solved.size,PROBS.length,'problems solved')+stat(known.size,nCards,'flashcards known')+stat(nStories,FLAT.length,'STAR stories written');
+ $('#home-stats').innerHTML=stat(solved.size,PROBS.length+AIPROBS.length,'coding problems solved')+stat(known.size,nCards,'flashcards known')+stat(nStories,FLAT.length,'STAR stories written');
  const cards=[['ds','ds','Data Structures','Stack, queue, linked list, BST, heap and hash table, animated operation by operation.'],['algo','algo','Algorithms','6 sorting algorithms, binary search, BFS/DFS/Dijkstra/A* on a grid you can draw on, and 14 pattern templates.'],
   ['problems','problems','Top Problems','45 frequently asked problems with step-by-step hints, a timer, notes and a spaced-repetition review schedule.'],['system','system','System Design','5 classic designs with animated request flows, guided step-by-step practice with self-scoring, and core concepts.'],
-  ['behavioral','behavioral','Behavioral','21 common questions with a STAR builder, a 2-minute timer and a saved story bank.'],['technical','technical','Technical Q&A','36 flashcards on OS, networking, databases, OOP, concurrency and web APIs.']];
+  ['behavioral','behavioral','Behavioral','26 common questions, including AI and ML projects, with a STAR builder, a timer and a saved story bank.'],['technical','technical','Technical Q&A','72 flashcards in two decks: software engineering fundamentals, and AI & ML.'],['ai','ai','AI & ML','Visual labs, 16 ML coding problems, 5 AI system designs and an interview guide for AI and ML roles.']];
  $('#home-cards').innerHTML=cards.map(([id,em,t,d])=>`<div class="card go" data-goto="${id}" tabindex="0" role="link"><div class="em">${icon(em)}</div><h3 style="margin-top:12px">${t}</h3><p class="muted" style="font-size:15px;margin:0">${d}</p></div>`).join('')}
 function renderToday(){
  const pool=PROBS.filter(p=>!solved.has(p[0])),L=pool.length?pool:PROBS,p=L[fnv(dkey())%L.length],dp=dueProblems(),dc=dueCards().length,s=streak(),act=store.get('act',{});
@@ -1442,7 +1983,7 @@ function renderToday(){
   <h4>Due for review</h4>${dp.length?`<div class="duelist">${dp.slice(0,6).map(x=>`<div><button class="linkbtn" data-open="${x[0]}">${x[1]}</button> <span class="pill ${x[3]}">${x[3]}</span></div>`).join('')}${dp.length>6?`<a href="#problems" class="muted" style="font-size:14px">${dp.length-6} more in Top Problems</a>`:''}</div>`:'<div class="muted" style="font-size:15px">Nothing to review yet. When you rate a problem after solving it, it comes back here on the right day.</div>'}
   ${dc?`<div style="margin-top:12px"><button class="btn sm" id="home-fc">Review ${dc} due flashcard${dc>1?'s':''}</button></div>`:''}</div>
  <div class="card"><h3>Your progress</h3><div class="stat-row" id="home-stats"></div><h4 style="margin-top:20px">Activity, last 20 weeks</h4><div class="heat">${cells}</div><div class="muted" style="font-size:14px;margin-top:6px">Active on ${active} day${active===1?'':'s'}. Solving, reviewing, writing stories and design practice all count.</div></div>`}
-$('#home-today').addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o)return openProblem(+o.dataset.open);if(e.target.id==='home-fc'){$('#fc-mode').value='due';fcTopic='All';fcIdx=0;location.hash='technical'}});
+$('#home-today').addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o)return openProblem(o.dataset.open);if(e.target.id==='home-fc'){const dc0=dueCards()[0];if(dc0){fcDeckName=dc0.deck;store.set('fcdeck',fcDeckName)}$('#fc-mode').value='due';fcTopic='All';fcIdx=0;location.hash='technical'}});
 $('#home-cards').onclick=e=>{const c=e.target.closest('[data-goto]');if(c)location.hash=c.dataset.goto};
 /* Backup */
 let bkJson='';
@@ -1453,7 +1994,7 @@ $('#bk-export').onclick=()=>{const data={};try{for(let i=0;i<localStorage.length
  bkSay(`Backup saved as <code>interview-prep-backup-${dkey()}.json</code> (${Object.keys(data).length} items). If no download started, <button class="btn sm" id="bk-copy">copy the backup</button> and paste it into a .json file.`)};
 $('#bk-say').addEventListener('click',async e=>{if(e.target.id!=='bk-copy')return;try{await navigator.clipboard.writeText(bkJson);e.target.textContent='Copied ✓'}catch(_){e.target.textContent='Copy blocked'}});
 $('#bk-file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(o.app!=='interview-prep-lab'||!o.data)throw 0;let n=0;for(const [k,v] of Object.entries(o.data))if(k.startsWith('ipl_')){localStorage.setItem(k,v);n++}bkSay(`Imported ${n} items. Reloading…`);setTimeout(()=>location.reload(),700)}catch(_){bkSay('That file isn’t an Interview Prep Lab backup.')}e.target.value=''};
-const SECTIONS=['home','ds','algo','problems','system','behavioral','technical'];
+const SECTIONS=['home','ds','algo','problems','system','behavioral','technical','ai'];
 function show(id){if(!SECTIONS.includes(id))id='home';$$('main>section').forEach(s=>s.hidden=s.id!=='sec-'+id);$$('#nav button[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='home')renderHome();if(id==='problems')renderProbs();if(id==='technical')renderFC();if(id==='behavioral'){renderBList();renderBEditor()}
  const sec=$('#sec-'+id),act=sec&&$('.tabs button.active',sec);if(act)act.click();window.scrollTo(0,0)}
@@ -1463,6 +2004,8 @@ $$('.tabs').forEach(tb=>{const g=tb.dataset.tabs,btns=$$('button',tb);
  const sel=name=>{btns.forEach(b=>b.classList.toggle('active',b.dataset.tab===name));$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+name);(TAB_HOOKS[g+':'+name]||(()=>{}))()};
  btns.forEach(b=>b.onclick=()=>{if(!BUSY||b.classList.contains('active'))sel(b.dataset.tab)});btns[0].classList.add('active');$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+btns[0].dataset.tab)});
 show(location.hash.slice(1));
+applyAccent(accentName);
+if(!store.get('toured',0)&&(!location.hash||location.hash==='#home'))setTimeout(startTour,800);
 </script>
 </body>
 </html>
