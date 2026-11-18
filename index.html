@@ -269,6 +269,20 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
 .tour-pop h3{margin:0 0 6px;font-size:19px}.tour-pop p{margin:0 0 16px;font-size:15.5px}
 .tour-foot{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .tour-dots{display:flex;gap:5px}.tour-dots i{width:7px;height:7px;border-radius:50%;background:var(--line2)}.tour-dots i.on{background:var(--accent)}
+
+.player{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px;padding:8px 10px;background:var(--panel2);border-radius:var(--r-md);border:1px solid var(--line)}
+.player .seg{margin:0;padding:3px;background:var(--panel)}
+.player .seg button{padding:5px 10px;font-size:13.5px}
+.player .pl-l{font-size:13.5px;font-weight:700}
+.player .pl-hint{font-size:13.5px}
+.explain{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px;margin-top:12px;align-items:start}
+.explain .say{margin-top:0;font-size:16px;line-height:1.6;min-height:96px}
+.pseudo{margin:0;padding:10px 4px;font-size:12.5px;line-height:1.6;white-space:pre;overflow-x:auto}
+.pseudo span{min-width:max-content}
+.pseudo span{display:block;padding:1px 8px;border-radius:5px;transition:background .2s}
+.pseudo span.on{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.pseudo .ttl{font-family:"Atkinson Hyperlegible",sans-serif;font-size:12.5px;color:var(--muted);font-weight:700;padding-bottom:4px}
+.cell.cur{outline:3px solid var(--orange);outline-offset:-2px;z-index:1}
 /* ---------- Responsive ---------- */
 .mobile-theme{display:none!important}
 @media (max-width:1100px){.plan{grid-template-columns:repeat(2,1fr)}.viz-layout,.sd-layout{grid-template-columns:1fr}}
@@ -281,6 +295,7 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
  main{padding:20px 16px 96px}
  h1{font-size:25px}.home-head h1{font-size:28px}
  .plan{grid-template-columns:1fr}
+ .explain{grid-template-columns:1fr}
  .b-layout,.home-row,.today-grid,.grid3,.ring-wrap,.pm-grid{grid-template-columns:1fr}
  .stat-row{grid-template-columns:repeat(3,1fr);gap:8px}.stat .v{font-size:22px}
  .modal{padding:10px}.modal-card{padding:20px}
@@ -308,7 +323,7 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
  <button data-go="behavioral"><span data-icon="behavioral"></span><span class="lbl">Behavioral</span><span class="short">Stories</span></button>
  <button data-go="technical"><span data-icon="technical"></span><span class="lbl">Technical Q&amp;A</span><span class="short">Q&amp;A</span></button>
  <button data-go="ai"><span data-icon="ai"></span><span class="lbl">AI &amp; ML</span><span class="short">AI</span></button>
- <div class="navfoot"><label>Animation speed<input type="range" id="speed" min="1" max="10" value="6"></label><div class="swatches" role="radiogroup" aria-label="Accent colour"></div><button class="theme-btn" data-theme-toggle>Dark mode</button></div>
+ <div class="navfoot"><div class="swatches" role="radiogroup" aria-label="Accent colour"></div><button class="theme-btn" data-theme-toggle>Dark mode</button></div>
 </nav>
 <main>
 
@@ -360,14 +375,16 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
    <div class="card">
     <div class="controls">
      <select id="sort-alg"></select>
-     <label class="muted" style="font-size:13px">n <input type="range" id="sort-n" min="8" max="60" value="24"></label>
+     <label class="muted" style="font-size:13px">n <input type="range" id="sort-n" min="6" max="40" value="10"></label>
      <button class="btn pri" id="sort-play">▶ Play</button>
      <button class="btn" id="sort-step">Step</button>
      <button class="btn" id="sort-shuffle">Shuffle</button>
     </div>
+    <div data-player></div>
     <svg id="sort-svg" class="vizsvg" viewBox="0 0 760 300"></svg>
     <div class="stats"><span>Comparisons: <b id="sort-cmp">0</b></span><span>Swaps / writes: <b id="sort-swp">0</b></span></div>
     <div class="legend"><span style="--c:var(--yellow)">comparing</span><span style="--c:var(--red)">swap / write</span><span style="--c:var(--purple)">pivot</span><span style="--c:var(--green)">in final place</span></div>
+    <div class="explain"><div class="say" id="sort-say">Press <b>Play</b> to watch, or <b>Step</b> to go one move at a time. Every move is explained here.</div><pre class="pseudo" id="sort-code"></pre></div>
    </div>
    <div class="card side" id="sort-info"></div>
   </div>
@@ -381,8 +398,9 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
      <button class="btn pri" id="bs-run">Search</button>
      <button class="btn" id="bs-new">New array</button>
     </div>
+    <div data-player></div>
     <svg id="bs-svg" class="vizsvg" viewBox="0 0 760 170"></svg>
-    <div class="say" id="bs-say">Enter a target and press Search. Each step cuts the search space in half.</div>
+    <div class="explain"><div class="say" id="bs-say">Enter a number (or leave it empty for a random one) and press <b>Search</b>. Each step cuts the search space in half.</div><pre class="pseudo" id="bs-code"></pre></div>
    </div>
    <div class="card side">
     <h3>Binary Search</h3>
@@ -407,10 +425,11 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
      <button class="btn" id="g-clearpath">Clear path</button>
      <button class="btn" id="g-clear">Clear all</button>
     </div>
+    <div data-player></div>
     <div class="grid" id="grid"></div>
     <div class="legend"><span style="--c:var(--green)">start</span><span style="--c:var(--red)">end</span><span style="--c:var(--wall)">wall</span><span style="--c:var(--weight)">weight (cost 5)</span><span style="--c:var(--visited)">visited</span><span style="--c:var(--yellow)">path</span></div>
     <div class="stats"><span>Visited: <b id="g-vis">0</b></span><span>Path length: <b id="g-len">–</b></span><span>Path cost: <b id="g-cost">–</b></span></div>
-    <div class="say" id="g-say">Click and drag on the grid to draw walls, then run an algorithm.</div>
+    <div class="explain"><div class="say" id="g-say">Click and drag on the grid to draw walls, then press <b>Run</b>. Green is the start and red is the end.</div><pre class="pseudo" id="g-code"></pre></div>
    </div>
    <div class="card side" id="g-info"></div>
   </div>
@@ -528,8 +547,9 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
      <label class="muted" style="font-size:14px;display:flex;align-items:center;gap:8px">Learning rate <input type="range" id="gd-lr" min="0" max="100" value="65" style="accent-color:var(--accent)"> <b id="gd-lrv" style="color:var(--text);min-width:42px">0.1</b></label>
      <button class="btn pri" id="gd-run">▶ Run</button><button class="btn" id="gd-reset">Reset</button>
     </div>
+    <div data-player></div>
     <svg id="gd-svg" class="vizsvg" viewBox="0 0 720 480" style="cursor:crosshair"></svg>
-    <div class="say" id="gd-say">Darker areas have lower loss. Pick a surface, an optimizer and a learning rate, then press Run.</div>
+    <div class="explain"><div class="say" id="gd-say">Think of the picture as a landscape seen from above: darker means lower. Gradient descent is a ball rolling downhill, one step at a time. Pick a surface, an optimizer and a learning rate (step size), then press <b>Run</b>.</div><pre class="pseudo" id="gd-code"></pre></div>
    </div>
    <div class="card side"><h3>Gradient descent</h3><p>Each step moves against the gradient: <code>w ← w − lr · ∇L(w)</code>. The learning rate decides how far.</p>
     <svg id="gd-loss" viewBox="0 0 300 124" style="width:100%;height:auto"></svg>
@@ -584,9 +604,10 @@ main>section:not([hidden]),.pane:not([hidden]){animation:enter .24s ease-out}
      <select id="km-init"><option value="pp">k-means++ initialization</option><option value="rand">Random initialization</option></select>
      <button class="btn pri" id="km-step">Step</button><button class="btn" id="km-run">▶ Run to convergence</button><button class="btn" id="km-new">New data</button>
     </div>
+    <div data-player></div>
     <svg id="km-svg" class="vizsvg" viewBox="0 0 720 440"></svg>
     <div class="stats" id="km-stats"></div>
-    <div class="say" id="km-say">Each step has two parts: assign every point to its nearest centroid, then move each centroid to the mean of its points.</div>
+    <div class="explain"><div class="say" id="km-say">K-means groups points into k clusters. Each round has two parts: every point joins its nearest centroid (diamond), then every centroid moves to the middle of its group.</div><pre class="pseudo" id="km-code"></pre></div>
    </div>
    <div class="card side"><h3>K-means</h3><table class="cx"><tr><td>Time per iteration</td><td><code>O(n · k · d)</code></td></tr><tr><td>Objective</td><td>Minimize inertia: the sum of squared distances to the nearest centroid</td></tr></table>
     <h4>Choosing k</h4><button class="btn sm" id="km-elbow-btn">Draw the elbow chart</button><svg id="km-elbow" viewBox="0 0 300 150" style="width:100%;height:auto;margin-top:8px"></svg>
@@ -626,12 +647,26 @@ function T(parent,x,y,txt,cls='t'){const e=S('text',{x,y,class:cls,'text-anchor'
 function h(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-let SPEED=700;
-const speedEl=$('#speed');
-function setSpeed(){SPEED=1600-(+speedEl.value)*150}
-speedEl.oninput=setSpeed;setSpeed();
-let BUSY=false;
-async function run(fn){if(BUSY)return;BUSY=true;try{await fn()}finally{BUSY=false}}
+/* ---- Playback: pace, pause, step-by-step ---- */
+const PACES={step:['Step by step',1300],slow:['Slow',2000],normal:['Normal',1000],fast:['Fast',350]};
+let PACE=store.get('pace','slow');if(!PACES[PACE])PACE='slow';
+let SPEED=PACES[PACE][1],paused=false,waitRes=null,ff=false,BUSY=false;
+function wait(mult=1){return new Promise(res=>{if(ff){res();return}
+ const go=()=>{waitRes=null;refreshPlayers();res()};
+ if(PACE==='step'||paused){waitRes=go;refreshPlayers();return}
+ setTimeout(()=>{if(ff){res();return}if(paused){waitRes=go;refreshPlayers()}else go()},Math.max(30,SPEED*mult))})}
+function nextStep(){if(waitRes)waitRes()}
+function setPace(p){PACE=p;SPEED=PACES[p][1];store.set('pace',p);if(p!=='step'&&!paused&&waitRes)waitRes();refreshPlayers()}
+function togglePause(){paused=!paused;if(!paused&&PACE!=='step'&&waitRes)waitRes();refreshPlayers()}
+function refreshPlayers(){$$('.player').forEach(pl=>{$$('[data-pace]',pl).forEach(b=>b.classList.toggle('active',b.dataset.pace===PACE));const pb=$('[data-pl=pause]',pl);pb.textContent=paused?'Resume':'Pause';pb.hidden=PACE==='step';
+ const nb=$('[data-pl=next]',pl);nb.disabled=!waitRes;nb.classList.toggle('pri',!!waitRes);$('.pl-hint',pl).textContent=waitRes?'Press Next step (or the → key) to continue':(PACE==='step'?'Each move waits for you':'')})}
+function interruptAnimations(){if(typeof sorter!=='undefined'&&sorter.playing)sorter.playing=false;if(BUSY)ff=true;paused=false;if(waitRes)waitRes()}
+function whenIdle(fn){if(!BUSY)return fn();const t=setInterval(()=>{if(!BUSY){clearInterval(t);fn()}},30)}
+async function run(fn){if(BUSY)return;BUSY=true;paused=false;try{await fn()}finally{BUSY=false;ff=false;refreshPlayers()}}
+const PLAYER=`<div class="player" role="group" aria-label="Animation controls"><span class="muted pl-l">Pace</span><div class="seg">${Object.entries(PACES).map(([k,v])=>`<button data-pace="${k}">${v[0]}</button>`).join('')}</div><button class="btn sm" data-pl="pause">Pause</button><button class="btn sm" data-pl="next" disabled>Next step ▸</button><span class="muted pl-hint"></span></div>`;
+document.addEventListener('click',e=>{const pc=e.target.closest('[data-pace]');if(pc)return setPace(pc.dataset.pace);const pl=e.target.closest('[data-pl]');if(!pl)return;if(pl.dataset.pl==='pause')togglePause();else nextStep()});
+document.addEventListener('keydown',e=>{if((e.key==='ArrowRight'||e.key==='n')&&waitRes&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){e.preventDefault();nextStep()}});
+function code(id,lines,on=-1){const el=$('#'+id+'-code');if(!el||!lines)return;const set=Array.isArray(on)?on:[on];el.innerHTML='<span class="ttl">Pseudocode</span>'+lines.map((l,i)=>`<span class="${set.includes(i)?'on':''}">${esc(l)||' '}</span>`).join('')}
 function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 function val(id){const el=$('#'+id);const n=parseInt(el.value,10);el.value='';return isNaN(n)?rnd(1,99):n}
 function say(k,msg){$('#'+k+'-say').innerHTML=msg}
@@ -714,7 +749,7 @@ const DS={
  for(const [k,d] of Object.entries(DS)){
   tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));
   host.append(h(`<div class="pane" data-pane="ds:${k}"><div class="viz-layout">
-   <div class="card"><div class="controls">${d.controls}</div><svg id="${k}-svg" class="vizsvg" viewBox="${d.vb}"></svg><div class="say" id="${k}-say">${d.hint}</div></div>
+   <div class="card"><div class="controls">${d.controls}</div><div data-player></div><svg id="${k}-svg" class="vizsvg" viewBox="${d.vb}"></svg><div class="explain"><div class="say" id="${k}-say">${d.hint}</div><pre class="pseudo" id="${k}-code"></pre></div></div>
    <div class="card side"><h3>${d.name}</h3><p style="font-size:14px">${d.desc}</p>
     <table class="cx">${d.cx.map(r=>`<tr><td>${r[0]}</td><td><code>${r[1]}</code></td></tr>`).join('')}</table>
     <h4>Interview tips</h4><ul>${d.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
@@ -733,9 +768,9 @@ function drawStack(hl={}){
   if(i===stk.length-1)T(s,x+bw+44,y+bh/2,'← top','lblA')});
  if(!stk.length)T(s,W/2,base-30,'empty','lbl');
 }
-ACT.stackPush=async()=>{const v=val('stack-in');if(stk.length>=9)return say('stack','Stack overflow (this demo holds 9 items).');stk.push(v);drawStack({[stk.length-1]:'new'});say('stack',`<code>push(${v})</code> placed on top. O(1).`)};
-ACT.stackPop=async()=>{if(!stk.length)return say('stack','Stack underflow: the stack is empty.');const i=stk.length-1;drawStack({[i]:'del'});say('stack',`<code>pop()</code> removes the top item, <b>${stk[i]}</b>.`);await sleep(SPEED);stk.pop();drawStack()};
-ACT.stackPeek=async()=>{if(!stk.length)return say('stack','Empty.');drawStack({[stk.length-1]:'cur'});say('stack',`<code>peek()</code> = <b>${stk[stk.length-1]}</b> (nothing is removed).`)};
+
+
+
 
 /* ---- Queue ---- */
 const que=[8,3,17];
@@ -746,9 +781,9 @@ function drawQueue(hl={}){
  if(!que.length)T(s,380,92,'empty','lbl');
  arrowLine(s,20,170,120,170);T(s,70,186,'dequeue here','lbl');
 }
-ACT.qEnq=async()=>{const v=val('queue-in');if(que.length>=9)return say('queue','Queue is full (this demo holds 9 items).');que.push(v);drawQueue({[que.length-1]:'new'});say('queue',`<code>enqueue(${v})</code> joins at the rear.`)};
-ACT.qDeq=async()=>{if(!que.length)return say('queue','Queue is empty.');drawQueue({0:'del'});say('queue',`<code>dequeue()</code> returns <b>${que[0]}</b>, the item that has waited longest.`);await sleep(SPEED);que.shift();drawQueue()};
-ACT.qPeek=async()=>{if(!que.length)return say('queue','Empty.');drawQueue({0:'cur'});say('queue',`front = <b>${que[0]}</b>`)};
+
+
+
 
 /* ---- Linked list ---- */
 let ll=[4,8,15,16];
@@ -771,17 +806,11 @@ function drawLL(hl={},ptr={},rev=null){
  const labels={};for(const [k,v] of Object.entries(ptr)){if(k>=0&&k<n)(labels[k]=labels[k]||[]).push(v)}
  for(const [k,v] of Object.entries(labels))T(s,X(+k)+w/2,y+hh+26,v.join(', '),'lblA');
 }
-ACT.llHead=async()=>{if(ll.length>=8)return say('ll','This demo holds 8 nodes.');const v=val('ll-in');ll.unshift(v);drawLL({0:'new'});say('ll',`New node <b>${v}</b>.next = old head. head = new node. O(1).`)};
-ACT.llTail=async()=>{if(ll.length>=8)return say('ll','This demo holds 8 nodes.');const v=val('ll-in');
- for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr'});say('ll',`Walking to the tail… node ${i} (O(n) without a tail pointer)`);await sleep(SPEED*0.6)}
- ll.push(v);drawLL({[ll.length-1]:'new'});say('ll',`tail.next = new node <b>${v}</b>.`)};
-ACT.llFind=async()=>{const v=val('ll-in');for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr'});say('ll',`Is ${ll[i]} == ${v}?`);await sleep(SPEED*0.7);if(ll[i]===v){drawLL({[i]:'found'});return say('ll',`Found <b>${v}</b> at position ${i}.`)}}drawLL();say('ll',`<b>${v}</b> is not in the list.`)};
-ACT.llDel=async()=>{const v=val('ll-in');for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr',[i-1]:'prev'});say('ll',`Is ${ll[i]} == ${v}?`);await sleep(SPEED*0.7);
-  if(ll[i]===v){drawLL({[i]:'del'},{[i]:'curr',[i-1]:'prev'});say('ll',i?`prev.next = curr.next skips over <b>${v}</b>.`:`Deleting the head: head = head.next.`);await sleep(SPEED);ll.splice(i,1);drawLL();return}}
- drawLL();say('ll',`<b>${v}</b> not found.`)};
-ACT.llRev=async()=>{const n=ll.length;if(n<2)return;const rev=Array(n).fill(false);
- for(let i=0;i<n;i++){drawLL({[i]:'cur'},{[i-1]:'prev',[i]:'curr',[i+1]:'next'},rev);say('ll',`<code>next = curr.next; curr.next = prev;</code> node <b>${ll[i]}</b> now points back.`);await sleep(SPEED);rev[i]=true;drawLL({[i]:'new'},{[i]:'prev',[i+1]:'curr'},rev);await sleep(SPEED*0.7)}
- ll.reverse();drawLL();say('ll','Done. <code>head = prev</code>. Time O(n), space O(1). Practise writing the recursive version as well.')};
+
+
+
+
+
 
 /* ---- BST ---- */
 let bst=null;
@@ -798,26 +827,11 @@ function drawBST(hl={}){
  if(!bst)T(s,380,150,'empty tree','lbl');
 }
 [50,30,70,20,40,60,80,35,65].forEach(v=>bst=bIns(bst,v));
-ACT.bstInsert=async()=>{const v=val('bst-in');if(bCount(bst)>=31)return say('bst','The tree is full for this demo.');let n=bst,d=0;
- while(n){drawBST({[n.v]:'cur'});if(v===n.v){say('bst',`${v} is already in the tree (a BST usually holds unique keys).`);return}
-  say('bst',`${v} ${v<n.v?'&lt;':'&gt;'} ${n.v} → go ${v<n.v?'left':'right'}`);await sleep(SPEED);n=v<n.v?n.l:n.r;d++}
- if(d>5){drawBST();return say('bst',`Inserting ${v} would go deeper than this canvas can show. Try another value. (This is how an unbalanced BST degrades toward O(n).)`)}
- bst=bIns(bst,v);drawBST({[v]:'new'});say('bst',`Inserted <b>${v}</b> as a leaf after ${d} comparisons.`)};
-ACT.bstSearch=async()=>{const v=val('bst-in');let n=bst,c=0;while(n){c++;drawBST({[n.v]:'cur'});if(v===n.v){drawBST({[v]:'found'});return say('bst',`Found <b>${v}</b> in ${c} steps.`)}
-  say('bst',`${v} ${v<n.v?'&lt;':'&gt;'} ${n.v} → go ${v<n.v?'left':'right'}`);await sleep(SPEED);n=v<n.v?n.l:n.r}
- drawBST();say('bst',`Hit null. <b>${v}</b> is not in the tree.`)};
-ACT.bstDelete=async()=>{const v=val('bst-in');let n=bst;while(n&&n.v!==v){drawBST({[n.v]:'cur'});say('bst',`Looking for ${v}…`);await sleep(SPEED*0.7);n=v<n.v?n.l:n.r}
- if(!n){drawBST();return say('bst',`<b>${v}</b> not found.`)}
- if(n.l&&n.r){let s=n.r;const hl={[v]:'del'};while(s.l)s=s.l;hl[s.v]='found';drawBST(hl);say('bst',`${v} has two children. Replace it with its inorder successor <b>${s.v}</b> (the smallest value in the right subtree), then delete that successor.`);await sleep(SPEED*1.8)}
- else{drawBST({[v]:'del'});say('bst',n.l||n.r?`${v} has one child. Link its parent directly to that child.`:`${v} is a leaf, so just remove it.`);await sleep(SPEED*1.3)}
- bst=bDel(bst,v);drawBST()};
-ACT.bstTraverse=async()=>{const t=$('#bst-trav').value,out=[];
- const f={in:function g(n){if(!n)return;g(n.l);out.push(n.v);g(n.r)},pre:function g(n){if(!n)return;out.push(n.v);g(n.l);g(n.r)},post:function g(n){if(!n)return;g(n.l);g(n.r);out.push(n.v)},
-  level:n=>{const q=n?[n]:[];while(q.length){const x=q.shift();out.push(x.v);if(x.l)q.push(x.l);if(x.r)q.push(x.r)}}};
- f[t](bst);const hl={},seen=[];
- for(const v of out){for(const k in hl)hl[k]='done';hl[v]='cur';seen.push(v);drawBST(hl);say('bst',`${$('#bst-trav').selectedOptions[0].text}: <code>[${seen.join(', ')}]</code>`);await sleep(SPEED*0.6)}
- for(const k in hl)hl[k]='done';drawBST(hl)};
-ACT.bstRandom=async()=>{for(let tries=0;tries<50;tries++){bst=null;const used=new Set();while(used.size<12){const v=rnd(1,99);if(!used.has(v)){used.add(v);bst=bIns(bst,v)}}if(bHeight(bst)<=6)break}drawBST();say('bst','A random tree with 12 nodes.')};
+
+
+
+
+
 
 /* ---- Heap ---- */
 let heap=[3,9,5,14,10,8,7];
@@ -831,18 +845,10 @@ function drawHeap(hl={}){
  heap.forEach((v,i)=>{S('rect',{x:x0+i*cw,y:252,width:cw-4,height:36,rx:5,class:'n '+(hl[i]||'')},s);T(s,x0+i*cw+(cw-4)/2,270,v,'ts');T(s,x0+i*cw+(cw-4)/2,304,i,'lbl')});
  if(!heap.length)T(s,380,120,'empty heap','lbl');
 }
-async function siftDown(i){const n=heap.length;while(true){const l=2*i+1,r=l+1;let m=i;if(l<n&&heap[l]<heap[m])m=l;if(r<n&&heap[r]<heap[m])m=r;
- const hl={[i]:'cur'};if(l<n)hl[l]='cmp';if(r<n)hl[r]='cmp';drawHeap(hl);say('heap',`Compare ${heap[i]} with its children${l<n?' '+heap[l]:''}${r<n?', '+heap[r]:''}.`);await sleep(SPEED);
- if(m===i){say('heap',`${heap[i]} is ≤ its children, so the heap property holds.`);break}
- [heap[i],heap[m]]=[heap[m],heap[i]];drawHeap({[m]:'new',[i]:'new'});say('heap',`Swap it with the smaller child, ${heap[i]}.`);await sleep(SPEED*0.8);i=m}}
-ACT.heapPush=async()=>{if(heap.length>=15)return say('heap','This demo holds 15 items.');const v=val('heap-in');heap.push(v);let i=heap.length-1;drawHeap({[i]:'new'});say('heap',`Add ${v} at the end of the array, then sift it up.`);await sleep(SPEED);
- while(i>0){const p=(i-1)>>1;drawHeap({[i]:'cur',[p]:'cmp'});say('heap',`Compare ${heap[i]} with its parent ${heap[p]}.`);await sleep(SPEED);if(heap[p]<=heap[i])break;
-  [heap[p],heap[i]]=[heap[i],heap[p]];drawHeap({[p]:'new'});say('heap',`${heap[p]} &lt; ${heap[i]}, so swap them.`);await sleep(SPEED*0.8);i=p}
- drawHeap({[i]:'found'});say('heap',`${v} is in place. O(log n).`)};
-ACT.heapPop=async()=>{if(!heap.length)return say('heap','Heap is empty.');const m=heap[0];drawHeap({0:'del'});say('heap',`The minimum is the root: <b>${m}</b>. Move the last item to the root and sift it down.`);await sleep(SPEED);
- const last=heap.pop();if(heap.length){heap[0]=last;drawHeap({0:'new'});await sleep(SPEED*0.7);await siftDown(0)}else drawHeap();say('heap',`Extracted <b>${m}</b>. O(log n).`)};
-ACT.heapify=async()=>{heap=Array.from({length:12},()=>rnd(1,99));drawHeap();say('heap','Random array. Build the heap by sifting down from the last parent up to the root. Total O(n).');await sleep(SPEED*1.5);
- for(let i=(heap.length>>1)-1;i>=0;i--)await siftDown(i);drawHeap();say('heap','Heap built. Every parent ≤ its children.')};
+
+
+
+
 
 /* ---- Hash table ---- */
 let ht={m:7,b:[]};
@@ -859,52 +865,281 @@ function drawHT(hb=-1,item=null,cls='cur'){
 }
 function htKey(){const el=$('#ht-in');let k=el.value.trim().toLowerCase();el.value='';if(!k){const pool=['date','fig','lemon','lime','peach','pear','plum','melon','berry','olive','guava','papaya'];k=pool[rnd(0,pool.length-1)]}return k}
 function htMsg(k,i){return `hash("${esc(k)}") = Σ charCode·31ⁱ mod ${ht.m} = <b>${i}</b>`}
-async function htWalk(k){const i=hf(k,ht.m);drawHT(i);say('hash',htMsg(k,i));await sleep(SPEED);
- for(let j=0;j<ht.b[i].length;j++){drawHT(i,[i,j],'cmp');say('hash',htMsg(k,i)+` → is "${esc(ht.b[i][j])}" == "${esc(k)}"?`);await sleep(SPEED*0.7);if(ht.b[i][j]===k)return[i,j]}return[i,-1]}
-ACT.htInsert=async()=>{const k=htKey();const [i,j]=await htWalk(k);if(j>=0){drawHT(i,[i,j],'found');return say('hash',`"${esc(k)}" already exists, so its value would be updated.`)}
- ht.b[i].push(k);drawHT(i,[i,ht.b[i].length-1],'new');const lf=htN()/ht.m;say('hash',`${htMsg(k,i)}, appended to the chain. Load factor α = ${htN()}/${ht.m} = <b>${lf.toFixed(2)}</b>${lf>0.75?' (above 0.75, time to resize)':''}`)};
-ACT.htGet=async()=>{const k=htKey();const [i,j]=await htWalk(k);if(j>=0){drawHT(i,[i,j],'found');say('hash',`Found "${esc(k)}" in bucket ${i}.`)}else{drawHT(i);say('hash',`"${esc(k)}" is not in bucket ${i}, so it isn't in the table.`)}};
-ACT.htDel=async()=>{const k=htKey();const [i,j]=await htWalk(k);if(j<0){drawHT(i);return say('hash',`"${esc(k)}" not found.`)}drawHT(i,[i,j],'del');await sleep(SPEED);ht.b[i].splice(j,1);drawHT();say('hash',`Removed "${esc(k)}" from bucket ${i}.`)};
-ACT.htRehash=async()=>{const keys=ht.b.flat();ht.m=ht.m===7?14:7;htInit(keys);drawHT();say('hash',`Resized to ${ht.m} buckets and re-hashed every key, O(n). Load factor is now ${(keys.length/ht.m).toFixed(2)}. Click again to switch back.`)};
 
-TAB_HOOKS['ds:stack']=()=>drawStack();TAB_HOOKS['ds:queue']=()=>drawQueue();TAB_HOOKS['ds:ll']=()=>drawLL();
-TAB_HOOKS['ds:bst']=()=>drawBST();TAB_HOOKS['ds:heap']=()=>drawHeap();TAB_HOOKS['ds:hash']=()=>drawHT();
+
+
+
+
+
+/* ---------- Pseudocode shown next to each visualizer ---------- */
+const PS={
+ stack:{push:['push(x):','  if the stack is full: error "overflow"','  put x on top','  the top is now x'],
+  pop:['pop():','  if the stack is empty: error "underflow"','  x = the item on top','  remove the top item','  return x'],
+  peek:['peek():','  return the item on top (nothing is removed)']},
+ queue:{enq:['enqueue(x):','  put x at the rear (back of the line)'],
+  deq:['dequeue():','  if the queue is empty: error','  x = the item at the front','  remove the front item','  return x'],
+  front:['front():','  return the item at the front']},
+ ll:{head:['insertHead(x):','  node = new Node(x)','  node.next = head','  head = node'],
+  tail:['insertTail(x):','  curr = head','  while curr.next is not null:','    curr = curr.next','  curr.next = new Node(x)'],
+  find:['search(x):','  curr = head','  while curr is not null:','    if curr.value == x: return found','    curr = curr.next','  return not found'],
+  del:['delete(x):','  prev = null, curr = head','  while curr is not null:','    if curr.value == x:','      prev.next = curr.next   # skip it','      return','    prev = curr, curr = curr.next'],
+  rev:['reverse():','  prev = null, curr = head','  while curr is not null:','    next = curr.next      # remember the rest','    curr.next = prev      # flip the arrow','    prev = curr','    curr = next','  head = prev']},
+ bst:{ins:['insert(x):','  node = root','  while node is not null:','    if x < node.value: node = node.left','    else: node = node.right','  put a new node with x in this empty spot'],
+  search:['search(x):','  node = root','  while node is not null:','    if x == node.value: return found','    if x < node.value: node = node.left','    else: node = node.right','  return not found'],
+  del:['delete(x):','  find the node holding x','  if it has no children: remove it','  if it has one child: replace it with that child','  if it has two children:','    s = smallest value in its right subtree','    copy s into the node, then delete the old s'],
+  in:['inorder(node):','  if node is null: return','  inorder(node.left)','  visit(node)','  inorder(node.right)'],
+  pre:['preorder(node):','  if node is null: return','  visit(node)','  preorder(node.left)','  preorder(node.right)'],
+  post:['postorder(node):','  if node is null: return','  postorder(node.left)','  postorder(node.right)','  visit(node)'],
+  level:['levelOrder(root):','  queue = [root]','  while the queue is not empty:','    node = take from the front of the queue','    visit(node)','    add node.left and node.right to the queue']},
+ heap:{push:['insert(x):','  add x at the end of the array','  i = last index','  while i > 0:','    p = parent of i = (i − 1) / 2','    if heap[p] <= heap[i]: stop','    swap heap[p] and heap[i]','    i = p'],
+  pop:['extractMin():','  min = heap[0]','  move the last item to index 0','  i = 0','  loop:','    c = the smaller child of i','    if heap[i] <= heap[c]: stop','    swap heap[i] and heap[c], i = c','  return min'],
+  heapify:['buildHeap(array):','  for i from the last parent down to 0:','    sift heap[i] down (swap with smaller child until in order)']},
+ hash:{put:['put(key):','  i = hash(key) mod size','  for each item in bucket[i]:','    if item == key: update it, stop','  append key to bucket[i]'],
+  get:['get(key):','  i = hash(key) mod size','  for each item in bucket[i]:','    if item == key: return found','  return not found'],
+  del:['delete(key):','  i = hash(key) mod size','  find key in bucket[i]','  remove it from the chain'],
+  resize:['resize():','  size = size × 2','  for every key in the table:','    put it in bucket hash(key) mod size']},
+ bs:{exact:['lo = 0, hi = n − 1','while lo <= hi:','  mid = (lo + hi) / 2','  if a[mid] == target: return mid','  if a[mid] < target: lo = mid + 1   # go right','  else: hi = mid − 1                # go left','return "not found"'],
+  lower:['lo = 0, hi = n','while lo < hi:','  mid = (lo + hi) / 2','  if a[mid] < target: lo = mid + 1','  else: hi = mid','return lo   # first index with a[i] >= target']},
+ g:{bfs:['queue = [start], mark start as seen','while the queue is not empty:','  node = take from the front of the queue','  if node == end: done','  for each neighbor not seen yet:','    mark it seen, remember it came from node','    add it to the back of the queue'],
+  dfs:['stack = [start]','while the stack is not empty:','  node = take from the top of the stack','  if node == end: done','  if node was visited already: skip it','  mark node visited','  push its unvisited neighbors onto the stack'],
+  dijkstra:['dist[start] = 0, heap = [(0, start)]','while the heap is not empty:','  node = the unvisited cell with the smallest dist','  if node == end: done','  for each neighbor:','    d = dist[node] + cost of entering neighbor','    if d < dist[neighbor]: dist[neighbor] = d, push it'],
+  astar:['g[start] = 0, heap = [(estimate(start), start)]','while the heap is not empty:','  node = cell with smallest g + estimate to end','  if node == end: done','  for each neighbor:','    d = g[node] + cost of entering neighbor','    if d < g[neighbor]: g[neighbor] = d, push it']},
+ gd:{gd:['w = starting point','repeat up to 120 times:','  g = gradient (slope) of the loss at w','  w = w − lr × g        # step downhill','  stop if g is almost zero  # flat = a minimum'],
+  mom:['w = starting point, v = 0','repeat up to 120 times:','  g = gradient (slope) of the loss at w','  v = 0.9 × v + g       # velocity remembers past steps','  w = w − lr × v','  stop if g is almost zero'],
+  adam:['w = starting point, m = 0, s = 0','repeat up to 120 times:','  g = gradient (slope) of the loss at w','  m = running average of g     # direction','  s = running average of g²    # how steep','  w = w − lr × m / √s          # per-direction step size','  stop if g is almost zero']},
+ km:['place k centroids (k-means++: spread them out)','repeat:','  for each point: join the nearest centroid','  for each centroid: move it to the average of its points','  stop when no point changes group']
+};
+
+/* ---------- Data structure operations, narrated ---------- */
+ACT.stackPush=async()=>{const v=val('stack-in'),C=PS.stack.push;code('stack',C,0);
+ if(stk.length>=9){code('stack',C,1);return say('stack','The stack is full (this demo holds 9 items), so <b>push</b> fails with an "overflow" error.')}
+ code('stack',C,1);say('stack',`<b>push(${v})</b>: first check there is room. There is.`);await wait(0.8);
+ stk.push(v);drawStack({[stk.length-1]:'new'});code('stack',C,2);say('stack',`Put ${v} on top of the pile, like adding a plate to a stack of plates.`);await wait(1);
+ code('stack',C,3);say('stack',`Done. Only the top was touched, so push takes the same time however big the stack is: <b>O(1)</b>.`)};
+ACT.stackPop=async()=>{const C=PS.stack.pop;code('stack',C,1);if(!stk.length)return say('stack','The stack is empty, so there is nothing to remove ("underflow").');
+ const i=stk.length-1;drawStack({[i]:'del'});code('stack',C,2);say('stack',`<b>pop()</b>: look at the top item, <b>${stk[i]}</b>. It was the last one added, so it is the first one out (Last In, First Out).`);await wait(1.2);
+ const x=stk.pop();drawStack();code('stack',C,3);say('stack',`Remove it. ${stk.length?`The new top is ${stk[stk.length-1]}.`:'The stack is now empty.'}`);await wait(0.8);
+ code('stack',C,4);say('stack',`Return <b>${x}</b>. This is O(1).`)};
+ACT.stackPeek=async()=>{const C=PS.stack.peek;code('stack',C,1);if(!stk.length)return say('stack','The stack is empty.');drawStack({[stk.length-1]:'cur'});say('stack',`<b>peek()</b> looks at the top item, <b>${stk[stk.length-1]}</b>, without removing it.`)};
+ACT.qEnq=async()=>{const v=val('queue-in'),C=PS.queue.enq;if(que.length>=9)return say('queue','The queue is full (this demo holds 9 items).');
+ que.push(v);drawQueue({[que.length-1]:'new'});code('queue',C,1);say('queue',`<b>enqueue(${v})</b>: ${v} joins the back of the line, like a person joining a queue at a shop. O(1).`)};
+ACT.qDeq=async()=>{const C=PS.queue.deq;code('queue',C,1);if(!que.length)return say('queue','The queue is empty, so there is nobody to serve.');
+ drawQueue({0:'del'});code('queue',C,2);say('queue',`<b>dequeue()</b>: the item at the front, <b>${que[0]}</b>, has waited the longest, so it leaves first (First In, First Out).`);await wait(1.2);
+ const x=que.shift();drawQueue();code('queue',C,3);say('queue',`Removed ${x}. Everyone else moves up one place.${que.length?` ${que[0]} is now at the front.`:''}`);await wait(0.8);code('queue',C,4)};
+ACT.qPeek=async()=>{const C=PS.queue.front;code('queue',C,1);if(!que.length)return say('queue','The queue is empty.');drawQueue({0:'cur'});say('queue',`<b>front()</b> = <b>${que[0]}</b>. It looks without removing anything.`)};
+ACT.llHead=async()=>{if(ll.length>=8)return say('ll','This demo holds 8 nodes.');const v=val('ll-in'),C=PS.ll.head;
+ code('ll',C,1);say('ll',`Create a new node holding ${v}. A node is a value plus an arrow (next) to the following node.`);await wait(1);
+ ll.unshift(v);drawLL({0:'new'});code('ll',C,2);say('ll',`Point the new node's arrow at the old first node.`);await wait(1);
+ code('ll',C,3);say('ll',`Make <b>head</b> point to the new node. Nothing else had to move, so this is <b>O(1)</b>.`)};
+ACT.llTail=async()=>{if(ll.length>=8)return say('ll','This demo holds 8 nodes.');const v=val('ll-in'),C=PS.ll.tail;code('ll',C,1);say('ll','To add at the end, we first have to find the end. Start at head.');await wait(0.8);
+ for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr'});const last=i===ll.length-1;code('ll',C,last?2:3);say('ll',last?`At ${ll[i]}. Its arrow points to null, so this is the last node.`:`At ${ll[i]}. It has a next node, so follow the arrow.`);await wait(0.9)}
+ ll.push(v);drawLL({[ll.length-1]:'new'});code('ll',C,4);say('ll',`Attach ${v} after it. We had to walk the whole list first, so this is <b>O(n)</b>, unless we also keep a pointer to the tail.`)};
+ACT.llFind=async()=>{const v=val('ll-in'),C=PS.ll.find;code('ll',C,1);say('ll',`Search for ${v}. A list has no index, so we can only start at head and follow the arrows.`);await wait(0.8);
+ for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr'});code('ll',C,3);say('ll',`Is this node's value (${ll[i]}) equal to ${v}?`);await wait(1);
+  if(ll[i]===v){drawLL({[i]:'found'});return say('ll',`Yes. Found <b>${v}</b> at position ${i}. In the worst case we check every node: <b>O(n)</b>.`)}
+  code('ll',C,4);say('ll','No. Follow the arrow to the next node.');await wait(0.6)}
+ drawLL();code('ll',C,5);say('ll',`Reached the end (null) without finding <b>${v}</b>.`)};
+ACT.llDel=async()=>{const v=val('ll-in'),C=PS.ll.del;code('ll',C,1);say('ll',`Delete ${v}. We walk with two pointers: <b>curr</b> (the node we're checking) and <b>prev</b> (the one before it).`);await wait(1);
+ for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr',[i-1]:'prev'});code('ll',C,3);say('ll',`Is ${ll[i]} equal to ${v}?`);await wait(1);
+  if(ll[i]===v){drawLL({[i]:'del'},{[i]:'curr',[i-1]:'prev'});code('ll',C,4);say('ll',i?`Yes. Make ${ll[i-1]}'s arrow skip over it and point to ${i+1<ll.length?ll[i+1]:'null'}. Nothing points to ${v} any more, so it is gone.`:`Yes, and it is the first node, so simply move <b>head</b> to the next node.`);await wait(1.4);ll.splice(i,1);drawLL();code('ll',C,5);return}
+  code('ll',C,6);say('ll','No. Move both pointers one step forward.');await wait(0.6)}
+ drawLL();say('ll',`<b>${v}</b> is not in the list.`)};
+ACT.llRev=async()=>{const n=ll.length;if(n<2)return;const C=PS.ll.rev,rev=Array(n).fill(false);code('ll',C,1);say('ll','We walk the list once and flip every arrow so it points backwards. <b>prev</b> starts at null and <b>curr</b> at the first node.');await wait(1.2);
+ for(let i=0;i<n;i++){drawLL({[i]:'cur'},{[i-1]:'prev',[i]:'curr',[i+1]:'next'},rev);code('ll',C,3);say('ll',`Save the node after ${ll[i]} (${i+1<n?ll[i+1]:'null'}) as <b>next</b>, so we don't lose the rest of the list when we flip the arrow.`);await wait(1.1);
+  rev[i]=true;drawLL({[i]:'new'},{[i-1]:'prev',[i]:'curr',[i+1]:'next'},rev);code('ll',C,4);say('ll',`Flip the arrow: ${ll[i]} now points back to ${i?ll[i-1]:'null'} (blue).`);await wait(1.1);
+  drawLL({},{[i]:'prev',[i+1]:'curr'},rev);code('ll',C,6);say('ll',`Step forward: <b>prev</b> = ${ll[i]}, <b>curr</b> = ${i+1<n?ll[i+1]:'null'}.`);await wait(0.9)}
+ ll.reverse();drawLL();code('ll',C,7);say('ll','<b>curr</b> is null, so every arrow is flipped. Set <b>head</b> = prev (the old last node). One pass, no extra list: <b>O(n)</b> time, <b>O(1)</b> space.')};
+ACT.bstInsert=async()=>{const v=val('bst-in'),C=PS.bst.ins;if(bCount(bst)>=31)return say('bst','The tree is full for this demo.');let n=bst,d=0;
+ code('bst',C,1);say('bst',`Insert ${v}. Start at the top (the root). At each node: smaller values go left, bigger values go right.`);await wait(1);
+ while(n){drawBST({[n.v]:'cur'});if(v===n.v){say('bst',`${v} is already in the tree. A BST usually holds each value once.`);return}
+  const left=v<n.v;code('bst',C,left?3:4);say('bst',`${v} is ${left?'smaller':'bigger'} than ${n.v}, so go <b>${left?'left':'right'}</b>.`);await wait(1.1);n=left?n.l:n.r;d++}
+ if(d>5){drawBST();return say('bst',`Inserting ${v} would go deeper than this canvas can show. Try another value. (Lopsided trees like this get slow, closer to O(n).)`)}
+ bst=bIns(bst,v);drawBST({[v]:'new'});code('bst',C,5);say('bst',`Reached an empty spot, so <b>${v}</b> goes here as a new leaf. It took ${d} comparisons, about the height of the tree: <b>O(log n)</b> when the tree is balanced.`)};
+ACT.bstSearch=async()=>{const v=val('bst-in'),C=PS.bst.search;let n=bst,c=0;code('bst',C,1);say('bst',`Search for ${v}, starting at the root.`);await wait(0.8);
+ while(n){c++;drawBST({[n.v]:'cur'});code('bst',C,3);say('bst',`Is ${n.v} the value we want (${v})?`);await wait(0.9);
+  if(v===n.v){drawBST({[v]:'found'});return say('bst',`Yes. Found <b>${v}</b> in ${c} steps. Each step rules out a whole side of the tree, which is why search is fast.`)}
+  const left=v<n.v;code('bst',C,left?4:5);say('bst',`No. ${v} is ${left?'smaller':'bigger'} than ${n.v}, so it can only be in the <b>${left?'left':'right'}</b> part. We never look at the other side.`);await wait(1.1);n=left?n.l:n.r}
+ drawBST();code('bst',C,6);say('bst',`Reached an empty spot, so <b>${v}</b> is not in the tree.`)};
+ACT.bstDelete=async()=>{const v=val('bst-in'),C=PS.bst.del;let n=bst;code('bst',C,1);
+ while(n&&n.v!==v){drawBST({[n.v]:'cur'});say('bst',`Looking for ${v}: it is ${v<n.v?'smaller':'bigger'} than ${n.v}, so go ${v<n.v?'left':'right'}.`);await wait(0.9);n=v<n.v?n.l:n.r}
+ if(!n){drawBST();return say('bst',`<b>${v}</b> is not in the tree.`)}
+ if(n.l&&n.r){let s=n.r;const hl={[v]:'del'};while(s.l)s=s.l;hl[s.v]='found';drawBST(hl);code('bst',C,5);say('bst',`${v} has two children, so we can't just remove it. Find the smallest value in its right side, <b>${s.v}</b> (green). It is the next value in sorted order.`);await wait(1.6);
+  code('bst',C,6);say('bst',`Copy ${s.v} into ${v}'s place, then delete the old ${s.v} node, which has at most one child.`);await wait(1.3)}
+ else{drawBST({[v]:'del'});code('bst',C,n.l||n.r?3:2);say('bst',n.l||n.r?`${v} has one child, so its parent links straight to that child.`:`${v} is a leaf (no children), so just remove it.`);await wait(1.3)}
+ bst=bDel(bst,v);drawBST();say('bst',`Deleted ${v}. Smaller-left, bigger-right still holds everywhere.`)};
+ACT.bstTraverse=async()=>{const t=$('#bst-trav').value,C=PS.bst[t],out=[],nm=$('#bst-trav').selectedOptions[0].text;
+ const f={in:function g(n){if(!n)return;g(n.l);out.push(n.v);g(n.r)},pre:function g(n){if(!n)return;out.push(n.v);g(n.l);g(n.r)},post:function g(n){if(!n)return;g(n.l);g(n.r);out.push(n.v)},
+  level:n=>{const q=n?[n]:[];while(q.length){const x=q.shift();out.push(x.v);if(x.l)q.push(x.l);if(x.r)q.push(x.r)}}};
+ f[t](bst);const hl={},seen=[],line={in:3,pre:2,post:4,level:4}[t];
+ const why={in:'the left side first, then the node itself, then the right side. For a BST this lists the values in sorted order',pre:'the node first, then its left side, then its right side. Handy for copying a tree',post:'both sides first, then the node. Handy for deleting a tree',level:'row by row from the top, using a queue'}[t];
+ code('bst',C,0);say('bst',`${nm} visits ${why}.`);await wait(1.4);
+ for(const v of out){for(const k in hl)hl[k]='done';hl[v]='cur';seen.push(v);drawBST(hl);code('bst',C,line);say('bst',`Visit <b>${v}</b>. Order so far: <code>[${seen.join(', ')}]</code>`);await wait(0.8)}
+ for(const k in hl)hl[k]='done';drawBST(hl);say('bst',`${nm} done: <code>[${seen.join(', ')}]</code>`)};
+ACT.bstRandom=async()=>{for(let tries=0;tries<50;tries++){bst=null;const used=new Set();while(used.size<12){const v=rnd(1,99);if(!used.has(v)){used.add(v);bst=bIns(bst,v)}}if(bHeight(bst)<=6)break}drawBST();say('bst','A random tree with 12 nodes.')};
+async function siftDown(i,mode='pop'){const C=PS.heap[mode],n=heap.length;while(true){const l=2*i+1,r=l+1;let m=i;if(l<n&&heap[l]<heap[m])m=l;if(r<n&&heap[r]<heap[m])m=r;
+ const hl={[i]:'cur'};if(l<n)hl[l]='cmp';if(r<n)hl[r]='cmp';drawHeap(hl);code('heap',C,mode==='pop'?5:2);
+ say('heap',l<n?`Compare ${heap[i]} with its children (${heap[l]}${r<n?' and '+heap[r]:''}). The smallest of them should sit on top.`:`${heap[i]} has no children.`);await wait(1.1);
+ if(m===i){code('heap',C,mode==='pop'?6:2);say('heap',l<n?`${heap[i]} is already the smallest, so it stays. Order is restored here.`:`${heap[i]} stays where it is.`);await wait(0.7);break}
+ [heap[i],heap[m]]=[heap[m],heap[i]];drawHeap({[m]:'new',[i]:'new'});code('heap',C,mode==='pop'?7:2);say('heap',`Swap with the smaller child (${heap[i]}). ${heap[m]} moves one level down.`);await wait(1);i=m}}
+ACT.heapPush=async()=>{if(heap.length>=15)return say('heap','This demo holds 15 items.');const v=val('heap-in'),C=PS.heap.push;heap.push(v);let i=heap.length-1;drawHeap({[i]:'new'});
+ code('heap',C,1);say('heap',`Add ${v} at the end of the array, which is the next free spot in the bottom row of the tree. Now move it up until its parent is smaller.`);await wait(1.3);
+ while(i>0){const p=(i-1)>>1;drawHeap({[i]:'cur',[p]:'cmp'});code('heap',C,4);say('heap',`Its parent is at index (${i} − 1) / 2 = ${p}, holding ${heap[p]}. Is the parent bigger than ${heap[i]}?`);await wait(1.1);
+  if(heap[p]<=heap[i]){code('heap',C,5);say('heap',`No (${heap[p]} ≤ ${heap[i]}), so every parent is smaller than its children again. Stop.`);await wait(0.7);break}
+  [heap[p],heap[i]]=[heap[i],heap[p]];drawHeap({[p]:'new'});code('heap',C,6);say('heap',`Yes, so swap them. ${heap[p]} moves up one level.`);await wait(1);i=p}
+ drawHeap({[i]:'found'});say('heap',`${v} is in place. It moved up at most the height of the tree: <b>O(log n)</b>. The smallest value is always at the top (index 0).`)};
+ACT.heapPop=async()=>{if(!heap.length)return say('heap','The heap is empty.');const C=PS.heap.pop,m=heap[0];drawHeap({0:'del'});code('heap',C,1);say('heap',`The smallest value is always at the top: <b>${m}</b>. Take it out.`);await wait(1.3);
+ const last=heap.pop();if(heap.length){heap[0]=last;drawHeap({0:'new'});code('heap',C,2);say('heap',`Fill the hole at the top with the last item, ${last}. That probably breaks the order, so move it down.`);await wait(1.3);await siftDown(0,'pop')}else drawHeap();
+ code('heap',C,8);say('heap',`Done: removed <b>${m}</b> in <b>O(log n)</b>.`)};
+ACT.heapify=async()=>{const C=PS.heap.heapify;heap=Array.from({length:12},()=>rnd(1,99));drawHeap();code('heap',C,0);say('heap','A random array. To turn it into a heap, fix each parent from the bottom up by moving it down. The bottom row has no children, so it is already fine.');await wait(1.6);
+ for(let i=(heap.length>>1)-1;i>=0;i--){code('heap',C,1);say('heap',`Fix the parent at index ${i} (${heap[i]}).`);await wait(0.7);await siftDown(i,'heapify')}
+ drawHeap();say('heap','Heap built: every parent is ≤ its children. This takes only <b>O(n)</b> overall.')};
+async function htWalk(k,C){const i=hf(k,ht.m);drawHT(i);code('hash',C,1);say('hash',`Turn the key into a bucket number: hash("${esc(k)}") mod ${ht.m} = <b>${i}</b>. The same key always gives the same number, so we only ever look in bucket ${i}.`);await wait(1.4);
+ for(let j=0;j<ht.b[i].length;j++){drawHT(i,[i,j],'cmp');code('hash',C,C===PS.hash.del?2:3);say('hash',`Bucket ${i} holds a short chain. Is "${esc(ht.b[i][j])}" the key "${esc(k)}"?`);await wait(1);if(ht.b[i][j]===k)return[i,j]}return[i,-1]}
+ACT.htInsert=async()=>{const k=htKey(),C=PS.hash.put;const [i,j]=await htWalk(k,C);if(j>=0){drawHT(i,[i,j],'found');return say('hash',`"${esc(k)}" is already here, so its value would just be updated.`)}
+ ht.b[i].push(k);drawHT(i,[i,ht.b[i].length-1],'new');code('hash',C,4);const lf=htN()/ht.m;say('hash',`Not there, so add "${esc(k)}" to bucket ${i}. Load factor = items ÷ buckets = ${htN()}/${ht.m} = <b>${lf.toFixed(2)}</b>.${lf>0.75?' That is above 0.75, so chains are getting long: time to resize.':''}`)};
+ACT.htGet=async()=>{const k=htKey(),C=PS.hash.get;const [i,j]=await htWalk(k,C);if(j>=0){drawHT(i,[i,j],'found');say('hash',`Found "${esc(k)}" after checking only bucket ${i}: <b>O(1)</b> on average.`)}else{drawHT(i);code('hash',C,4);say('hash',`"${esc(k)}" is not in bucket ${i}, so it is not in the table at all.`)}};
+ACT.htDel=async()=>{const k=htKey(),C=PS.hash.del;const [i,j]=await htWalk(k,C);if(j<0){drawHT(i);return say('hash',`"${esc(k)}" is not in the table.`)}
+ drawHT(i,[i,j],'del');code('hash',C,3);say('hash',`Found it. Unlink it from bucket ${i}'s chain.`);await wait(1.1);ht.b[i].splice(j,1);drawHT();say('hash',`Removed "${esc(k)}".`)};
+ACT.htRehash=async()=>{const C=PS.hash.resize,keys=ht.b.flat();ht.m=ht.m===7?14:7;code('hash',C,1);say('hash',`Change the number of buckets to ${ht.m}. Each key's bucket depends on the size, so every key must be placed again.`);await wait(1.3);
+ ht.b=Array.from({length:ht.m},()=>[]);drawHT();for(const k of keys){const b=hf(k,ht.m);ht.b[b].push(k);drawHT(b);code('hash',C,3);say('hash',`Put "${esc(k)}" into bucket ${b}.`);await wait(0.45)}
+ drawHT();say('hash',`Done: ${keys.length} keys over ${ht.m} buckets, load factor ${(keys.length/ht.m).toFixed(2)}. Resizing touches every key, <b>O(n)</b>, but it happens rarely. Click again to switch back.`)};
+
+/* ---------- Sorting, narrated ---------- */
+const SORTS={
+ bubble:{name:'Bubble sort',cx:['O(n)','O(n²)','O(n²)','O(1)','Yes'],idea:'Walk through the list comparing neighbours and swap any pair that is out of order. After each pass, the biggest remaining value has "bubbled" to the end.',code:['for i from 0 to n − 1:','  for j from 0 to n − 2 − i:','    if a[j] > a[j + 1]:','      swap a[j] and a[j + 1]','  a[n − 1 − i] is now in its final place'],
+  gen:function*(c){const a=c.a,n=a.length;for(let i=0;i<n;i++){let s=false;for(let j=0;j<n-1-i;j++){c.cmp++;const out=a[j]>a[j+1];yield{c:[j,j+1],l:2,m:`Compare neighbours ${a[j]} and ${a[j+1]}. ${out?`${a[j]} is bigger, so they are in the wrong order.`:'They are already in order, so leave them.'}`};
+   if(out){sw(a,j,j+1);c.swp++;s=true;yield{s:[j,j+1],l:3,m:`Swap them. The bigger value, ${a[j+1]}, moves one step to the right.`}}}
+   c.done.add(n-1-i);yield{l:4,m:`End of pass ${i+1}: the biggest remaining value, ${a[n-1-i]}, has reached the end. It is in its final place (green).`};if(!s){yield{l:4,m:'No swaps happened in this pass, so everything is already in order. Stop early.'};break}}}},
+ selection:{name:'Selection sort',cx:['O(n²)','O(n²)','O(n²)','O(1)','No'],idea:'Find the smallest value in the unsorted part and swap it to the front. Repeat for the next position.',code:['for i from 0 to n − 1:','  m = i                      # smallest so far','  for j from i + 1 to n − 1:','    if a[j] < a[m]: m = j','  swap a[i] and a[m]'],
+  gen:function*(c){const a=c.a,n=a.length;for(let i=0;i<n;i++){let m=i;yield{p:m,l:1,m:`Fill position ${i}. Start by assuming ${a[i]} (purple) is the smallest remaining value.`};
+   for(let j=i+1;j<n;j++){c.cmp++;const sm=a[j]<a[m];yield{c:[j],p:m,l:3,m:`Is ${a[j]} smaller than the smallest so far, ${a[m]}? ${sm?'Yes, remember it instead.':'No.'}`};if(sm)m=j}
+   if(m!==i){sw(a,i,m);c.swp++;yield{s:[i,m],l:4,m:`The smallest remaining value is ${a[i]}. Swap it into position ${i}.`}}else yield{l:4,m:`${a[i]} was already the smallest, so it stays at position ${i}.`};c.done.add(i)}}},
+ insertion:{name:'Insertion sort',cx:['O(n)','O(n²)','O(n²)','O(1)','Yes'],idea:'Like sorting playing cards in your hand: take the next card and slide it left until it sits in the right place among the cards already sorted.',code:['for i from 1 to n − 1:','  j = i','  while j > 0 and a[j − 1] > a[j]:','    swap a[j − 1] and a[j]','    j = j − 1'],
+  gen:function*(c){const a=c.a,n=a.length;for(let i=1;i<n;i++){let j=i;yield{p:i,l:0,m:`Everything left of position ${i} is sorted. Take ${a[i]} (purple) and slide it left into place.`};
+   while(j>0){c.cmp++;const out=a[j-1]>a[j];yield{c:[j-1,j],l:2,m:`Is ${a[j-1]} bigger than ${a[j]}? ${out?'Yes, so swap them.':`No, so ${a[j]} has found its place.`}`};if(out){sw(a,j-1,j);c.swp++;yield{s:[j-1,j],l:3,m:`Swapped. ${a[j-1]} moves one step left.`};j--}else break}}}},
+ merge:{name:'Merge sort',cx:['O(n log n)','O(n log n)','O(n log n)','O(n)','Yes'],idea:'Split the list in half again and again until each piece has one item, then merge the pieces back together in order. Merging two sorted lists is easy: keep taking the smaller front item.',code:['mergeSort(lo, hi):','  if lo >= hi: return       # one item is sorted','  mid = (lo + hi) / 2','  mergeSort(lo, mid), mergeSort(mid + 1, hi)','  merge: compare the front items of both halves','         and write the smaller one back, repeat'],
+  gen:function*(c){function* ms(lo,hi){if(hi<=lo)return;const mid=(lo+hi)>>1;yield{r:[lo,hi],l:2,m:`Split positions ${lo}–${hi} into two halves: ${lo}–${mid} and ${mid+1}–${hi}. Sort each half first.`};yield* ms(lo,mid);yield* ms(mid+1,hi);
+   const a=c.a,L=a.slice(lo,mid+1),R=a.slice(mid+1,hi+1);let i=0,j=0,k=lo;yield{r:[lo,hi],l:4,m:`Both halves are now sorted: [${L.join(', ')}] and [${R.join(', ')}]. Merge them.`};
+   while(i<L.length&&j<R.length){c.cmp++;const tl=L[i]<=R[j];yield{c:[k],r:[lo,hi],l:4,m:`Compare the front of each half: ${L[i]} vs ${R[j]}. Take the smaller one, ${tl?L[i]:R[j]}.`};a[k++]=tl?L[i++]:R[j++];c.swp++;yield{w:[k-1],r:[lo,hi],l:5,m:`Write ${a[k-1]} into position ${k-1}.`}}
+   while(i<L.length){a[k++]=L[i++];c.swp++;yield{w:[k-1],r:[lo,hi],l:5,m:`The right half is used up. Copy the rest of the left half: ${a[k-1]}.`}}
+   while(j<R.length){a[k++]=R[j++];c.swp++;yield{w:[k-1],r:[lo,hi],l:5,m:`The left half is used up. Copy the rest of the right half: ${a[k-1]}.`}}}yield* ms(0,c.a.length-1)}},
+ quick:{name:'Quick sort',cx:['O(n log n)','O(n log n)','O(n²)','O(log n)','No'],idea:'Pick a pivot value. Move everything smaller to its left and everything bigger to its right, which puts the pivot in its final place. Then do the same for each side.',code:['quickSort(lo, hi):','  if lo >= hi: return','  pivot = a[hi], i = lo','  for j from lo to hi − 1:','    if a[j] < pivot: swap a[i] and a[j], i = i + 1','  swap a[i] and a[hi]    # pivot lands in place','  quickSort(lo, i − 1), quickSort(i + 1, hi)'],
+  gen:function*(c){function* qs(lo,hi){if(lo>hi)return;if(lo===hi){c.done.add(lo);return}const a=c.a,pv=a[hi];let i=lo;yield{p:hi,r:[lo,hi],l:2,m:`Work on positions ${lo}–${hi}. Pick the last value, ${pv}, as the pivot (purple). Goal: smaller values to its left, bigger to its right.`};
+   for(let j=lo;j<hi;j++){c.cmp++;const sm=a[j]<pv;yield{c:[j],p:hi,r:[lo,hi],l:4,m:`Is ${a[j]} smaller than the pivot ${pv}? ${sm?'Yes, so move it to the "smaller" group on the left.':'No, so it stays in the "bigger" group.'}`};if(sm){sw(a,i,j);c.swp++;yield{s:[i,j],p:hi,r:[lo,hi],l:4,m:`Swap it into position ${i}, the end of the smaller group.`};i++}}
+   sw(a,i,hi);c.swp++;c.done.add(i);yield{s:[i,hi],r:[lo,hi],l:5,m:`Put the pivot ${pv} right after the smaller values, at position ${i}. It is now in its final place (green). Next, sort each side.`};yield* qs(lo,i-1);yield* qs(i+1,hi)}yield* qs(0,c.a.length-1)}},
+ heap:{name:'Heap sort',cx:['O(n log n)','O(n log n)','O(n log n)','O(1)','No'],idea:'First arrange the array as a max-heap, so the biggest value is at the front. Then repeatedly swap the biggest to the end and repair the heap.',code:['build a max-heap (every parent >= its children)','for end from n − 1 down to 1:','  swap a[0] (the largest) with a[end]','  a[end] is now in its final place','  sift a[0] down to repair the heap'],
+  gen:function*(c){const a=c.a,n=a.length;function* sift(i,m){while(true){const l=2*i+1,r=l+1;let g=i;if(l<m){c.cmp++;if(a[l]>a[g])g=l}if(r<m){c.cmp++;if(a[r]>a[g])g=r}if(l>=m)return;
+    yield{c:[i,l,...(r<m?[r]:[])],l:4,m:`Compare ${a[i]} with its children ${a[l]}${r<m?' and '+a[r]:''}. ${g===i?`${a[i]} is the largest, so it stays.`:`Swap it with the larger child, ${a[g]}.`}`};if(g===i)return;sw(a,i,g);c.swp++;yield{s:[i,g],l:4,m:'Swapped. Keep pushing it down.'};i=g}}
+   yield{l:0,m:'Step 1: rearrange the array into a max-heap, where every parent is at least as big as its children. The biggest value ends up at the front.'};for(let i=(n>>1)-1;i>=0;i--)yield* sift(i,n);
+   for(let e=n-1;e>0;e--){sw(a,0,e);c.swp++;c.done.add(e);yield{s:[0,e],l:2,m:`The biggest remaining value (${a[e]}) is at the front. Swap it to position ${e}. It is now final (green).`};yield* sift(0,e)}c.done.add(0)}}
+};
+function sortStep(){if(sorter.finished)return false;const r=sorter.gen.next(),C=SORTS[$('#sort-alg').value].code;
+ if(r.done){sorter.ctx.a.forEach((_,i)=>sorter.ctx.done.add(i));sorter.finished=true;drawBars({});code('sort',C,-1);say('sort',`Sorted! That took ${sorter.ctx.cmp} comparisons and ${sorter.ctx.swp} swaps or writes for ${sorter.ctx.a.length} items. Try another algorithm on the same numbers and compare.`);return false}
+ const st=r.value;drawBars(st);code('sort',C,st.l??-1);if(st.m)say('sort',st.m);return true}
+$('#sort-play').onclick=async()=>{if(sorter.playing){sorter.playing=false;if(waitRes)waitRes();return}if(sorter.finished)sortReset(false);sorter.playing=true;$('#sort-play').textContent='❚❚ Pause';
+ while(sorter.playing&&sortStep()){await wait(PACE==='fast'?0.15:0.6)}sorter.playing=false;$('#sort-play').textContent='▶ Play'};
+
+/* ---------- Binary search, narrated ---------- */
+$('#bs-run').onclick=()=>run(async()=>{const el=$('#bs-t');let t=parseInt(el.value,10);if(isNaN(t)){t=Math.random()<.6?bsA[rnd(0,15)]:rnd(1,99);el.value=t}
+ const mode=$('#bs-mode').value,C=PS.bs[mode];let steps=0;code('bs',C,0);
+ if(mode==='exact'){let lo=0,hi=bsA.length-1;drawBS(lo,hi);say('bs',`Find <b>${t}</b>. The numbers are sorted, so we can look in the middle and throw away half of them each time. <b>lo</b> and <b>hi</b> mark the part we still need to search.`);await wait(1.4);
+  while(lo<=hi){steps++;const mid=(lo+hi)>>1;drawBS(lo,hi,mid);code('bs',C,2);say('bs',`Step ${steps}: the middle of positions ${lo}–${hi} is position ${mid}, which holds <b>${bsA[mid]}</b>.`);await wait(1.1);
+   if(bsA[mid]===t){drawBS(lo,hi,-1,mid);code('bs',C,3);return say('bs',`That is the target. <b>Found it in ${steps} steps.</b> Checking one by one could take up to 16. With a million numbers, binary search needs only about 20 steps.`)}
+   const lt=bsA[mid]<t;code('bs',C,lt?4:5);say('bs',lt?`${bsA[mid]} is smaller than ${t}, so the target can only be to the <b>right</b>. Ignore positions ${lo}–${mid}: lo = ${mid+1}.`:`${bsA[mid]} is bigger than ${t}, so the target can only be to the <b>left</b>. Ignore positions ${mid}–${hi}: hi = ${mid-1}.`);
+   if(lt)lo=mid+1;else hi=mid-1;drawBS(lo,hi);await wait(1.4)}
+  drawBS();code('bs',C,6);say('bs',`lo (${lo}) has passed hi (${hi}), so there is nothing left to search: <b>${t} is not in the list</b>. If you added it, it would go at position ${lo}.`)}
+ else{let lo=0,hi=bsA.length;say('bs',`Find the first position whose value is <b>at least ${t}</b>. The answer could be anywhere from 0 up to ${hi} (just past the end).`);await wait(1.4);
+  while(lo<hi){steps++;const mid=(lo+hi)>>1;drawBS(lo,hi-1,mid);code('bs',C,2);say('bs',`Step ${steps}: the middle position is ${mid}, holding ${bsA[mid]}.`);await wait(1.1);const lt=bsA[mid]<t;code('bs',C,lt?3:4);
+   say('bs',lt?`${bsA[mid]} is smaller than ${t}, so the answer is further right: lo = ${mid+1}.`:`${bsA[mid]} is at least ${t}, so position ${mid} could be the answer, but there might be an earlier one: hi = ${mid}.`);if(lt)lo=mid+1;else hi=mid;await wait(1.3)}
+  drawBS(-1,-1,-1,lo<16?lo:-1);code('bs',C,5);say('bs',lo<16?`lo and hi met at position <b>${lo}</b> (value ${bsA[lo]}): the first value that is at least ${t}. The same idea solves "find the smallest X that works" problems.`:`Every value is smaller than ${t}, so the answer is ${lo}, just past the end.`)}});
+
+/* ---------- Graph search, narrated ---------- */
+const GINTRO={bfs:'<b>BFS</b> explores in rings: first every cell 1 step from the start, then every cell 2 steps away, and so on. It keeps a <b>queue</b> (first in, first out). Because it goes ring by ring, the first time it reaches the end is a shortest path.',
+ dfs:'<b>DFS</b> picks one direction and keeps going as far as it can, backing up only at dead ends. It keeps a <b>stack</b> (last in, first out). It finds a path, but usually not the shortest one.',
+ dijkstra:'<b>Dijkstra</b> always expands the cell with the smallest total cost from the start so far, using a priority queue. Brown cells cost 5 to enter, so it goes around them when that is cheaper.',
+ astar:'<b>A*</b> is Dijkstra plus a guess: it prefers cells that are cheap so far <i>and</i> look close to the end. That focus means it visits far fewer cells.'};
+const GLINES={bfs:[2,4,5,6],dfs:[2,5,6],dijkstra:[2,4,5,6],astar:[2,4,5,6]};
+function gNarr(alg,st){const [r,c]=st.u,at=`row ${r+1}, column ${c+1}`;if(st.end)return `Reached the end at ${at}!`;
+ if(alg==='bfs')return `Take the cell at ${at} from the front of the queue. ${st.add?`${st.add} new neighbor${st.add>1?'s join':' joins'} the back of the queue`:'All its neighbors were already seen'} (${st.size} waiting).`;
+ if(alg==='dfs')return `Take the cell at ${at} from the top of the stack and go deeper. ${st.add} neighbor${st.add===1?'':'s'} pushed on top (${st.size} on the stack).`;
+ if(alg==='dijkstra')return `The cheapest unvisited cell is at ${at}, cost ${st.d} from the start. ${st.add?`Found cheaper routes to ${st.add} neighbor${st.add>1?'s':''}.`:'No neighbor gets a cheaper route.'}`;
+ return `Best guess is the cell at ${at}: cost so far ${st.d} + estimated ${st.h} to go = ${st.d+st.h}. ${st.add?`Updated ${st.add} neighbor${st.add>1?'s':''}.`:''}`}
+function* gSearch(alg,prev){const end=K(GE);const cost=([r,c])=>G[r][c]===2?5:1;
+ if(alg==='bfs'){const q=[GS],seen=new Set([K(GS)]);let qi=0;while(qi<q.length){const u=q[qi++];if(K(u)===end){yield{u,end:true};return true}let add=0;for(const v of nb(u))if(!seen.has(K(v))){seen.add(K(v));prev.set(K(v),u);q.push(v);add++}yield{u,add,size:q.length-qi}}return false}
+ if(alg==='dfs'){const st=[[GS,null]],seen=new Set();while(st.length){const [u,p]=st.pop();if(seen.has(K(u)))continue;seen.add(K(u));if(p)prev.set(K(u),p);if(K(u)===end){yield{u,end:true};return true}let add=0;for(const v of nb(u).reverse())if(!seen.has(K(v))){st.push([v,u]);add++}yield{u,add,size:st.length}}return false}
+ const dist=new Map([[K(GS),0]]),pq=new PQ(),done=new Set(),hf=([r,c])=>alg==='astar'?Math.abs(r-GE[0])+Math.abs(c-GE[1]):0;pq.push([hf(GS),GS]);
+ while(pq.size){const [,u]=pq.pop();if(done.has(K(u)))continue;done.add(K(u));if(K(u)===end){yield{u,end:true};return true}let add=0;
+  for(const v of nb(u)){const nd=dist.get(K(u))+cost(v);if(nd<(dist.get(K(v))??Infinity)){dist.set(K(v),nd);prev.set(K(v),u);pq.push([nd+hf(v),v]);add++}}yield{u,add,size:pq.size,d:dist.get(K(u)),h:hf(u)}}return false}
+$('#g-run').onclick=()=>{if(gRunning)return;run(async()=>{gRunning=true;try{gClearPath();const alg=$('#g-alg').value,prev=new Map(),it=gSearch(alg,prev),C=PS.g[alg];let vis=0,res,last=null;
+ code('g',C,0);say('g',GINTRO[alg]);await wait(1.5);
+ while(true){const per=ff?60:PACE==='fast'?10:PACE==='normal'?2:1;let r;
+  for(let k=0;k<per;k++){r=it.next();if(r.done)break;const st=r.value,[y,x]=st.u;if(last)last.classList.remove('cur');last=cellEl(y,x);last.classList.add('visited','cur');vis++;code('g',C,st.end?3:GLINES[alg]);say('g',gNarr(alg,st)+(PACE==='slow'&&vis===10?' <span class="muted">(Speeding up now. Choose "Step by step" to follow every cell.)</span>':''))}
+  $('#g-vis').textContent=vis;if(r.done){res=r.value;break}
+  if(ff)continue;if(PACE==='step')await wait();else if(PACE==='slow')await wait(vis<10?0.7:0.05);else await sleep(16)}
+ if(last)last.classList.remove('cur');
+ if(!res){code('g',C,1);say('g','The queue ran out before reaching the end: there is no path, because the end is walled off.');return}
+ const path=[];let cur=GE;while(cur&&K(cur)!==K(GS)){path.push(cur);cur=prev.get(K(cur))}path.push(GS);path.reverse();
+ say('g','Found the end. Every cell remembered which cell it was reached from, so follow those links backwards from the end to the start. That is the path (yellow).');code('g',C,-1);await wait(1.2);
+ let cost=0;for(const [y,x] of path.slice(1)){cost+=G[y][x]===2?5:1;cellEl(y,x).classList.add('path');if(!ff)await sleep(18)}
+ $('#g-len').textContent=path.length-1;$('#g-cost').textContent=cost;
+ const notes={bfs:'BFS guarantees the fewest steps, but not the lowest cost when some cells cost more.',dfs:'DFS found <i>a</i> path, but it is usually not the shortest one.',dijkstra:'Dijkstra found the cheapest path.',astar:'A* found the cheapest path while visiting fewer cells than Dijkstra.'};
+ say('g',`${gInfo[alg][0]} visited <b>${vis}</b> cells. Path: ${path.length-1} steps, cost ${cost}. ${notes[alg]}`)}finally{gRunning=false}})};
+
+/* ---------- Gradient descent, narrated ---------- */
+async function gdRun(){const key=$('#gd-f').value,{f,g}=GDF[key],opt=$('#gd-opt').value,lr=gdLR(),C=PS.gd[opt];let [x,y]=gdStart;gdPath=[[x,y]];drawGD();
+ let vx=0,vy=0,mx=0,my=0,sx=0,sy=0;const b1=0.9,b2=0.999;let msg='';
+ code('gd',C,0);say('gd',`Start at (${x.toFixed(2)}, ${y.toFixed(2)}), where the loss is ${f(x,y).toFixed(3)}. Goal: reach the lowest point. At each step we measure the slope and step downhill.`);await wait(1.4);
+ for(let t=1;t<=120;t++){const [gx,gy]=g(x,y),L0=f(x,y),slow=PACE==='step'||t<=5;
+  if(Math.hypot(gx,gy)<1e-3){code('gd',C,C.length-1);msg=`<b>Converged</b> after ${t-1} steps at (${x.toFixed(2)}, ${y.toFixed(2)}): the ground is flat, so we are at a minimum. Loss ${f(x,y).toExponential(1)}.`;break}
+  if(slow){code('gd',C,2);say('gd',`Step ${t}: the slope here is (${gx.toFixed(2)}, ${gy.toFixed(2)}). Uphill is that way, so we will move the opposite way.`);await wait(1)}
+  let note='';
+  if(opt==='gd'){x-=lr*gx;y-=lr*gy;note=`Move by learning rate × slope = ${lr.toFixed(3)} × slope.`}
+  else if(opt==='mom'){vx=0.9*vx+gx;vy=0.9*vy+gy;x-=lr*vx;y-=lr*vy;note='Velocity keeps 90% of the previous step and adds the new slope, so it builds up speed in a consistent direction.'}
+  else{mx=b1*mx+(1-b1)*gx;my=b1*my+(1-b1)*gy;sx=b2*sx+(1-b2)*gx*gx;sy=b2*sy+(1-b2)*gy*gy;const c1=1-b1**t,c2=1-b2**t;x-=lr*(mx/c1)/(Math.sqrt(sx/c2)+1e-8);y-=lr*(my/c1)/(Math.sqrt(sy/c2)+1e-8);note='Adam divides by how steep each direction has been, so steep and flat directions get similar-sized steps.'}
+  gdPath.push([x,y]);drawGD();const L=f(x,y);
+  if(!isFinite(x)||Math.abs(x)>60||Math.abs(y)>60){code('gd',C,3);msg=`<b>Diverged</b> after ${t} steps. The learning rate (${lr.toFixed(3)}) is too large: each step overshoots the bottom and lands even higher on the other side.`;break}
+  code('gd',C,opt==='adam'?5:opt==='mom'?4:3);
+  say('gd',`Step ${t}: ${slow?note+' ':''}New position (${x.toFixed(2)}, ${y.toFixed(2)}). Loss ${L0.toFixed(4)} → ${L.toFixed(4)} ${L<L0?'(lower, good)':'(higher: overshot)'}.${PACE!=='step'&&t===5?' <span class="muted">Speeding up now: every remaining step repeats the same idea.</span>':''}`);
+  await wait(slow?1.1:0.05)}
+ if(!msg){const L=f(x,y);msg=L<1e-3?`<b>Converged</b> to (${x.toFixed(2)}, ${y.toFixed(2)}) with loss ${L.toExponential(1)}.`:`Stopped after 120 steps with loss ${L.toFixed(4)}. Still going downhill: try a larger learning rate${opt==='gd'?' or momentum':''}.`}
+ const div=msg.startsWith('<b>Diverged');
+ if(!div&&key==='two'&&isFinite(x)&&Math.abs(y)<0.2)msg+=` It settled in the ${x>0?'right':'left'} valley. Start on the other side of the middle and it finds the other one: with bumpy loss surfaces, the starting point matters.`;
+ if(!div&&key==='ravine'&&opt==='gd')msg+=' Notice the zig-zag: the slope points across the narrow valley rather than along it. Compare with momentum or Adam.';
+ drawGD();say('gd',msg)}
+
+/* ---------- K-means, narrated ---------- */
+async function kmStep(){const k=km.c.length;if(km.done)return say('km','Already converged: no point changes group any more. Try a different k or press New data.');
+ const ch=kmAssign();drawKM();code('km',PS.km,2);say('km',`<b>Assign:</b> each point measures its distance to all ${k} centroids (diamonds) and joins the nearest one, taking its colour. ${ch} point${ch===1?'':'s'} changed group.`);await wait(1.3);
+ if(ch===0&&km.it>0){km.done=true;code('km',PS.km,4);return say('km',`<b>Converged</b> after ${km.it} rounds: no point changed group, so the centroids won't move again. Inertia (total squared distance to centroids) is ${Math.round(kmInertia()).toLocaleString()}.`)}
+ kmUpdate();km.it++;drawKM();code('km',PS.km,3);say('km',`<b>Move:</b> each centroid jumps to the middle (average position) of the points in its group. Round ${km.it} done.`);await wait(1.1)}
+
+/* ---------- System design flows ---------- */
+function moveDot(dot,A,B,ms){return new Promise(res=>{if(ff){res();return}const t0=performance.now();function f(t){if(ff){res();return}const p=Math.min(1,(t-t0)/ms),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;dot.setAttribute('cx',A[2]+(B[2]-A[2])*e);dot.setAttribute('cy',A[3]+(B[3]-A[3])*e);p<1?requestAnimationFrame(f):res()}requestAnimationFrame(f)})}
+async function playFlow(k,fi){const d=SD[k],f=d.flows[fi],ol=$('#sd-steps-'+k);ol.innerHTML='';const act=new Set(),hot=new Set();
+ for(const [a,b,txt] of f.s){act.add(a);hot.add(a+'>'+b);drawSD(k,act,hot);$$('li',ol).forEach(li=>li.classList.remove('now'));const li=h(`<li class="now"><b>${d.nodes[a][0]} → ${d.nodes[b][0]}:</b> ${esc(txt)}</li>`);ol.append(li);
+  const dot=S('circle',{r:7,class:'dot',cx:d.nodes[a][2],cy:d.nodes[a][3]},$('#sd-svg-'+k));await moveDot(dot,d.nodes[a],d.nodes[b],Math.max(600,SPEED*0.8));act.add(b);drawSD(k,act,hot);await wait(0.9)}}
+
+TAB_HOOKS['ds:stack']=()=>{drawStack();code('stack',PS.stack.push)};TAB_HOOKS['ds:queue']=()=>{drawQueue();code('queue',PS.queue.enq)};TAB_HOOKS['ds:ll']=()=>{drawLL();code('ll',PS.ll.rev)};
+TAB_HOOKS['ds:bst']=()=>{drawBST();code('bst',PS.bst.search)};TAB_HOOKS['ds:heap']=()=>{drawHeap();code('heap',PS.heap.push)};TAB_HOOKS['ds:hash']=()=>{drawHT();code('hash',PS.hash.put)};
 
 /* =========================================================
    SORTING
    ========================================================= */
 function sw(a,i,j){[a[i],a[j]]=[a[j],a[i]]}
-const SORTS={
- bubble:{name:'Bubble sort',cx:['O(n)','O(n²)','O(n²)','O(1)','Yes'],idea:'Repeatedly swap adjacent items that are out of order. After each pass, the largest remaining item has "bubbled" to the end. Stop early if a pass makes no swaps.',
-  gen:function*(c){const a=c.a,n=a.length;for(let i=0;i<n;i++){let s=false;for(let j=0;j<n-1-i;j++){c.cmp++;yield{c:[j,j+1]};if(a[j]>a[j+1]){sw(a,j,j+1);c.swp++;s=true;yield{s:[j,j+1]}}}c.done.add(n-1-i);if(!s)break}}},
- selection:{name:'Selection sort',cx:['O(n²)','O(n²)','O(n²)','O(1)','No'],idea:'Find the minimum of the unsorted part and swap it into the next position. It makes very few swaps (at most n−1).',
-  gen:function*(c){const a=c.a,n=a.length;for(let i=0;i<n;i++){let m=i;for(let j=i+1;j<n;j++){c.cmp++;yield{c:[m,j],p:m};if(a[j]<a[m])m=j}if(m!==i){sw(a,i,m);c.swp++;yield{s:[i,m]}}c.done.add(i)}}},
- insertion:{name:'Insertion sort',cx:['O(n)','O(n²)','O(n²)','O(1)','Yes'],idea:'Grow a sorted prefix by inserting each new item into its place, the way you sort playing cards. Very fast on nearly sorted data, which is why Timsort uses it for small runs.',
-  gen:function*(c){const a=c.a,n=a.length;for(let i=1;i<n;i++){let j=i;while(j>0){c.cmp++;yield{c:[j-1,j]};if(a[j-1]>a[j]){sw(a,j-1,j);c.swp++;yield{s:[j-1,j]};j--}else break}}}},
- merge:{name:'Merge sort',cx:['O(n log n)','O(n log n)','O(n log n)','O(n)','Yes'],idea:'Divide and conquer: split in half, sort each half recursively, then merge the two sorted halves. The time bound is guaranteed. Good for linked lists and external sorting.',
-  gen:function*(c){function* ms(lo,hi){if(hi<=lo)return;const mid=(lo+hi)>>1;yield* ms(lo,mid);yield* ms(mid+1,hi);const a=c.a,L=a.slice(lo,mid+1),R=a.slice(mid+1,hi+1);let i=0,j=0,k=lo;
-   while(i<L.length&&j<R.length){c.cmp++;yield{c:[lo+i,mid+1+j],r:[lo,hi]};a[k++]=L[i]<=R[j]?L[i++]:R[j++];c.swp++;yield{w:[k-1],r:[lo,hi]}}
-   while(i<L.length){a[k++]=L[i++];c.swp++;yield{w:[k-1],r:[lo,hi]}}while(j<R.length){a[k++]=R[j++];c.swp++;yield{w:[k-1],r:[lo,hi]}}}yield* ms(0,c.a.length-1)}},
- quick:{name:'Quick sort',cx:['O(n log n)','O(n log n)','O(n²)','O(log n)','No'],idea:'Pick a pivot (here the last item, Lomuto partition) and move smaller items to its left. The pivot is then in its final place. Recurse on each side. Use a random pivot to avoid the O(n²) worst case.',
-  gen:function*(c){function* qs(lo,hi){if(lo>hi)return;if(lo===hi){c.done.add(lo);return}const a=c.a,pv=a[hi];let i=lo;for(let j=lo;j<hi;j++){c.cmp++;yield{c:[j],p:hi,r:[lo,hi]};if(a[j]<pv){sw(a,i,j);c.swp++;yield{s:[i,j],p:hi,r:[lo,hi]};i++}}sw(a,i,hi);c.swp++;yield{s:[i,hi],r:[lo,hi]};c.done.add(i);yield* qs(lo,i-1);yield* qs(i+1,hi)}yield* qs(0,c.a.length-1)}},
- heap:{name:'Heap sort',cx:['O(n log n)','O(n log n)','O(n log n)','O(1)','No'],idea:'Build a max-heap, then repeatedly swap the root (the maximum) to the end and sift down the rest. In-place with a guaranteed O(n log n).',
-  gen:function*(c){const a=c.a,n=a.length;function* sift(i,m){while(true){const l=2*i+1,r=l+1;let g=i;if(l<m){c.cmp++;yield{c:[l,g]};if(a[l]>a[g])g=l}if(r<m){c.cmp++;yield{c:[r,g]};if(a[r]>a[g])g=r}if(g===i)return;sw(a,i,g);c.swp++;yield{s:[i,g]};i=g}}
-   for(let i=(n>>1)-1;i>=0;i--)yield* sift(i,n);for(let e=n-1;e>0;e--){sw(a,0,e);c.swp++;yield{s:[0,e]};c.done.add(e);yield* sift(0,e)}c.done.add(0)}}
-};
+
 const sorter={base:[],ctx:null,gen:null,playing:false,finished:false};
 (function(){const sel=$('#sort-alg');for(const [k,v] of Object.entries(SORTS))sel.append(new Option(v.name,k))})();
 function sortInfo(){const d=SORTS[$('#sort-alg').value];$('#sort-info').innerHTML=`<h3>${d.name}</h3><p style="font-size:14px">${d.idea}</p><table class="cx"><tr><td>Best</td><td><code>${d.cx[0]}</code></td></tr><tr><td>Average</td><td><code>${d.cx[1]}</code></td></tr><tr><td>Worst</td><td><code>${d.cx[2]}</code></td></tr><tr><td>Extra space</td><td><code>${d.cx[3]}</code></td></tr><tr><td>Stable</td><td><code>${d.cx[4]}</code></td></tr></table>
  <h4>Interview angle</h4><ul><li>You'll rarely implement a sort. You will be asked about trade-offs: stability, memory, worst case.</li><li>Quickselect (the partition step) finds the k-th element in O(n) on average.</li><li>The merge step is the core of Merge k Sorted Lists and counting inversions.</li></ul>`}
-function sortReset(shuffle){if(shuffle||!sorter.base.length){const n=+$('#sort-n').value;sorter.base=Array.from({length:n},()=>rnd(5,100))}
- sorter.playing=false;$('#sort-play').textContent='▶ Play';sorter.finished=false;sorter.ctx={a:sorter.base.slice(),done:new Set(),cmp:0,swp:0};sorter.gen=SORTS[$('#sort-alg').value].gen(sorter.ctx);drawBars({});sortInfo()}
+function sortReset(shuffle){if(waitRes&&!BUSY)waitRes();if(shuffle||!sorter.base.length){const n=+$('#sort-n').value;sorter.base=Array.from({length:n},()=>rnd(5,100))}
+ sorter.playing=false;$('#sort-play').textContent='▶ Play';sorter.finished=false;code('sort',SORTS[$('#sort-alg').value].code);say('sort','Press <b>Play</b> to watch, or <b>Step</b> to go one move at a time. Every move is explained here.');sorter.ctx={a:sorter.base.slice(),done:new Set(),cmp:0,swp:0};sorter.gen=SORTS[$('#sort-alg').value].gen(sorter.ctx);drawBars({});sortInfo()}
 function drawBars(st){const s=svg('sort-svg'),a=sorter.ctx.a,n=a.length,bw=760/n,c=new Set(st.c||[]),x=new Set([...(st.s||[]),...(st.w||[])]);
  a.forEach((v,i)=>{let cls='bar';if(sorter.ctx.done.has(i))cls+=' done';if(c.has(i))cls+=' cmp';if(x.has(i))cls+=' swap';if(st.p===i)cls+=' pivot';if(st.r&&(i<st.r[0]||i>st.r[1]))cls+=' out';
   const hgt=v/100*270;S('rect',{x:i*bw+1,y:290-hgt,width:Math.max(1,bw-2),height:hgt,rx:2,class:cls},s);if(n<=24)T(s,i*bw+bw/2,290-hgt-9,v,'lbl')});
  $('#sort-cmp').textContent=sorter.ctx.cmp;$('#sort-swp').textContent=sorter.ctx.swp}
-function sortStep(){if(sorter.finished)return false;const r=sorter.gen.next();if(r.done){sorter.ctx.a.forEach((_,i)=>sorter.ctx.done.add(i));sorter.finished=true;drawBars({});return false}drawBars(r.value);return true}
-$('#sort-play').onclick=async()=>{if(sorter.playing){sorter.playing=false;return}if(sorter.finished)sortReset(false);sorter.playing=true;$('#sort-play').textContent='❚❚ Pause';
- while(sorter.playing&&sortStep())await sleep(Math.max(4,SPEED/9));sorter.playing=false;$('#sort-play').textContent='▶ Play'};
-$('#sort-step').onclick=()=>{sorter.playing=false;sortStep()};
+
+
+$('#sort-step').onclick=()=>{if(sorter.playing){sorter.playing=false;if(waitRes)waitRes()}sortStep()};
 $('#sort-shuffle').onclick=()=>sortReset(true);
 $('#sort-n').oninput=()=>sortReset(true);
 $('#sort-alg').onchange=()=>sortReset(false);
@@ -921,16 +1156,9 @@ function drawBS(lo=-1,hi=-1,mid=-1,found=-1){const s=svg('bs-svg'),cw=44,x0=(760
  const lab={};if(lo>=0){(lab[lo]=lab[lo]||[]).push('lo');if(hi>=0&&hi<16)(lab[hi]=lab[hi]||[]).push('hi');if(mid>=0)(lab[mid]=lab[mid]||[]).push('mid')}
  for(const [i,v] of Object.entries(lab))T(s,x0+i*cw+(cw-4)/2,y+64,v.join('/'),'lblA')}
 $('#bs-new').onclick=()=>run(async()=>{bsNew();say('bs','New sorted array.')});
-$('#bs-run').onclick=()=>run(async()=>{const el=$('#bs-t');let t=parseInt(el.value,10);if(isNaN(t)){t=Math.random()<.6?bsA[rnd(0,15)]:rnd(1,99);el.value=t}
- const mode=$('#bs-mode').value;let steps=0;
- if(mode==='exact'){let lo=0,hi=bsA.length-1;while(lo<=hi){steps++;const mid=(lo+hi)>>1;drawBS(lo,hi,mid);
-   if(bsA[mid]===t){drawBS(lo,hi,-1,mid);return say('bs',`a[${mid}] = ${t}. <b>Found</b> in ${steps} steps (a linear scan could take up to 16).`)}
-   const lt=bsA[mid]<t;say('bs',`Step ${steps}: mid = (${lo}+${hi})/2 = ${mid}, a[mid] = ${bsA[mid]} ${lt?'&lt;':'&gt;'} ${t} → ${lt?'search the right half: lo = mid + 1':'search the left half: hi = mid − 1'}`);await sleep(SPEED*1.2);if(lt)lo=mid+1;else hi=mid-1}
-  drawBS();say('bs',`lo (${lo}) &gt; hi (${hi}), so <b>${t} is not present</b>. It would be inserted at index ${lo}.`)}
- else{let lo=0,hi=bsA.length;while(lo<hi){steps++;const mid=(lo+hi)>>1;drawBS(lo,hi-1,mid);const lt=bsA[mid]<t;
-   say('bs',`Step ${steps}: range [${lo}, ${hi}), mid = ${mid}, a[mid] = ${bsA[mid]} ${lt?'&lt;':'≥'} ${t} → ${lt?'lo = mid + 1':'hi = mid (mid could be the answer)'}`);await sleep(SPEED*1.2);if(lt)lo=mid+1;else hi=mid}
-  drawBS(-1,-1,-1,lo<16?lo:-1);say('bs',lo<16?`Lower bound = index <b>${lo}</b> (a[${lo}] = ${bsA[lo]}): the first value ≥ ${t}. This is the template behind "binary search on the answer".`:`Every value is &lt; ${t}, so the lower bound is ${lo} (past the end).`)}});
-TAB_HOOKS['algo:bs']=()=>{if(!bsA.length)bsNew()};
+
+TAB_HOOKS['algo:bs']=()=>{if(!bsA.length)bsNew();code('bs',PS.bs[$('#bs-mode').value])};
+$('#bs-mode').addEventListener('change',()=>code('bs',PS.bs[$('#bs-mode').value]));
 
 /* =========================================================
    GRAPH / PATHFINDING
@@ -957,28 +1185,14 @@ function nb([r,c]){const o=[];for(const [dr,dc] of [[-1,0],[0,1],[1,0],[0,-1]]){
 const K=([r,c])=>r*GC+c;
 class PQ{constructor(){this.h=[]}push(x){const h=this.h;h.push(x);let i=h.length-1;while(i>0){const p=(i-1)>>1;if(h[p][0]<=h[i][0])break;[h[p],h[i]]=[h[i],h[p]];i=p}}
  pop(){const h=this.h,top=h[0],last=h.pop();if(h.length){h[0]=last;let i=0;while(true){const l=2*i+1,r=l+1;let m=i;if(l<h.length&&h[l][0]<h[m][0])m=l;if(r<h.length&&h[r][0]<h[m][0])m=r;if(m===i)break;[h[m],h[i]]=[h[i],h[m]];i=m}}return top}get size(){return this.h.length}}
-function* gSearch(alg,prev){const end=K(GE);const cost=([r,c])=>G[r][c]===2?5:1;
- if(alg==='bfs'){const q=[GS],seen=new Set([K(GS)]);let qi=0;while(qi<q.length){const u=q[qi++];yield u;if(K(u)===end)return true;for(const v of nb(u))if(!seen.has(K(v))){seen.add(K(v));prev.set(K(v),u);q.push(v)}}return false}
- if(alg==='dfs'){const st=[[GS,null]],seen=new Set();while(st.length){const [u,p]=st.pop();if(seen.has(K(u)))continue;seen.add(K(u));if(p)prev.set(K(u),p);yield u;if(K(u)===end)return true;for(const v of nb(u).reverse())if(!seen.has(K(v)))st.push([v,u])}return false}
- const dist=new Map([[K(GS),0]]),pq=new PQ(),done=new Set(),hf=([r,c])=>alg==='astar'?Math.abs(r-GE[0])+Math.abs(c-GE[1]):0;pq.push([hf(GS),GS]);
- while(pq.size){const [,u]=pq.pop();if(done.has(K(u)))continue;done.add(K(u));yield u;if(K(u)===end)return true;
-  for(const v of nb(u)){const nd=dist.get(K(u))+cost(v);if(nd<(dist.get(K(v))??Infinity)){dist.set(K(v),nd);prev.set(K(v),u);pq.push([nd+hf(v),v])}}}return false}
-$('#g-run').onclick=async()=>{if(gRunning)return;gRunning=true;gClearPath();const alg=$('#g-alg').value,prev=new Map(),it=gSearch(alg,prev);let vis=0,res;
- say('g',`Running ${gInfo[alg][0]}…`);
- while(true){const per=Math.max(1,Math.round((1700-SPEED)/120));let r;for(let k=0;k<per;k++){r=it.next();if(r.done)break;const [y,x]=r.value;cellEl(y,x).classList.add('visited');vis++}
-  $('#g-vis').textContent=vis;if(r.done){res=r.value;break}await sleep(16)}
- if(!res){say('g','No path exists. The end is walled off.');gRunning=false;return}
- const path=[];let cur=GE;while(cur&&K(cur)!==K(GS)){path.push(cur);cur=prev.get(K(cur))}path.push(GS);path.reverse();
- let cost=0;for(const [y,x] of path.slice(1)){cost+=G[y][x]===2?5:1;cellEl(y,x).classList.add('path');await sleep(18)}
- $('#g-len').textContent=path.length-1;$('#g-cost').textContent=cost;
- const notes={bfs:'BFS guarantees the fewest steps, but not the lowest cost when there are weights.',dfs:'DFS found <i>a</i> path, but it is usually not the shortest one.',dijkstra:'Dijkstra found the lowest-cost path.',astar:'A* found the lowest-cost path while visiting fewer cells than Dijkstra.'};
- say('g',`${gInfo[alg][0]} visited <b>${vis}</b> cells. Path: ${path.length-1} steps, cost ${cost}. ${notes[alg]}`);gRunning=false};
+
+
 $('#g-walls').onclick=()=>{if(gRunning)return;gClearPath();for(let r=0;r<GR;r++)for(let c=0;c<GC;c++)G[r][c]=Math.random()<.28?1:(G[r][c]===2?2:0);G[GS[0]][GS[1]]=0;G[GE[0]][GE[1]]=0;gPaint()};
 $('#g-weights').onclick=()=>{if(gRunning)return;gClearPath();for(let r=0;r<GR;r++)for(let c=0;c<GC;c++)if(G[r][c]!==1&&Math.random()<.25)G[r][c]=2;G[GS[0]][GS[1]]=0;G[GE[0]][GE[1]]=0;gPaint()};
 $('#g-clearpath').onclick=()=>{if(!gRunning)gClearPath()};
 $('#g-clear').onclick=()=>{if(gRunning)return;G=Array.from({length:GR},()=>Array(GC).fill(0));gClearPath();gPaint()};
-$('#g-alg').onchange=gInfoRender;
-TAB_HOOKS['algo:graph']=()=>{if(!G.length)gBuild();gInfoRender()};
+$('#g-alg').onchange=()=>{gInfoRender();code('g',PS.g[$('#g-alg').value])};
+TAB_HOOKS['algo:graph']=()=>{if(!G.length)gBuild();gInfoRender();code('g',PS.g[$('#g-alg').value])};
 
 /* =========================================================
    PATTERNS
@@ -1309,7 +1523,7 @@ const SD={
    ['Storage cost tiers','Hot (recent and popular), warm and cold (rarely watched). Keep fewer renditions for the long tail.']]}
 };
 function designPane(k,d,g){const types=[...new Set(Object.values(d.nodes).map(n=>n[1]))];return `<div class="pane" data-pane="${g}:${k}">
-  <div class="sd-layout"><div class="card"><div class="controls">${d.flows.map((f,i)=>`<button class="btn ${i?'':'pri'}" data-flow="${k}:${i}">▶ ${f.n}</button>`).join('')}<button class="btn" data-flow="${k}:reset">Reset</button><button class="btn" data-practice="${k}" style="margin-left:auto">✎ Practice this design</button></div>
+  <div class="sd-layout"><div class="card"><div class="controls">${d.flows.map((f,i)=>`<button class="btn ${i?'':'pri'}" data-flow="${k}:${i}">▶ ${f.n}</button>`).join('')}<button class="btn" data-flow="${k}:reset">Reset</button><button class="btn" data-practice="${k}" style="margin-left:auto">✎ Practice this design</button></div><div data-player></div>
    <svg id="sd-svg-${k}" class="vizsvg" viewBox="0 0 900 460"></svg><ol class="steps" id="sd-steps-${k}"></ol></div>
    <div class="card side" id="sd-info-${k}"><h3>Click any component</h3><p class="muted" style="font-size:14px">Each box shows why it exists and the trade-offs to mention in the interview.</p><h4>Legend</h4>${Object.entries(TYPE_NAMES).filter(([t])=>types.includes(t)).map(([t,n])=>`<div style="font-size:13px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${TYPE_COLORS[t]};margin-right:6px"></span>${n}</div>`).join('')}</div></div>
   <div class="grid3">
@@ -1354,10 +1568,8 @@ function drawSD(k,act=new Set(),hot=new Set(),sel=null){const d=SD[k],s=svg('sd-
   const ty=S('text',{x:n[2],y:n[3]-9,class:'ty','text-anchor':'middle','dominant-baseline':'central',fill:TYPE_COLORS[n[1]]},g);ty.textContent=TYPE_NAMES[n[1]].split(' /')[0];
   const nm=S('text',{x:n[2],y:n[3]+9,class:'nm','text-anchor':'middle','dominant-baseline':'central'},g);nm.textContent=n[0]}}
 function sdInfo(k,id){const n=SD[k].nodes[id];$('#sd-info-'+k).innerHTML=`<span class="pill" style="color:${TYPE_COLORS[n[1]]}">${TYPE_NAMES[n[1]]}</span><h3 style="margin-top:8px">${n[0]}</h3><p style="font-size:14px">${n[4]}</p><h4>Connected to</h4><ul>${SD[k].edges.filter(e=>e.includes(id)).map(e=>`<li>${SD[k].nodes[e[0]===id?e[1]:e[0]][0]}</li>`).join('')}</ul>`}
-function moveDot(dot,A,B,ms){return new Promise(res=>{const t0=performance.now();function f(t){const p=Math.min(1,(t-t0)/ms),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;dot.setAttribute('cx',A[2]+(B[2]-A[2])*e);dot.setAttribute('cy',A[3]+(B[3]-A[3])*e);p<1?requestAnimationFrame(f):res()}requestAnimationFrame(f)})}
-async function playFlow(k,fi){const d=SD[k],f=d.flows[fi],ol=$('#sd-steps-'+k);ol.innerHTML='';const act=new Set(),hot=new Set();
- for(const [a,b,txt] of f.s){act.add(a);hot.add(a+'>'+b);drawSD(k,act,hot);$$('li',ol).forEach(li=>li.classList.remove('now'));const li=h(`<li class="now"><b>${d.nodes[a][0]} → ${d.nodes[b][0]}:</b> ${esc(txt)}</li>`);ol.append(li);
-  const dot=S('circle',{r:7,class:'dot',cx:d.nodes[a][2],cy:d.nodes[a][3]},$('#sd-svg-'+k));await moveDot(dot,d.nodes[a],d.nodes[b],Math.max(450,SPEED*1.1));act.add(b);drawSD(k,act,hot);await sleep(SPEED*0.5)}}
+
+
 
 /* Guided system design practice */
 const li=x=>`<li>${x}</li>`;
@@ -1632,21 +1844,7 @@ function drawGDLoss(){const s=$('#gd-loss'),F=GDF[$('#gd-f').value].f;if(!s)retu
  const lg=L.map(v=>Math.log10(v+1e-6)),mx=Math.max(...lg),mn=Math.min(...lg),rng=mx-mn||1;
  s.innerHTML=`<line x1="30" y1="100" x2="290" y2="100" class="edge"/><line x1="30" y1="10" x2="30" y2="100" class="edge"/><text x="160" y="116" class="lbl" text-anchor="middle">step</text><text x="12" y="56" class="lbl" text-anchor="middle" transform="rotate(-90 12 56)">loss (log)</text>`+
  `<polyline points="${lg.map((v,i)=>(30+i/(lg.length-1)*260).toFixed(1)+','+(100-(v-mn)/rng*88).toFixed(1)).join(' ')}" fill="none" style="stroke:var(--orange)" stroke-width="2"/>`}
-async function gdRun(){const key=$('#gd-f').value,{f,g}=GDF[key],opt=$('#gd-opt').value,lr=gdLR();let [x,y]=gdStart;gdPath=[[x,y]];
- let vx=0,vy=0,mx=0,my=0,sx=0,sy=0;const b1=0.9,b2=0.999;let msg='';
- for(let t=1;t<=120;t++){const [gx,gy]=g(x,y);
-  if(Math.hypot(gx,gy)<1e-3){msg=`<b>Converged</b> after ${t-1} steps at (${x.toFixed(2)}, ${y.toFixed(2)}), loss ${f(x,y).toExponential(1)}.`;break}
-  if(opt==='gd'){x-=lr*gx;y-=lr*gy}
-  else if(opt==='mom'){vx=0.9*vx+gx;vy=0.9*vy+gy;x-=lr*vx;y-=lr*vy}
-  else{mx=b1*mx+(1-b1)*gx;my=b1*my+(1-b1)*gy;sx=b2*sx+(1-b2)*gx*gx;sy=b2*sy+(1-b2)*gy*gy;const c1=1-b1**t,c2=1-b2**t;x-=lr*(mx/c1)/(Math.sqrt(sx/c2)+1e-8);y-=lr*(my/c1)/(Math.sqrt(sy/c2)+1e-8)}
-  gdPath.push([x,y]);drawGD();say('gd',`Step ${t}: loss = ${f(x,y).toFixed(4)}, position (${x.toFixed(2)}, ${y.toFixed(2)})`);
-  if(!isFinite(x)||Math.abs(x)>60||Math.abs(y)>60){msg=`<b>Diverged</b> after ${t} steps. The learning rate (${lr.toFixed(3)}) is too large for how steep this surface is, so each step overshoots further.`;break}
-  await sleep(Math.max(25,SPEED/10))}
- if(!msg){const L=f(x,y);msg=L<1e-3?`<b>Converged</b> to (${x.toFixed(2)}, ${y.toFixed(2)}) with loss ${L.toExponential(1)}.`:`Stopped after 120 steps with loss ${L.toFixed(4)}. Still descending: try a larger learning rate${opt==='gd'?' or momentum':''}.`}
- const div=msg.startsWith('<b>Diverged');
- if(!div&&key==='two'&&isFinite(x)&&Math.abs(y)<0.2)msg+=` It settled in the ${x>0?'right':'left'} valley. Start on the other side of x = 0 and it finds the other one: with non-convex losses, initialization matters.`;
- if(!div&&key==='ravine'&&opt==='gd')msg+=' Notice the zig-zag across the narrow direction: the gradient points across the valley, not along it. Compare with momentum or Adam.';
- drawGD();say('gd',msg)}
+
 function gdLabel(){$('#gd-lrv').textContent=gdLR().toFixed(3)}
 
 /* ---- LLM sampling lab ---- */
@@ -1705,16 +1903,14 @@ function kmGen(){const nb=rnd(3,5),cs=Array.from({length:nb},()=>[rnd(100,620),r
 function d2(a,b){return(a[0]-b[0])**2+(a[1]-b[1])**2}
 function kmInitCentroids(pts,k,pp){if(!pp)return[...pts].sort(()=>Math.random()-.5).slice(0,k).map(p=>p.slice());
  const c=[pts[rnd(0,pts.length-1)].slice()];while(c.length<k){const D=pts.map(p=>Math.min(...c.map(q=>d2(p,q)))),S=D.reduce((a,b)=>a+b,0);let r=Math.random()*S,i=0;for(;i<pts.length;i++){r-=D[i];if(r<=0)break}c.push(pts[Math.min(i,pts.length-1)].slice())}return c}
-function kmInit(){const k=+$('#km-k').value;km.c=kmInitCentroids(km.pts,k,$('#km-init').value==='pp');km.a=km.pts.map(()=>-1);km.it=0;km.done=false;drawKM();say('km',`${k} centroids placed ${$('#km-init').value==='pp'?'with k-means++ (spread out, far from each other)':'on random points'}. Press Step to assign points, then move centroids.`)}
+function kmInit(){const k=+$('#km-k').value;km.c=kmInitCentroids(km.pts,k,$('#km-init').value==='pp');km.a=km.pts.map(()=>-1);km.it=0;km.done=false;drawKM();code('km',PS.km,0);say('km',`${k} centroids placed ${$('#km-init').value==='pp'?'with k-means++ (spread out, far from each other)':'on random points'}. Press Step to assign points, then move centroids.`)}
 function kmAssign(){let ch=0;km.a=km.pts.map((p,i)=>{let b=0,bd=Infinity;km.c.forEach((c,j)=>{const d=d2(p,c);if(d<bd){bd=d;b=j}});if(b!==km.a[i])ch++;return b});return ch}
 function kmUpdate(){km.c=km.c.map((c,j)=>{const m=km.pts.filter((_,i)=>km.a[i]===j);return m.length?[m.reduce((a,p)=>a+p[0],0)/m.length,m.reduce((a,p)=>a+p[1],0)/m.length]:c})}
 function kmInertia(pts=km.pts,c=km.c,a=km.a){return pts.reduce((s,p,i)=>s+(a[i]>=0?d2(p,c[a[i]]):0),0)}
 function drawKM(){const s=$('#km-svg');let html='';km.pts.forEach((p,i)=>{const a=km.a[i];html+=`<circle cx="${p[0]}" cy="${p[1]}" r="5" style="fill:${a>=0?KCOL[a%6]:'var(--node-stroke)'};fill-opacity:${a>=0?.75:.6}"/>`});
  km.c.forEach((c,j)=>{html+=`<g transform="translate(${c[0]},${c[1]})"><rect x="-11" y="-11" width="22" height="22" rx="4" transform="rotate(45)" style="fill:${KCOL[j%6]};stroke:var(--panel)" stroke-width="3"/></g>`});
  s.innerHTML=html;$('#km-stats').innerHTML=`<span>Iteration: <b>${km.it}</b></span><span>Inertia (sum of squared distances): <b>${km.a[0]>=0?Math.round(kmInertia()).toLocaleString():'–'}</b></span>`}
-async function kmStep(){if(km.done)return say('km','Converged: no point changed cluster. Try a different k or initialization.');const ch=kmAssign();drawKM();say('km',`<b>Assign:</b> each point joins its nearest centroid (${ch} changed).`);await sleep(SPEED);
- if(ch===0&&km.it>0){km.done=true;return say('km',`<b>Converged</b> after ${km.it} iterations. Inertia ${Math.round(kmInertia()).toLocaleString()}.`)}
- kmUpdate();km.it++;drawKM();say('km',`<b>Update:</b> each centroid moves to the mean of its points. Iteration ${km.it}.`);await sleep(SPEED*0.6)}
+
 async function kmRun(){for(let i=0;i<40&&!km.done;i++)await kmStep()}
 function kmElbow(){const out=[];for(let k=1;k<=8;k++){let best=Infinity;for(let r=0;r<4;r++){let c=kmInitCentroids(km.pts,k,true),a=km.pts.map(()=>-1);for(let it=0;it<50;it++){const na=km.pts.map(p=>{let b=0,bd=Infinity;c.forEach((q,j)=>{const d=d2(p,q);if(d<bd){bd=d;b=j}});return b});const same=na.every((v,i)=>v===a[i]);a=na;c=c.map((q,j)=>{const m=km.pts.filter((_,i)=>a[i]===j);return m.length?[m.reduce((s,p)=>s+p[0],0)/m.length,m.reduce((s,p)=>s+p[1],0)/m.length]:q});if(same)break}best=Math.min(best,kmInertia(km.pts,c,a))}out.push(best)}
  const mx=out[0],X=k=>30+(k-1)/7*250,Y=v=>110-v/mx*95;
@@ -1880,13 +2076,13 @@ Object.assign(SD,{
  for(const [k,d] of Object.entries(SD)){if(!d.ai)continue;tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));host.append(h(designPane(k,d,'aisd')));TAB_HOOKS['aisd:'+k]=()=>{if(!BUSY)drawSD(k)}}
  wireDesignHost(host);
  TAB_HOOKS['ai:design']=()=>{const b=$('[data-tabs=aisd] button.active');if(b)b.click()};
- TAB_HOOKS['ai:gd']=()=>{gdLabel();drawGD()};
+ TAB_HOOKS['ai:gd']=()=>{gdLabel();drawGD();code('gd',PS.gd[$('#gd-opt').value])};
  TAB_HOOKS['ai:sample']=()=>drawSP();
  TAB_HOOKS['ai:pr']=()=>{if(!prPts.length)prGen();else drawPR()};
  TAB_HOOKS['ai:km']=()=>{if(!km.pts.length)kmGen();else drawKM()};
  TAB_HOOKS['ai:code']=()=>renderAIProbs();
  $('#gd-f').onchange=()=>{gdStart=null;gdPath=[];drawGD();say('gd',GDF[$('#gd-f').value].n+'. Press Run.')};
- $('#gd-opt').onchange=()=>{gdPath=[];drawGD()};
+ $('#gd-opt').onchange=()=>{gdPath=[];drawGD();code('gd',PS.gd[$('#gd-opt').value])};
  $('#gd-lr').oninput=gdLabel;
  $('#gd-run').onclick=()=>run(gdRun);
  $('#gd-reset').onclick=()=>{if(BUSY)return;gdStart=null;gdPath=[];drawGD();say('gd','Reset to the default starting point.')};
@@ -1995,17 +2191,18 @@ $('#bk-export').onclick=()=>{const data={};try{for(let i=0;i<localStorage.length
 $('#bk-say').addEventListener('click',async e=>{if(e.target.id!=='bk-copy')return;try{await navigator.clipboard.writeText(bkJson);e.target.textContent='Copied ✓'}catch(_){e.target.textContent='Copy blocked'}});
 $('#bk-file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(o.app!=='interview-prep-lab'||!o.data)throw 0;let n=0;for(const [k,v] of Object.entries(o.data))if(k.startsWith('ipl_')){localStorage.setItem(k,v);n++}bkSay(`Imported ${n} items. Reloading…`);setTimeout(()=>location.reload(),700)}catch(_){bkSay('That file isn’t an Interview Prep Lab backup.')}e.target.value=''};
 const SECTIONS=['home','ds','algo','problems','system','behavioral','technical','ai'];
-function show(id){if(!SECTIONS.includes(id))id='home';$$('main>section').forEach(s=>s.hidden=s.id!=='sec-'+id);$$('#nav button[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
+function show(id){if(!SECTIONS.includes(id))id='home';interruptAnimations();$$('main>section').forEach(s=>s.hidden=s.id!=='sec-'+id);$$('#nav button[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='home')renderHome();if(id==='problems')renderProbs();if(id==='technical')renderFC();if(id==='behavioral'){renderBList();renderBEditor()}
  const sec=$('#sec-'+id),act=sec&&$('.tabs button.active',sec);if(act)act.click();window.scrollTo(0,0)}
 $$('#nav button[data-go]').forEach(b=>b.onclick=()=>{if(location.hash.slice(1)===b.dataset.go)show(b.dataset.go);else location.hash=b.dataset.go});
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
 $$('.tabs').forEach(tb=>{const g=tb.dataset.tabs,btns=$$('button',tb);
- const sel=name=>{btns.forEach(b=>b.classList.toggle('active',b.dataset.tab===name));$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+name);(TAB_HOOKS[g+':'+name]||(()=>{}))()};
- btns.forEach(b=>b.onclick=()=>{if(!BUSY||b.classList.contains('active'))sel(b.dataset.tab)});btns[0].classList.add('active');$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+btns[0].dataset.tab)});
+ const sel=name=>{btns.forEach(b=>b.classList.toggle('active',b.dataset.tab===name));$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+name);whenIdle(()=>(TAB_HOOKS[g+':'+name]||(()=>{}))())};
+ btns.forEach(b=>b.onclick=()=>{if(BUSY&&b.classList.contains('active'))return;interruptAnimations();sel(b.dataset.tab)});btns[0].classList.add('active');$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+btns[0].dataset.tab)});
+$$('[data-player]').forEach(e=>e.outerHTML=PLAYER);refreshPlayers();
 show(location.hash.slice(1));
 applyAccent(accentName);
-if(!store.get('toured',0)&&(!location.hash||location.hash==='#home'))setTimeout(startTour,800);
+if(!store.get('toured',0)&&(!location.hash||location.hash==='#home'))setTimeout(()=>{if(!$('#sec-home').hidden&&!store.get('toured',0))startTour()},800);
 </script>
 </body>
 </html>
