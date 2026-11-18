@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Interview Prep Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e1016;--panel:#161a24;--panel2:#1c2130;--line:#283044;--text:#e6e8ef;--muted:#9097a8;--accent:#7c9cff;--green:#4fd1a5;--yellow:#f6c453;--red:#f2777a;--purple:#c792ea;--cyan:#56b6c2;--orange:#ff9e64}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,sans-serif}
+a{color:var(--accent)}
+code,pre{font-family:"JetBrains Mono",ui-monospace,monospace}
+pre{background:#0b0d13;border:1px solid var(--line);border-radius:8px;padding:12px;overflow:auto;font-size:12.5px;line-height:1.5;margin:8px 0 0}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+#nav{background:var(--panel);border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+.brand{font-weight:700;font-size:17px;padding:4px 10px 16px;display:flex;align-items:center;gap:8px}
+.brand .logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--green));display:grid;place-items:center;color:#0e1016;font-weight:800}
+#nav button{all:unset;cursor:pointer;padding:9px 12px;border-radius:8px;color:var(--muted);font-weight:500;display:flex;gap:10px;align-items:center}
+#nav button:hover{background:var(--panel2);color:var(--text)}
+#nav button.active{background:#232b45;color:var(--text)}
+#nav .ico{width:18px;text-align:center}
+.speed{margin-top:auto;padding:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.speed input{width:100%}
+main{padding:28px 32px 60px;max-width:1280px;width:100%}
+h1{font-size:26px;margin:0 0 4px}
+h2{font-size:20px;margin:0 0 4px}
+h3{font-size:16px;margin:0 0 8px}
+h4{font-size:13px;margin:14px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sub{color:var(--muted);margin:0 0 20px}
+.muted{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{all:unset;cursor:pointer;padding:7px 14px;border-radius:999px;border:1px solid var(--line);color:var(--muted);font-weight:500;font-size:14px}
+.tabs button:hover{color:var(--text)}
+.tabs button.active{background:var(--accent);border-color:var(--accent);color:#0e1016}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+input[type=text],input[type=number],input[type=search],select,textarea{background:#0f121a;border:1px solid var(--line);color:var(--text);border-radius:8px;padding:7px 10px;font:inherit;font-size:14px}
+input[type=number]{width:90px}
+textarea{width:100%;resize:vertical;min-height:70px}
+.btn{all:unset;cursor:pointer;padding:7px 13px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);font-size:14px;font-weight:500}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);color:#0e1016;border-color:var(--accent)}
+.btn.sm{padding:4px 9px;font-size:13px}
+.say{min-height:44px;margin-top:10px;padding:10px 12px;background:#0f121a;border-radius:8px;border-left:3px solid var(--accent);font-size:14px}
+.say code{color:var(--yellow)}
+.viz-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+.side ul{padding-left:18px;margin:4px 0}
+.side li{margin:3px 0;font-size:14px}
+table.cx{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+table.cx td,table.cx th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
+table.cx code{color:var(--green)}
+.vizsvg{width:100%;height:auto;display:block}
+svg .n{fill:#232a3d;stroke:#3a4360;stroke-width:1.5;transition:fill .25s,stroke .25s}
+svg .n.cur{fill:#2e3c78;stroke:var(--accent)}
+svg .n.cmp{fill:#5a4a1c;stroke:var(--yellow)}
+svg .n.new,svg .n.found{fill:#1d5246;stroke:var(--green)}
+svg .n.del{fill:#5c2328;stroke:var(--red)}
+svg .n.done{fill:#22362f;stroke:#2f8f70}
+svg .n.out{opacity:.28}
+svg .n.idx{fill:#191d2a}
+svg .t{fill:var(--text);font:600 14px Inter,sans-serif}
+svg .ts{fill:var(--text);font:600 12px Inter,sans-serif}
+svg .lbl{fill:var(--muted);font:500 12px Inter,sans-serif}
+svg .lblA{fill:var(--yellow);font:600 12px Inter,sans-serif}
+svg .edge{stroke:#46506d;stroke-width:2;fill:none}
+svg .arrow{stroke:#6b7699;stroke-width:2;fill:none}
+svg .arrow.rev{stroke:var(--accent)}
+svg .wall{stroke:#46506d;stroke-width:3;fill:none}
+svg .bar{fill:#3d4a6e}
+svg .bar.cmp{fill:var(--yellow)}
+svg .bar.swap{fill:var(--red)}
+svg .bar.done{fill:var(--green)}
+svg .bar.pivot{fill:var(--purple)}
+svg .bar.out{opacity:.35}
+.grid{display:grid;grid-template-columns:repeat(35,1fr);gap:1px;background:#252b3c;border:1px solid var(--line);border-radius:6px;overflow:hidden;touch-action:none;user-select:none}
+.cell{aspect-ratio:1;background:#121520;position:relative}
+.cell.wall{background:#5b6584}
+.cell.weight::after{content:"";position:absolute;inset:30%;border-radius:50%;background:#a77b2c}
+.cell.visited{background:#1f3866;animation:pop .35s}
+.cell.path{background:var(--yellow);animation:pop .35s}
+.cell.start{background:var(--green)}
+.cell.end{background:var(--red)}
+@keyframes pop{0%{transform:scale(.5)}100%{transform:scale(1)}}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:10px}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.stats{display:flex;gap:18px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-top:8px}
+.stats b{color:var(--text)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.cards .card h3{display:flex;justify-content:space-between;align-items:center}
+.pill{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);margin:2px 2px 0 0}
+.pill.Easy{color:var(--green);border-color:#2b5a4b}
+.pill.Medium{color:var(--yellow);border-color:#5a4a1c}
+.pill.Hard{color:var(--red);border-color:#5c2328}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--panel);margin-bottom:8px}
+details summary{cursor:pointer;font-weight:600}
+details p,details ul{margin:8px 0 0;font-size:14px}
+.home-hero{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:16px}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:var(--panel2);border-radius:10px;padding:12px}
+.stat .v{font-size:24px;font-weight:700}
+.stat .k{font-size:12.5px;color:var(--muted)}
+.bar-bg{height:6px;background:#0f121a;border-radius:4px;margin-top:8px;overflow:hidden}
+.bar-fg{height:100%;background:linear-gradient(90deg,var(--accent),var(--green))}
+.go{cursor:pointer;transition:border-color .2s}
+.go:hover{border-color:var(--accent)}
+.go .em{font-size:22px}
+table.probs{width:100%;border-collapse:collapse;font-size:14px}
+table.probs th{text-align:left;color:var(--muted);font-weight:500;font-size:12.5px;padding:8px 6px;border-bottom:1px solid var(--line)}
+table.probs td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+table.probs tr.solved td{opacity:.55}
+table.probs input{accent-color:var(--green);width:16px;height:16px}
+.sd-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start;margin-bottom:16px}
+.sdn{cursor:pointer}
+.sdn rect{fill:#1a1f2e;stroke-width:2}
+.sdn.act rect{fill:#253050}
+.sdn.sel rect{stroke-width:4}
+.sdn .nm{fill:var(--text);font:600 13px Inter,sans-serif}
+.sdn .ty{font:500 10.5px Inter,sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.sdedge{stroke:#343c55;stroke-width:2;fill:none}
+.sdedge.hot{stroke:var(--accent);stroke-width:2.5}
+.dot{fill:var(--yellow)}
+ol.steps{margin:10px 0 0;padding-left:22px;font-size:14px;min-height:24px}
+ol.steps li{margin:4px 0;color:var(--muted)}
+ol.steps li.now{color:var(--text)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.grid3 ul{padding-left:18px;margin:4px 0;font-size:14px}
+.tb-tokens{display:flex;gap:8px;margin:10px 0}
+.tb-tokens i{width:26px;height:26px;border-radius:50%;border:2px solid var(--green);display:block}
+.tb-tokens i.on{background:var(--green)}
+.tb-log{font-family:"JetBrains Mono",monospace;font-size:12.5px;max-height:150px;overflow:auto}
+.ok{color:var(--green)}.bad{color:var(--red)}
+.b-layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px;align-items:start}
+.qlist{max-height:72vh;overflow:auto}
+.qlist .cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:12px 0 4px}
+.qlist button{all:unset;cursor:pointer;display:block;padding:7px 10px;border-radius:8px;font-size:14px;width:100%;box-sizing:border-box}
+.qlist button:hover{background:var(--panel2)}
+.qlist button.active{background:#232b45}
+.qlist button .chk{color:var(--green);margin-right:4px}
+.star label{display:block;font-weight:600;margin:12px 0 4px}
+.star label span{color:var(--muted);font-weight:400;font-size:13px}
+.timer{font:600 28px "JetBrains Mono",monospace}
+.flash{min-height:240px;display:flex;flex-direction:column;justify-content:center;text-align:center;cursor:pointer;padding:28px;font-size:18px;perspective:800px}
+.flash .q{font-weight:600}
+.flash .a{font-size:15.5px;color:#cfd3de;text-align:left;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.ring-wrap{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
+@media (max-width:980px){
+ .app{grid-template-columns:1fr}
+ #nav{position:sticky;top:0;height:auto;flex-direction:row;overflow-x:auto;z-index:5;padding:8px}
+ .brand{display:none}.speed{display:none}
+ #nav button{white-space:nowrap}
+ main{padding:18px 14px 60px}
+ .viz-layout,.sd-layout,.b-layout,.home-hero,.grid3,.ring-wrap{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+ <defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b7699"/></marker>
+  <marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7c9cff"/></marker>
+ </defs>
+</svg>
+<div class="app">
+<nav id="nav">
+ <div class="brand"><div class="logo">IP</div>Interview Prep Lab</div>
+ <button data-go="home"><span class="ico">⌂</span>Home</button>
+ <button data-go="ds"><span class="ico">▦</span>Data Structures</button>
+ <button data-go="algo"><span class="ico">↯</span>Algorithms</button>
+ <button data-go="problems"><span class="ico">✓</span>Top Problems</button>
+ <button data-go="system"><span class="ico">⧉</span>System Design</button>
+ <button data-go="behavioral"><span class="ico">☺</span>Behavioral</button>
+ <button data-go="technical"><span class="ico">?</span>Technical Q&amp;A</button>
+ <div class="speed">Animation speed<input type="range" id="speed" min="1" max="10" value="6"></div>
+</nav>
+<main>
+
+<!-- HOME -->
+<section id="sec-home">
+ <div class="home-hero">
+  <div class="card">
+   <h1>Interview Prep Lab</h1>
+   <p class="sub" style="margin-bottom:12px">See data structures and algorithms run step by step, walk through system designs, practise behavioral stories with STAR, and drill core CS questions.</p>
+   <div class="stat-row" id="home-stats"></div>
+  </div>
+  <div class="card">
+   <h3>A 4-week plan</h3>
+   <ul style="padding-left:18px;margin:0;font-size:14px">
+    <li><b>Week 1:</b> Arrays, hashing, two pointers, sliding window, stacks. 2–3 problems a day.</li>
+    <li><b>Week 2:</b> Linked lists, trees, heaps, binary search. Watch each visualizer before solving.</li>
+    <li><b>Week 3:</b> Graphs, backtracking, DP. Start one system design every two days.</li>
+    <li><b>Week 4:</b> Mock interviews, behavioral stories (aim for 8), redo missed problems.</li>
+   </ul>
+  </div>
+ </div>
+ <div class="cards" id="home-cards"></div>
+</section>
+
+<!-- DATA STRUCTURES -->
+<section id="sec-ds" hidden>
+ <h1>Data Structures</h1>
+ <p class="sub">Run each operation and watch what happens. Leave the value box empty to use a random value.</p>
+ <div class="tabs" data-tabs="ds" id="ds-tabs"></div>
+ <div id="ds-panes"></div>
+</section>
+
+<!-- ALGORITHMS -->
+<section id="sec-algo" hidden>
+ <h1>Algorithms</h1>
+ <p class="sub">Sorting, binary search and graph search, step by step, plus templates for the 14 patterns that cover most coding rounds.</p>
+ <div class="tabs" data-tabs="algo">
+  <button data-tab="sort">Sorting</button><button data-tab="bs">Binary Search</button><button data-tab="graph">Graph / Pathfinding</button><button data-tab="patterns">Pattern Cheat Sheet</button>
+ </div>
+ <div class="pane" data-pane="algo:sort">
+  <div class="viz-layout">
+   <div class="card">
+    <div class="controls">
+     <select id="sort-alg"></select>
+     <label class="muted" style="font-size:13px">n <input type="range" id="sort-n" min="8" max="60" value="24"></label>
+     <button class="btn pri" id="sort-play">▶ Play</button>
+     <button class="btn" id="sort-step">Step</button>
+     <button class="btn" id="sort-shuffle">Shuffle</button>
+    </div>
+    <svg id="sort-svg" class="vizsvg" viewBox="0 0 760 300"></svg>
+    <div class="stats"><span>Comparisons: <b id="sort-cmp">0</b></span><span>Swaps / writes: <b id="sort-swp">0</b></span></div>
+    <div class="legend"><span style="--c:var(--yellow)">comparing</span><span style="--c:var(--red)">swap / write</span><span style="--c:var(--purple)">pivot</span><span style="--c:var(--green)">in final place</span></div>
+   </div>
+   <div class="card side" id="sort-info"></div>
+  </div>
+ </div>
+ <div class="pane" data-pane="algo:bs">
+  <div class="viz-layout">
+   <div class="card">
+    <div class="controls">
+     <input type="number" id="bs-t" placeholder="target">
+     <select id="bs-mode"><option value="exact">Exact match</option><option value="lower">Lower bound (first ≥ target)</option></select>
+     <button class="btn pri" id="bs-run">Search</button>
+     <button class="btn" id="bs-new">New array</button>
+    </div>
+    <svg id="bs-svg" class="vizsvg" viewBox="0 0 760 170"></svg>
+    <div class="say" id="bs-say">Enter a target and press Search. Each step cuts the search space in half.</div>
+   </div>
+   <div class="card side">
+    <h3>Binary Search</h3>
+    <p>Works on any <b>monotonic</b> condition, not only sorted arrays: "first day the condition holds", "smallest capacity that works" and similar.</p>
+    <table class="cx"><tr><td>Time</td><td><code>O(log n)</code></td></tr><tr><td>Space</td><td><code>O(1)</code></td></tr></table>
+    <h4>Common bugs</h4>
+    <ul><li>Off-by-one: decide whether <code>hi</code> is inclusive or exclusive and keep it that way.</li><li>Use <code>mid = lo + (hi - lo) // 2</code> in fixed-width languages to avoid overflow.</li><li>Infinite loop when <code>lo = mid</code> and mid rounds down.</li></ul>
+    <h4>Practice</h4>
+    <ul><li>Search in Rotated Sorted Array</li><li>Find Minimum in Rotated Sorted Array</li><li>Koko Eating Bananas (binary search on the answer)</li><li>Median of Two Sorted Arrays</li></ul>
+   </div>
+  </div>
+ </div>
+ <div class="pane" data-pane="algo:graph">
+  <div class="viz-layout">
+   <div class="card">
+    <div class="controls">
+     <select id="g-alg"><option value="bfs">BFS</option><option value="dfs">DFS</option><option value="dijkstra">Dijkstra</option><option value="astar">A*</option></select>
+     <button class="btn pri" id="g-run">▶ Run</button>
+     <select id="g-mode"><option value="wall">Draw: walls</option><option value="weight">Draw: weights (cost 5)</option><option value="erase">Erase</option><option value="start">Move start</option><option value="end">Move end</option></select>
+     <button class="btn" id="g-walls">Random walls</button>
+     <button class="btn" id="g-weights">Random weights</button>
+     <button class="btn" id="g-clearpath">Clear path</button>
+     <button class="btn" id="g-clear">Clear all</button>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="legend"><span style="--c:var(--green)">start</span><span style="--c:var(--red)">end</span><span style="--c:#5b6584">wall</span><span style="--c:#a77b2c">weight (cost 5)</span><span style="--c:#1f3866">visited</span><span style="--c:var(--yellow)">path</span></div>
+    <div class="stats"><span>Visited: <b id="g-vis">0</b></span><span>Path length: <b id="g-len">–</b></span><span>Path cost: <b id="g-cost">–</b></span></div>
+    <div class="say" id="g-say">Click and drag on the grid to draw walls, then run an algorithm.</div>
+   </div>
+   <div class="card side" id="g-info"></div>
+  </div>
+ </div>
+ <div class="pane" data-pane="algo:patterns"><div class="cards" id="patterns"></div></div>
+</section>
+
+<!-- PROBLEMS -->
+<section id="sec-problems" hidden>
+ <h1>Top Interview Problems</h1>
+ <p class="sub">45 problems that come up again and again at large tech companies, grouped by pattern. Ticks are saved in this browser.</p>
+ <div class="card">
+  <div class="controls">
+   <input type="search" id="p-q" placeholder="Search…">
+   <select id="p-diff"><option value="">All difficulties</option><option>Easy</option><option>Medium</option><option>Hard</option></select>
+   <select id="p-pat"><option value="">All patterns</option></select>
+   <select id="p-co"><option value="">All companies</option></select>
+   <label class="muted" style="font-size:14px"><input type="checkbox" id="p-hide"> Hide solved</label>
+  </div>
+  <div id="p-progress" class="muted" style="font-size:14px"></div>
+  <div class="bar-bg" style="margin-bottom:12px"><div class="bar-fg" id="p-bar" style="width:0"></div></div>
+  <div style="overflow:auto"><table class="probs"><thead><tr><th></th><th>#</th><th>Problem</th><th>Difficulty</th><th>Pattern</th><th>Often reported at</th></tr></thead><tbody id="p-body"></tbody></table></div>
+  <p class="muted" style="font-size:12.5px;margin-bottom:0">Company tags come from public interview reports and change over time, so use them as a guide only. Problem links open LeetCode.</p>
+ </div>
+</section>
+
+<!-- SYSTEM DESIGN -->
+<section id="sec-system" hidden>
+ <h1>System Design</h1>
+ <p class="sub">Play a request flow to watch it move through the architecture. Click any component to see why it's there.</p>
+ <div class="tabs" data-tabs="sd" id="sd-tabs"></div>
+ <div id="sd-panes"></div>
+</section>
+
+<!-- BEHAVIORAL -->
+<section id="sec-behavioral" hidden>
+ <h1>Behavioral</h1>
+ <p class="sub">Build a bank of STAR stories. Pick a question, write your story, then time yourself saying it aloud (aim for about 2 minutes).</p>
+ <div class="b-layout">
+  <div class="card qlist" id="b-list"></div>
+  <div>
+   <div class="card star" id="b-editor"></div>
+   <div class="card" style="margin-top:16px">
+    <h3>What interviewers listen for</h3>
+    <ul style="padding-left:18px;margin:0;font-size:14px">
+     <li>Spend about <b>60% on Action</b>. Keep Situation and Task short (about 20%) and finish with Result (about 20%).</li>
+     <li>Say <b>"I"</b>, not "we". They are hiring you, not your team.</li>
+     <li><b>Put numbers on results</b>: latency down 40%, saved 10 hours a week, unblocked 3 teams.</li>
+     <li>For failure questions, show <b>what you learned and what you changed</b> afterwards.</li>
+     <li>Prepare 6–8 strong stories that each fit several questions (conflict, ownership, failure, impact).</li>
+     <li>Amazon maps questions to its Leadership Principles. Google looks at "Googleyness" and leadership. Meta focuses on conflict, growth and impact.</li>
+    </ul>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- TECHNICAL -->
+<section id="sec-technical" hidden>
+ <h1>Technical Q&amp;A</h1>
+ <p class="sub">Flashcards on the CS fundamentals that come up in phone screens and technical rounds. Click a card to reveal the answer.</p>
+ <div class="chips" id="fc-topics"></div>
+ <div class="controls">
+  <label class="muted" style="font-size:14px"><input type="checkbox" id="fc-unknown"> Only cards I don't know yet</label>
+  <button class="btn sm" id="fc-shuffle">Shuffle</button>
+  <span class="muted" id="fc-count" style="font-size:14px"></span>
+ </div>
+ <div class="card flash" id="fc-card"></div>
+ <div class="controls" style="justify-content:center;margin-top:12px">
+  <button class="btn" id="fc-prev">← Prev</button>
+  <button class="btn" id="fc-again">Review again</button>
+  <button class="btn pri" id="fc-know">I know this ✓</button>
+  <button class="btn" id="fc-next">Next →</button>
+ </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* =========================================================
+   Helpers
+   ========================================================= */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem('ipl_'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('ipl_'+k,JSON.stringify(v))}catch(e){}}};
+const NS='http://www.w3.org/2000/svg';
+function S(tag,attrs={},parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+function T(parent,x,y,txt,cls='t'){const e=S('text',{x,y,class:cls,'text-anchor':'middle','dominant-baseline':'central'},parent);e.textContent=txt;return e}
+function h(html){const t=document.createElement('template');t.innerHTML=html.trim();return t.content.firstElementChild}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+let SPEED=700;
+const speedEl=$('#speed');
+function setSpeed(){SPEED=1600-(+speedEl.value)*150}
+speedEl.oninput=setSpeed;setSpeed();
+let BUSY=false;
+async function run(fn){if(BUSY)return;BUSY=true;try{await fn()}finally{BUSY=false}}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function val(id){const el=$('#'+id);const n=parseInt(el.value,10);el.value='';return isNaN(n)?rnd(1,99):n}
+function say(k,msg){$('#'+k+'-say').innerHTML=msg}
+function svg(id){const s=$('#'+id);s.innerHTML='';return s}
+function arrowLine(p,x1,y1,x2,y2,cls='arrow',mk='arr'){return S('line',{x1,y1,x2,y2,class:cls,'marker-end':`url(#${mk})`},p)}
+const TAB_HOOKS={};
+
+/* =========================================================
+   DATA STRUCTURES
+   ========================================================= */
+const DS={
+ stack:{name:'Stack',vb:'0 0 360 400',
+  controls:`<input type="number" id="stack-in" placeholder="value"><button class="btn pri" data-act="stackPush">push</button><button class="btn" data-act="stackPop">pop</button><button class="btn" data-act="stackPeek">peek</button>`,
+  hint:'LIFO: the last item in is the first one out.',
+  desc:'Last-In-First-Out. Think of a pile of plates or the browser back button. The call stack is also how recursion works under the hood.',
+  cx:[['push','O(1)'],['pop','O(1)'],['peek','O(1)'],['search','O(n)']],
+  tips:['Matching brackets and parsing expressions → stack','"Next greater element" → monotonic stack','Any recursive DFS can be rewritten with an explicit stack'],
+  probs:['Valid Parentheses','Min Stack','Daily Temperatures','Largest Rectangle in Histogram']},
+ queue:{name:'Queue',vb:'0 0 760 200',
+  controls:`<input type="number" id="queue-in" placeholder="value"><button class="btn pri" data-act="qEnq">enqueue</button><button class="btn" data-act="qDeq">dequeue</button><button class="btn" data-act="qPeek">front</button>`,
+  hint:'FIFO: items leave in the order they arrived.',
+  desc:'First-In-First-Out. Used for BFS, task scheduling, buffering, and message queues in system design.',
+  cx:[['enqueue','O(1)'],['dequeue','O(1)*'],['front','O(1)'],['search','O(n)']],
+  tips:['* Use a deque or circular buffer. In JS, array.shift() is O(n)','BFS on graphs and grids always uses a queue','Monotonic deque gives O(n) sliding-window max'],
+  probs:['Implement Queue using Stacks','Number of Islands (BFS)','Rotting Oranges','Sliding Window Maximum']},
+ ll:{name:'Linked List',vb:'0 0 900 220',
+  controls:`<input type="number" id="ll-in" placeholder="value"><button class="btn pri" data-act="llHead">insert head</button><button class="btn" data-act="llTail">insert tail</button><button class="btn" data-act="llDel">delete</button><button class="btn" data-act="llFind">search</button><button class="btn" data-act="llRev">reverse ↺</button>`,
+  hint:'Try <b>reverse</b>. It\'s one of the most frequently asked linked-list questions.',
+  desc:'Nodes connected by pointers. Insert and delete are O(1) once you have the node, but there is no random access.',
+  cx:[['access i-th','O(n)'],['insert head','O(1)'],['insert tail','O(n) / O(1) with tail ptr'],['delete (given node)','O(1)'],['search','O(n)']],
+  tips:['Use a dummy head node to remove edge cases','Fast and slow pointers: cycle detection, finding the middle','Draw the pointers before writing the code'],
+  probs:['Reverse Linked List','Merge Two Sorted Lists','Linked List Cycle','LRU Cache (hash map + doubly linked list)']},
+ bst:{name:'Binary Search Tree',vb:'0 0 760 360',
+  controls:`<input type="number" id="bst-in" placeholder="value"><button class="btn pri" data-act="bstInsert">insert</button><button class="btn" data-act="bstSearch">search</button><button class="btn" data-act="bstDelete">delete</button><select id="bst-trav"><option value="in">Inorder</option><option value="pre">Preorder</option><option value="post">Postorder</option><option value="level">Level order (BFS)</option></select><button class="btn" data-act="bstTraverse">traverse</button><button class="btn" data-act="bstRandom">random</button>`,
+  hint:'Left subtree &lt; node &lt; right subtree. An inorder traversal returns the values sorted.',
+  desc:'Every node is greater than all values in its left subtree and less than all values in its right subtree. Balanced variants (AVL, Red-Black) guarantee O(log n).',
+  cx:[['search','O(log n) avg / O(n) worst'],['insert','O(log n) avg'],['delete','O(log n) avg'],['traversal','O(n)']],
+  tips:['Most tree problems are "recurse left, recurse right, combine the results"','Validate a BST by passing (min, max) bounds down the tree','Level order traversal → BFS with a queue, one level at a time'],
+  probs:['Validate Binary Search Tree','Kth Smallest Element in a BST','Lowest Common Ancestor','Binary Tree Level Order Traversal']},
+ heap:{name:'Min-Heap',vb:'0 0 760 330',
+  controls:`<input type="number" id="heap-in" placeholder="value"><button class="btn pri" data-act="heapPush">insert</button><button class="btn" data-act="heapPop">extract-min</button><button class="btn" data-act="heapify">build heap (random)</button>`,
+  hint:'A complete binary tree stored in an array. Parent of i is <code>(i-1)/2</code>, children are <code>2i+1</code> and <code>2i+2</code>.',
+  desc:'A priority queue. The smallest item is always at the root. It is stored as a plain array, and the tree is only a way of looking at it.',
+  cx:[['peek min','O(1)'],['insert (sift up)','O(log n)'],['extract-min (sift down)','O(log n)'],['build heap','O(n)']],
+  tips:['"Top K" or "K-th largest" → a heap of size K','Merging K sorted lists → min-heap of the list heads','Running median → two heaps (a max-heap and a min-heap)','Dijkstra uses a min-heap'],
+  probs:['Kth Largest Element in an Array','Top K Frequent Elements','Merge k Sorted Lists','Find Median from Data Stream']},
+ hash:{name:'Hash Table',vb:'0 0 760 330',
+  controls:`<input type="text" id="ht-in" placeholder="key (e.g. apple)" style="width:150px"><button class="btn pri" data-act="htInsert">put</button><button class="btn" data-act="htGet">get</button><button class="btn" data-act="htDel">delete</button><button class="btn" data-act="htRehash">resize ×2</button>`,
+  hint:'Keys are hashed into buckets. When two keys land in the same bucket (a collision), they are chained in a list.',
+  desc:'Maps keys to values in O(1) on average. A hash function picks the bucket. Collisions are handled by chaining (shown here) or open addressing.',
+  cx:[['get / put / delete','O(1) avg'],['worst case (all collide)','O(n)'],['resize','O(n), amortized O(1)']],
+  tips:['Most of the time, the brute force fix is "add a hash map"','Two Sum, anagram grouping, frequency counting','Resize when the load factor goes above ~0.75','Hash set for O(1) "have I seen this?" checks'],
+  probs:['Two Sum','Group Anagrams','Longest Consecutive Sequence','Subarray Sum Equals K']}
+};
+(function buildDS(){
+ const tabs=$('#ds-tabs'),host=$('#ds-panes');
+ for(const [k,d] of Object.entries(DS)){
+  tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));
+  host.append(h(`<div class="pane" data-pane="ds:${k}"><div class="viz-layout">
+   <div class="card"><div class="controls">${d.controls}</div><svg id="${k}-svg" class="vizsvg" viewBox="${d.vb}"></svg><div class="say" id="${k}-say">${d.hint}</div></div>
+   <div class="card side"><h3>${d.name}</h3><p style="font-size:14px">${d.desc}</p>
+    <table class="cx">${d.cx.map(r=>`<tr><td>${r[0]}</td><td><code>${r[1]}</code></td></tr>`).join('')}</table>
+    <h4>Interview tips</h4><ul>${d.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <h4>Practice</h4><ul>${d.probs.map(t=>`<li>${t}</li>`).join('')}</ul></div></div></div>`));
+ }
+ host.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&ACT[b.dataset.act])run(ACT[b.dataset.act])});
+})();
+const ACT={};
+
+/* ---- Stack ---- */
+const stk=[12,5,30];
+function drawStack(hl={}){
+ const s=svg('stack-svg'),W=360,base=380,bw=140,bh=34,x=(W-bw)/2;
+ S('path',{d:`M${x-10} 30 V${base} H${x+bw+10} V30`,class:'wall'},s);
+ stk.forEach((v,i)=>{const y=base-6-(i+1)*(bh+4);S('rect',{x,y,width:bw,height:bh,rx:6,class:'n '+(hl[i]||'')},s);T(s,x+bw/2,y+bh/2,v);
+  if(i===stk.length-1)T(s,x+bw+44,y+bh/2,'← top','lblA')});
+ if(!stk.length)T(s,W/2,base-30,'empty','lbl');
+}
+ACT.stackPush=async()=>{const v=val('stack-in');if(stk.length>=9)return say('stack','Stack overflow (this demo holds 9 items).');stk.push(v);drawStack({[stk.length-1]:'new'});say('stack',`<code>push(${v})</code> placed on top. O(1).`)};
+ACT.stackPop=async()=>{if(!stk.length)return say('stack','Stack underflow: the stack is empty.');const i=stk.length-1;drawStack({[i]:'del'});say('stack',`<code>pop()</code> removes the top item, <b>${stk[i]}</b>.`);await sleep(SPEED);stk.pop();drawStack()};
+ACT.stackPeek=async()=>{if(!stk.length)return say('stack','Empty.');drawStack({[stk.length-1]:'cur'});say('stack',`<code>peek()</code> = <b>${stk[stk.length-1]}</b> (nothing is removed).`)};
+
+/* ---- Queue ---- */
+const que=[8,3,17];
+function drawQueue(hl={}){
+ const s=svg('queue-svg'),bw=64,x0=40,y=70;
+ que.forEach((v,i)=>{const x=x0+i*(bw+10);S('rect',{x,y,width:bw,height:44,rx:6,class:'n '+(hl[i]||'')},s);T(s,x+bw/2,y+22,v);
+  if(i===0)T(s,x+bw/2,y-18,'front','lblA');if(i===que.length-1)T(s,x+bw/2,y+64,'rear','lblA')});
+ if(!que.length)T(s,380,92,'empty','lbl');
+ arrowLine(s,20,170,120,170);T(s,70,186,'dequeue here','lbl');
+}
+ACT.qEnq=async()=>{const v=val('queue-in');if(que.length>=9)return say('queue','Queue is full (this demo holds 9 items).');que.push(v);drawQueue({[que.length-1]:'new'});say('queue',`<code>enqueue(${v})</code> joins at the rear.`)};
+ACT.qDeq=async()=>{if(!que.length)return say('queue','Queue is empty.');drawQueue({0:'del'});say('queue',`<code>dequeue()</code> returns <b>${que[0]}</b>, the item that has waited longest.`);await sleep(SPEED);que.shift();drawQueue()};
+ACT.qPeek=async()=>{if(!que.length)return say('queue','Empty.');drawQueue({0:'cur'});say('queue',`front = <b>${que[0]}</b>`)};
+
+/* ---- Linked list ---- */
+let ll=[4,8,15,16];
+function drawLL(hl={},ptr={},rev=null){
+ const s=svg('ll-svg'),w=62,hh=40,step=96,x0=80,y=80,n=ll.length;
+ const X=i=>x0+i*step;
+ if(n)T(s,X(0)+w/2,y-22,'head','lblA');
+ ll.forEach((v,i)=>{
+  S('rect',{x:X(i),y,width:w,height:hh,rx:6,class:'n '+(hl[i]||'')},s);T(s,X(i)+w/2,y+hh/2,v);
+  if(rev&&rev[i]){
+   if(i>0)arrowLine(s,X(i),y+hh/2+10,X(i-1)+w+2,y+hh/2+10,'arrow rev','arrA');
+   else{arrowLine(s,X(0),y+hh/2+10,X(0)-34,y+hh/2+10,'arrow rev','arrA')}
+  }else{
+   if(i<n-1)arrowLine(s,X(i)+w,y+hh/2-6,X(i+1)-2,y+hh/2-6);
+   else arrowLine(s,X(i)+w,y+hh/2-6,X(i)+w+30,y+hh/2-6);
+  }
+ });
+ if(n){const lastRev=rev&&rev[n-1];if(!lastRev)T(s,X(n-1)+w+52,y+hh/2-6,'null','lbl');if(rev&&rev[0])T(s,X(0)-56,y+hh/2+10,'null','lbl')}
+ else T(s,450,100,'empty list (head → null)','lbl');
+ const labels={};for(const [k,v] of Object.entries(ptr)){if(k>=0&&k<n)(labels[k]=labels[k]||[]).push(v)}
+ for(const [k,v] of Object.entries(labels))T(s,X(+k)+w/2,y+hh+26,v.join(', '),'lblA');
+}
+ACT.llHead=async()=>{if(ll.length>=8)return say('ll','This demo holds 8 nodes.');const v=val('ll-in');ll.unshift(v);drawLL({0:'new'});say('ll',`New node <b>${v}</b>.next = old head. head = new node. O(1).`)};
+ACT.llTail=async()=>{if(ll.length>=8)return say('ll','This demo holds 8 nodes.');const v=val('ll-in');
+ for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr'});say('ll',`Walking to the tail… node ${i} (O(n) without a tail pointer)`);await sleep(SPEED*0.6)}
+ ll.push(v);drawLL({[ll.length-1]:'new'});say('ll',`tail.next = new node <b>${v}</b>.`)};
+ACT.llFind=async()=>{const v=val('ll-in');for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr'});say('ll',`Is ${ll[i]} == ${v}?`);await sleep(SPEED*0.7);if(ll[i]===v){drawLL({[i]:'found'});return say('ll',`Found <b>${v}</b> at position ${i}.`)}}drawLL();say('ll',`<b>${v}</b> is not in the list.`)};
+ACT.llDel=async()=>{const v=val('ll-in');for(let i=0;i<ll.length;i++){drawLL({[i]:'cur'},{[i]:'curr',[i-1]:'prev'});say('ll',`Is ${ll[i]} == ${v}?`);await sleep(SPEED*0.7);
+  if(ll[i]===v){drawLL({[i]:'del'},{[i]:'curr',[i-1]:'prev'});say('ll',i?`prev.next = curr.next skips over <b>${v}</b>.`:`Deleting the head: head = head.next.`);await sleep(SPEED);ll.splice(i,1);drawLL();return}}
+ drawLL();say('ll',`<b>${v}</b> not found.`)};
+ACT.llRev=async()=>{const n=ll.length;if(n<2)return;const rev=Array(n).fill(false);
+ for(let i=0;i<n;i++){drawLL({[i]:'cur'},{[i-1]:'prev',[i]:'curr',[i+1]:'next'},rev);say('ll',`<code>next = curr.next; curr.next = prev;</code> node <b>${ll[i]}</b> now points back.`);await sleep(SPEED);rev[i]=true;drawLL({[i]:'new'},{[i]:'prev',[i+1]:'curr'},rev);await sleep(SPEED*0.7)}
+ ll.reverse();drawLL();say('ll','Done. <code>head = prev</code>. Time O(n), space O(1). Practise writing the recursive version as well.')};
+
+/* ---- BST ---- */
+let bst=null;
+function bIns(n,v){if(!n)return{v,l:null,r:null};if(v<n.v)n.l=bIns(n.l,v);else if(v>n.v)n.r=bIns(n.r,v);return n}
+function bDel(n,v){if(!n)return null;if(v<n.v)n.l=bDel(n.l,v);else if(v>n.v)n.r=bDel(n.r,v);else{if(!n.l)return n.r;if(!n.r)return n.l;let s=n.r;while(s.l)s=s.l;n.v=s.v;n.r=bDel(n.r,s.v)}return n}
+function bHeight(n){return n?1+Math.max(bHeight(n.l),bHeight(n.r)):0}
+function bCount(n){return n?1+bCount(n.l)+bCount(n.r):0}
+function drawBST(hl={}){
+ const s=svg('bst-svg'),pos=new Map(),ord=[];
+ (function f(n,d){if(!n)return;f(n.l,d+1);ord.push([n,d]);f(n.r,d+1)})(bst,0);
+ ord.forEach(([n,d],k)=>pos.set(n,{x:(k+1)*760/(ord.length+1),y:30+d*60}));
+ for(const [n] of ord)for(const c of [n.l,n.r])if(c){const a=pos.get(n),b=pos.get(c);S('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,class:'edge'},s)}
+ for(const [n] of ord){const p=pos.get(n);S('circle',{cx:p.x,cy:p.y,r:18,class:'n '+(hl[n.v]||'')},s);T(s,p.x,p.y,n.v,'ts')}
+ if(!bst)T(s,380,150,'empty tree','lbl');
+}
+[50,30,70,20,40,60,80,35,65].forEach(v=>bst=bIns(bst,v));
+ACT.bstInsert=async()=>{const v=val('bst-in');if(bCount(bst)>=31)return say('bst','The tree is full for this demo.');let n=bst,d=0;
+ while(n){drawBST({[n.v]:'cur'});if(v===n.v){say('bst',`${v} is already in the tree (a BST usually holds unique keys).`);return}
+  say('bst',`${v} ${v<n.v?'&lt;':'&gt;'} ${n.v} → go ${v<n.v?'left':'right'}`);await sleep(SPEED);n=v<n.v?n.l:n.r;d++}
+ if(d>5){drawBST();return say('bst',`Inserting ${v} would go deeper than this canvas can show. Try another value. (This is how an unbalanced BST degrades toward O(n).)`)}
+ bst=bIns(bst,v);drawBST({[v]:'new'});say('bst',`Inserted <b>${v}</b> as a leaf after ${d} comparisons.`)};
+ACT.bstSearch=async()=>{const v=val('bst-in');let n=bst,c=0;while(n){c++;drawBST({[n.v]:'cur'});if(v===n.v){drawBST({[v]:'found'});return say('bst',`Found <b>${v}</b> in ${c} steps.`)}
+  say('bst',`${v} ${v<n.v?'&lt;':'&gt;'} ${n.v} → go ${v<n.v?'left':'right'}`);await sleep(SPEED);n=v<n.v?n.l:n.r}
+ drawBST();say('bst',`Hit null. <b>${v}</b> is not in the tree.`)};
+ACT.bstDelete=async()=>{const v=val('bst-in');let n=bst;while(n&&n.v!==v){drawBST({[n.v]:'cur'});say('bst',`Looking for ${v}…`);await sleep(SPEED*0.7);n=v<n.v?n.l:n.r}
+ if(!n){drawBST();return say('bst',`<b>${v}</b> not found.`)}
+ if(n.l&&n.r){let s=n.r;const hl={[v]:'del'};while(s.l)s=s.l;hl[s.v]='found';drawBST(hl);say('bst',`${v} has two children. Replace it with its inorder successor <b>${s.v}</b> (the smallest value in the right subtree), then delete that successor.`);await sleep(SPEED*1.8)}
+ else{drawBST({[v]:'del'});say('bst',n.l||n.r?`${v} has one child. Link its parent directly to that child.`:`${v} is a leaf, so just remove it.`);await sleep(SPEED*1.3)}
+ bst=bDel(bst,v);drawBST()};
+ACT.bstTraverse=async()=>{const t=$('#bst-trav').value,out=[];
+ const f={in:function g(n){if(!n)return;g(n.l);out.push(n.v);g(n.r)},pre:function g(n){if(!n)return;out.push(n.v);g(n.l);g(n.r)},post:function g(n){if(!n)return;g(n.l);g(n.r);out.push(n.v)},
+  level:n=>{const q=n?[n]:[];while(q.length){const x=q.shift();out.push(x.v);if(x.l)q.push(x.l);if(x.r)q.push(x.r)}}};
+ f[t](bst);const hl={},seen=[];
+ for(const v of out){for(const k in hl)hl[k]='done';hl[v]='cur';seen.push(v);drawBST(hl);say('bst',`${$('#bst-trav').selectedOptions[0].text}: <code>[${seen.join(', ')}]</code>`);await sleep(SPEED*0.6)}
+ for(const k in hl)hl[k]='done';drawBST(hl)};
+ACT.bstRandom=async()=>{for(let tries=0;tries<50;tries++){bst=null;const used=new Set();while(used.size<12){const v=rnd(1,99);if(!used.has(v)){used.add(v);bst=bIns(bst,v)}}if(bHeight(bst)<=6)break}drawBST();say('bst','A random tree with 12 nodes.')};
+
+/* ---- Heap ---- */
+let heap=[3,9,5,14,10,8,7];
+function hPos(i){const lvl=Math.floor(Math.log2(i+1)),p=i-(2**lvl-1),cnt=2**lvl;return{x:(p+.5)*760/cnt,y:30+lvl*56}}
+function drawHeap(hl={}){
+ const s=svg('heap-svg');
+ heap.forEach((v,i)=>{if(i){const a=hPos(i),b=hPos((i-1)>>1);S('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,class:'edge'},s)}});
+ heap.forEach((v,i)=>{const p=hPos(i);S('circle',{cx:p.x,cy:p.y,r:18,class:'n '+(hl[i]||'')},s);T(s,p.x,p.y,v,'ts')});
+ const cw=46,x0=(760-heap.length*cw)/2;
+ T(s,380,236,'underlying array','lbl');
+ heap.forEach((v,i)=>{S('rect',{x:x0+i*cw,y:252,width:cw-4,height:36,rx:5,class:'n '+(hl[i]||'')},s);T(s,x0+i*cw+(cw-4)/2,270,v,'ts');T(s,x0+i*cw+(cw-4)/2,304,i,'lbl')});
+ if(!heap.length)T(s,380,120,'empty heap','lbl');
+}
+async function siftDown(i){const n=heap.length;while(true){const l=2*i+1,r=l+1;let m=i;if(l<n&&heap[l]<heap[m])m=l;if(r<n&&heap[r]<heap[m])m=r;
+ const hl={[i]:'cur'};if(l<n)hl[l]='cmp';if(r<n)hl[r]='cmp';drawHeap(hl);say('heap',`Compare ${heap[i]} with its children${l<n?' '+heap[l]:''}${r<n?', '+heap[r]:''}.`);await sleep(SPEED);
+ if(m===i){say('heap',`${heap[i]} is ≤ its children, so the heap property holds.`);break}
+ [heap[i],heap[m]]=[heap[m],heap[i]];drawHeap({[m]:'new',[i]:'new'});say('heap',`Swap it with the smaller child, ${heap[i]}.`);await sleep(SPEED*0.8);i=m}}
+ACT.heapPush=async()=>{if(heap.length>=15)return say('heap','This demo holds 15 items.');const v=val('heap-in');heap.push(v);let i=heap.length-1;drawHeap({[i]:'new'});say('heap',`Add ${v} at the end of the array, then sift it up.`);await sleep(SPEED);
+ while(i>0){const p=(i-1)>>1;drawHeap({[i]:'cur',[p]:'cmp'});say('heap',`Compare ${heap[i]} with its parent ${heap[p]}.`);await sleep(SPEED);if(heap[p]<=heap[i])break;
+  [heap[p],heap[i]]=[heap[i],heap[p]];drawHeap({[p]:'new'});say('heap',`${heap[p]} &lt; ${heap[i]}, so swap them.`);await sleep(SPEED*0.8);i=p}
+ drawHeap({[i]:'found'});say('heap',`${v} is in place. O(log n).`)};
+ACT.heapPop=async()=>{if(!heap.length)return say('heap','Heap is empty.');const m=heap[0];drawHeap({0:'del'});say('heap',`The minimum is the root: <b>${m}</b>. Move the last item to the root and sift it down.`);await sleep(SPEED);
+ const last=heap.pop();if(heap.length){heap[0]=last;drawHeap({0:'new'});await sleep(SPEED*0.7);await siftDown(0)}else drawHeap();say('heap',`Extracted <b>${m}</b>. O(log n).`)};
+ACT.heapify=async()=>{heap=Array.from({length:12},()=>rnd(1,99));drawHeap();say('heap','Random array. Build the heap by sifting down from the last parent up to the root. Total O(n).');await sleep(SPEED*1.5);
+ for(let i=(heap.length>>1)-1;i>=0;i--)await siftDown(i);drawHeap();say('heap','Heap built. Every parent ≤ its children.')};
+
+/* ---- Hash table ---- */
+let ht={m:7,b:[]};
+function hf(k,m){let x=0;for(const c of k)x=(x*31+c.charCodeAt(0))%m;return x}
+function htInit(keys){ht.b=Array.from({length:ht.m},()=>[]);keys.forEach(k=>ht.b[hf(k,ht.m)].push(k))}
+htInit(['apple','banana','cherry','grape','kiwi','mango']);
+function htN(){return ht.b.reduce((a,c)=>a+c.length,0)}
+function drawHT(hb=-1,item=null,cls='cur'){
+ const s=$('#hash-svg');s.setAttribute('viewBox',`0 0 760 ${20+ht.m*44}`);s.innerHTML='';
+ ht.b.forEach((ch,i)=>{const y=10+i*44;S('rect',{x:14,y,width:48,height:34,rx:5,class:'n idx '+(i===hb?'cur':'')},s);T(s,38,y+17,i,'ts');
+  if(!ch.length)T(s,100,y+17,'∅','lbl');
+  ch.slice(0,5).forEach((k,j)=>{const x=100+j*125;arrowLine(s,j?x-23:64,y+17,x-2,y+17);S('rect',{x,y,width:100,height:34,rx:5,class:'n '+(item&&item[0]===i&&item[1]===j?cls:'')},s);T(s,x+50,y+17,k.length>11?k.slice(0,10)+'…':k,'ts')});
+  if(ch.length>5)T(s,735,y+17,'+'+(ch.length-5),'lbl')});
+}
+function htKey(){const el=$('#ht-in');let k=el.value.trim().toLowerCase();el.value='';if(!k){const pool=['date','fig','lemon','lime','peach','pear','plum','melon','berry','olive','guava','papaya'];k=pool[rnd(0,pool.length-1)]}return k}
+function htMsg(k,i){return `hash("${esc(k)}") = Σ charCode·31ⁱ mod ${ht.m} = <b>${i}</b>`}
+async function htWalk(k){const i=hf(k,ht.m);drawHT(i);say('hash',htMsg(k,i));await sleep(SPEED);
+ for(let j=0;j<ht.b[i].length;j++){drawHT(i,[i,j],'cmp');say('hash',htMsg(k,i)+` → is "${esc(ht.b[i][j])}" == "${esc(k)}"?`);await sleep(SPEED*0.7);if(ht.b[i][j]===k)return[i,j]}return[i,-1]}
+ACT.htInsert=async()=>{const k=htKey();const [i,j]=await htWalk(k);if(j>=0){drawHT(i,[i,j],'found');return say('hash',`"${esc(k)}" already exists, so its value would be updated.`)}
+ ht.b[i].push(k);drawHT(i,[i,ht.b[i].length-1],'new');const lf=htN()/ht.m;say('hash',`${htMsg(k,i)}, appended to the chain. Load factor α = ${htN()}/${ht.m} = <b>${lf.toFixed(2)}</b>${lf>0.75?' (above 0.75, time to resize)':''}`)};
+ACT.htGet=async()=>{const k=htKey();const [i,j]=await htWalk(k);if(j>=0){drawHT(i,[i,j],'found');say('hash',`Found "${esc(k)}" in bucket ${i}.`)}else{drawHT(i);say('hash',`"${esc(k)}" is not in bucket ${i}, so it isn't in the table.`)}};
+ACT.htDel=async()=>{const k=htKey();const [i,j]=await htWalk(k);if(j<0){drawHT(i);return say('hash',`"${esc(k)}" not found.`)}drawHT(i,[i,j],'del');await sleep(SPEED);ht.b[i].splice(j,1);drawHT();say('hash',`Removed "${esc(k)}" from bucket ${i}.`)};
+ACT.htRehash=async()=>{const keys=ht.b.flat();ht.m=ht.m===7?14:7;htInit(keys);drawHT();say('hash',`Resized to ${ht.m} buckets and re-hashed every key, O(n). Load factor is now ${(keys.length/ht.m).toFixed(2)}. Click again to switch back.`)};
+
+TAB_HOOKS['ds:stack']=()=>drawStack();TAB_HOOKS['ds:queue']=()=>drawQueue();TAB_HOOKS['ds:ll']=()=>drawLL();
+TAB_HOOKS['ds:bst']=()=>drawBST();TAB_HOOKS['ds:heap']=()=>drawHeap();TAB_HOOKS['ds:hash']=()=>drawHT();
+
+/* =========================================================
+   SORTING
+   ========================================================= */
+function sw(a,i,j){[a[i],a[j]]=[a[j],a[i]]}
+const SORTS={
+ bubble:{name:'Bubble sort',cx:['O(n)','O(n²)','O(n²)','O(1)','Yes'],idea:'Repeatedly swap adjacent items that are out of order. After each pass, the largest remaining item has "bubbled" to the end. Stop early if a pass makes no swaps.',
+  gen:function*(c){const a=c.a,n=a.length;for(let i=0;i<n;i++){let s=false;for(let j=0;j<n-1-i;j++){c.cmp++;yield{c:[j,j+1]};if(a[j]>a[j+1]){sw(a,j,j+1);c.swp++;s=true;yield{s:[j,j+1]}}}c.done.add(n-1-i);if(!s)break}}},
+ selection:{name:'Selection sort',cx:['O(n²)','O(n²)','O(n²)','O(1)','No'],idea:'Find the minimum of the unsorted part and swap it into the next position. It makes very few swaps (at most n−1).',
+  gen:function*(c){const a=c.a,n=a.length;for(let i=0;i<n;i++){let m=i;for(let j=i+1;j<n;j++){c.cmp++;yield{c:[m,j],p:m};if(a[j]<a[m])m=j}if(m!==i){sw(a,i,m);c.swp++;yield{s:[i,m]}}c.done.add(i)}}},
+ insertion:{name:'Insertion sort',cx:['O(n)','O(n²)','O(n²)','O(1)','Yes'],idea:'Grow a sorted prefix by inserting each new item into its place, the way you sort playing cards. Very fast on nearly sorted data, which is why Timsort uses it for small runs.',
+  gen:function*(c){const a=c.a,n=a.length;for(let i=1;i<n;i++){let j=i;while(j>0){c.cmp++;yield{c:[j-1,j]};if(a[j-1]>a[j]){sw(a,j-1,j);c.swp++;yield{s:[j-1,j]};j--}else break}}}},
+ merge:{name:'Merge sort',cx:['O(n log n)','O(n log n)','O(n log n)','O(n)','Yes'],idea:'Divide and conquer: split in half, sort each half recursively, then merge the two sorted halves. The time bound is guaranteed. Good for linked lists and external sorting.',
+  gen:function*(c){function* ms(lo,hi){if(hi<=lo)return;const mid=(lo+hi)>>1;yield* ms(lo,mid);yield* ms(mid+1,hi);const a=c.a,L=a.slice(lo,mid+1),R=a.slice(mid+1,hi+1);let i=0,j=0,k=lo;
+   while(i<L.length&&j<R.length){c.cmp++;yield{c:[lo+i,mid+1+j],r:[lo,hi]};a[k++]=L[i]<=R[j]?L[i++]:R[j++];c.swp++;yield{w:[k-1],r:[lo,hi]}}
+   while(i<L.length){a[k++]=L[i++];c.swp++;yield{w:[k-1],r:[lo,hi]}}while(j<R.length){a[k++]=R[j++];c.swp++;yield{w:[k-1],r:[lo,hi]}}}yield* ms(0,c.a.length-1)}},
+ quick:{name:'Quick sort',cx:['O(n log n)','O(n log n)','O(n²)','O(log n)','No'],idea:'Pick a pivot (here the last item, Lomuto partition) and move smaller items to its left. The pivot is then in its final place. Recurse on each side. Use a random pivot to avoid the O(n²) worst case.',
+  gen:function*(c){function* qs(lo,hi){if(lo>hi)return;if(lo===hi){c.done.add(lo);return}const a=c.a,pv=a[hi];let i=lo;for(let j=lo;j<hi;j++){c.cmp++;yield{c:[j],p:hi,r:[lo,hi]};if(a[j]<pv){sw(a,i,j);c.swp++;yield{s:[i,j],p:hi,r:[lo,hi]};i++}}sw(a,i,hi);c.swp++;yield{s:[i,hi],r:[lo,hi]};c.done.add(i);yield* qs(lo,i-1);yield* qs(i+1,hi)}yield* qs(0,c.a.length-1)}},
+ heap:{name:'Heap sort',cx:['O(n log n)','O(n log n)','O(n log n)','O(1)','No'],idea:'Build a max-heap, then repeatedly swap the root (the maximum) to the end and sift down the rest. In-place with a guaranteed O(n log n).',
+  gen:function*(c){const a=c.a,n=a.length;function* sift(i,m){while(true){const l=2*i+1,r=l+1;let g=i;if(l<m){c.cmp++;yield{c:[l,g]};if(a[l]>a[g])g=l}if(r<m){c.cmp++;yield{c:[r,g]};if(a[r]>a[g])g=r}if(g===i)return;sw(a,i,g);c.swp++;yield{s:[i,g]};i=g}}
+   for(let i=(n>>1)-1;i>=0;i--)yield* sift(i,n);for(let e=n-1;e>0;e--){sw(a,0,e);c.swp++;yield{s:[0,e]};c.done.add(e);yield* sift(0,e)}c.done.add(0)}}
+};
+const sorter={base:[],ctx:null,gen:null,playing:false,finished:false};
+(function(){const sel=$('#sort-alg');for(const [k,v] of Object.entries(SORTS))sel.append(new Option(v.name,k))})();
+function sortInfo(){const d=SORTS[$('#sort-alg').value];$('#sort-info').innerHTML=`<h3>${d.name}</h3><p style="font-size:14px">${d.idea}</p><table class="cx"><tr><td>Best</td><td><code>${d.cx[0]}</code></td></tr><tr><td>Average</td><td><code>${d.cx[1]}</code></td></tr><tr><td>Worst</td><td><code>${d.cx[2]}</code></td></tr><tr><td>Extra space</td><td><code>${d.cx[3]}</code></td></tr><tr><td>Stable</td><td><code>${d.cx[4]}</code></td></tr></table>
+ <h4>Interview angle</h4><ul><li>You'll rarely implement a sort. You will be asked about trade-offs: stability, memory, worst case.</li><li>Quickselect (the partition step) finds the k-th element in O(n) on average.</li><li>The merge step is the core of Merge k Sorted Lists and counting inversions.</li></ul>`}
+function sortReset(shuffle){if(shuffle||!sorter.base.length){const n=+$('#sort-n').value;sorter.base=Array.from({length:n},()=>rnd(5,100))}
+ sorter.playing=false;$('#sort-play').textContent='▶ Play';sorter.finished=false;sorter.ctx={a:sorter.base.slice(),done:new Set(),cmp:0,swp:0};sorter.gen=SORTS[$('#sort-alg').value].gen(sorter.ctx);drawBars({});sortInfo()}
+function drawBars(st){const s=svg('sort-svg'),a=sorter.ctx.a,n=a.length,bw=760/n,c=new Set(st.c||[]),x=new Set([...(st.s||[]),...(st.w||[])]);
+ a.forEach((v,i)=>{let cls='bar';if(sorter.ctx.done.has(i))cls+=' done';if(c.has(i))cls+=' cmp';if(x.has(i))cls+=' swap';if(st.p===i)cls+=' pivot';if(st.r&&(i<st.r[0]||i>st.r[1]))cls+=' out';
+  const hgt=v/100*270;S('rect',{x:i*bw+1,y:290-hgt,width:Math.max(1,bw-2),height:hgt,rx:2,class:cls},s);if(n<=24)T(s,i*bw+bw/2,290-hgt-9,v,'lbl')});
+ $('#sort-cmp').textContent=sorter.ctx.cmp;$('#sort-swp').textContent=sorter.ctx.swp}
+function sortStep(){if(sorter.finished)return false;const r=sorter.gen.next();if(r.done){sorter.ctx.a.forEach((_,i)=>sorter.ctx.done.add(i));sorter.finished=true;drawBars({});return false}drawBars(r.value);return true}
+$('#sort-play').onclick=async()=>{if(sorter.playing){sorter.playing=false;return}if(sorter.finished)sortReset(false);sorter.playing=true;$('#sort-play').textContent='❚❚ Pause';
+ while(sorter.playing&&sortStep())await sleep(Math.max(4,SPEED/9));sorter.playing=false;$('#sort-play').textContent='▶ Play'};
+$('#sort-step').onclick=()=>{sorter.playing=false;sortStep()};
+$('#sort-shuffle').onclick=()=>sortReset(true);
+$('#sort-n').oninput=()=>sortReset(true);
+$('#sort-alg').onchange=()=>sortReset(false);
+TAB_HOOKS['algo:sort']=()=>{if(!sorter.ctx)sortReset(true)};
+
+/* =========================================================
+   BINARY SEARCH
+   ========================================================= */
+let bsA=[];
+function bsNew(){const s=new Set();while(s.size<16)s.add(rnd(1,99));bsA=[...s].sort((a,b)=>a-b);drawBS()}
+function drawBS(lo=-1,hi=-1,mid=-1,found=-1){const s=svg('bs-svg'),cw=44,x0=(760-16*cw)/2,y=50;
+ bsA.forEach((v,i)=>{const x=x0+i*cw;let cls='n';if(lo>=0&&(i<lo||i>hi))cls+=' out';if(i===mid)cls+=' cur';if(i===found)cls+=' found';
+  S('rect',{x,y,width:cw-4,height:40,rx:5,class:cls},s);T(s,x+(cw-4)/2,y+20,v,'ts');T(s,x+(cw-4)/2,y-14,i,'lbl')});
+ const lab={};if(lo>=0){(lab[lo]=lab[lo]||[]).push('lo');if(hi>=0&&hi<16)(lab[hi]=lab[hi]||[]).push('hi');if(mid>=0)(lab[mid]=lab[mid]||[]).push('mid')}
+ for(const [i,v] of Object.entries(lab))T(s,x0+i*cw+(cw-4)/2,y+64,v.join('/'),'lblA')}
+$('#bs-new').onclick=()=>run(async()=>{bsNew();say('bs','New sorted array.')});
+$('#bs-run').onclick=()=>run(async()=>{const el=$('#bs-t');let t=parseInt(el.value,10);if(isNaN(t)){t=Math.random()<.6?bsA[rnd(0,15)]:rnd(1,99);el.value=t}
+ const mode=$('#bs-mode').value;let steps=0;
+ if(mode==='exact'){let lo=0,hi=bsA.length-1;while(lo<=hi){steps++;const mid=(lo+hi)>>1;drawBS(lo,hi,mid);
+   if(bsA[mid]===t){drawBS(lo,hi,-1,mid);return say('bs',`a[${mid}] = ${t}. <b>Found</b> in ${steps} steps (a linear scan could take up to 16).`)}
+   const lt=bsA[mid]<t;say('bs',`Step ${steps}: mid = (${lo}+${hi})/2 = ${mid}, a[mid] = ${bsA[mid]} ${lt?'&lt;':'&gt;'} ${t} → ${lt?'search the right half: lo = mid + 1':'search the left half: hi = mid − 1'}`);await sleep(SPEED*1.2);if(lt)lo=mid+1;else hi=mid-1}
+  drawBS();say('bs',`lo (${lo}) &gt; hi (${hi}), so <b>${t} is not present</b>. It would be inserted at index ${lo}.`)}
+ else{let lo=0,hi=bsA.length;while(lo<hi){steps++;const mid=(lo+hi)>>1;drawBS(lo,hi-1,mid);const lt=bsA[mid]<t;
+   say('bs',`Step ${steps}: range [${lo}, ${hi}), mid = ${mid}, a[mid] = ${bsA[mid]} ${lt?'&lt;':'≥'} ${t} → ${lt?'lo = mid + 1':'hi = mid (mid could be the answer)'}`);await sleep(SPEED*1.2);if(lt)lo=mid+1;else hi=mid}
+  drawBS(-1,-1,-1,lo<16?lo:-1);say('bs',lo<16?`Lower bound = index <b>${lo}</b> (a[${lo}] = ${bsA[lo]}): the first value ≥ ${t}. This is the template behind "binary search on the answer".`:`Every value is &lt; ${t}, so the lower bound is ${lo} (past the end).`)}});
+TAB_HOOKS['algo:bs']=()=>{if(!bsA.length)bsNew()};
+
+/* =========================================================
+   GRAPH / PATHFINDING
+   ========================================================= */
+const GR=17,GC=35;let G=[],GS=[8,4],GE=[8,30],gRunning=false;
+const gInfo={bfs:['Breadth-First Search','Explores level by level using a queue. Finds the shortest path by number of edges in an unweighted graph. It ignores weights.','O(V + E)','Shortest path in a grid or unweighted graph, level order, "minimum steps", multi-source spreading (Rotting Oranges).'],
+ dfs:['Depth-First Search','Goes as deep as possible before backtracking, using a stack or recursion. It does not find shortest paths, as you can see here.','O(V + E)','Connected components, cycle detection, topological sort, backtracking, flood fill (Number of Islands).'],
+ dijkstra:['Dijkstra','Always expands the closest unvisited node using a min-heap. Gives the shortest path when all weights are non-negative.','O((V + E) log V)','Network delay time, cheapest route, any weighted shortest-path problem with non-negative weights.'],
+ astar:['A* Search','Dijkstra plus a heuristic (here Manhattan distance to the goal) that steers the search toward the target. It visits far fewer nodes.','O(E log V) worst case','Games and maps. In interviews, mention it as an optimisation over Dijkstra when you have a target.']};
+function gInfoRender(){const d=gInfo[$('#g-alg').value];$('#g-info').innerHTML=`<h3>${d[0]}</h3><p style="font-size:14px">${d[1]}</p><table class="cx"><tr><td>Time</td><td><code>${d[2]}</code></td></tr></table><h4>Use it for</h4><p style="font-size:14px">${d[3]}</p><h4>Try this</h4><ul><li>Add random walls, then compare how many cells BFS and A* visit.</li><li>Add weights. BFS goes straight through them, while Dijkstra goes around.</li></ul>`}
+function gBuild(){const g=$('#grid');g.innerHTML='';G=Array.from({length:GR},()=>Array(GC).fill(0));for(let r=0;r<GR;r++)for(let c=0;c<GC;c++){const d=document.createElement('div');d.className='cell';d.dataset.r=r;d.dataset.c=c;g.append(d)}gPaint()}
+function cellEl(r,c){return $('#grid').children[r*GC+c]}
+function gPaint(){for(let r=0;r<GR;r++)for(let c=0;c<GC;c++){const e=cellEl(r,c);e.classList.toggle('wall',G[r][c]===1);e.classList.toggle('weight',G[r][c]===2);e.classList.toggle('start',r===GS[0]&&c===GS[1]);e.classList.toggle('end',r===GE[0]&&c===GE[1])}}
+function gClearPath(){$$('#grid .cell').forEach(e=>e.classList.remove('visited','path'));$('#g-vis').textContent=0;$('#g-len').textContent='–';$('#g-cost').textContent='–'}
+let gDraw=false;
+function gApply(e){const t=e.target.closest('.cell');if(!t||gRunning)return;const r=+t.dataset.r,c=+t.dataset.c,m=$('#g-mode').value;
+ if((r===GS[0]&&c===GS[1])||(r===GE[0]&&c===GE[1]))return;
+ if(m==='start'){GS=[r,c];G[r][c]=0}else if(m==='end'){GE=[r,c];G[r][c]=0}else G[r][c]=m==='wall'?1:m==='weight'?2:0;gPaint()}
+$('#grid').addEventListener('pointerdown',e=>{gDraw=true;gClearPath();gApply(e)});
+$('#grid').addEventListener('pointerover',e=>{if(gDraw&&!['start','end'].includes($('#g-mode').value))gApply(e)});
+window.addEventListener('pointerup',()=>gDraw=false);
+$('#grid').addEventListener('pointermove',e=>{if(!gDraw||e.pointerType==='mouse')return;const el=document.elementFromPoint(e.clientX,e.clientY);if(el&&el.classList.contains('cell')&&!['start','end'].includes($('#g-mode').value))gApply({target:el})});
+function nb([r,c]){const o=[];for(const [dr,dc] of [[-1,0],[0,1],[1,0],[0,-1]]){const R=r+dr,C=c+dc;if(R>=0&&R<GR&&C>=0&&C<GC&&G[R][C]!==1)o.push([R,C])}return o}
+const K=([r,c])=>r*GC+c;
+class PQ{constructor(){this.h=[]}push(x){const h=this.h;h.push(x);let i=h.length-1;while(i>0){const p=(i-1)>>1;if(h[p][0]<=h[i][0])break;[h[p],h[i]]=[h[i],h[p]];i=p}}
+ pop(){const h=this.h,top=h[0],last=h.pop();if(h.length){h[0]=last;let i=0;while(true){const l=2*i+1,r=l+1;let m=i;if(l<h.length&&h[l][0]<h[m][0])m=l;if(r<h.length&&h[r][0]<h[m][0])m=r;if(m===i)break;[h[m],h[i]]=[h[i],h[m]];i=m}}return top}get size(){return this.h.length}}
+function* gSearch(alg,prev){const end=K(GE);const cost=([r,c])=>G[r][c]===2?5:1;
+ if(alg==='bfs'){const q=[GS],seen=new Set([K(GS)]);let qi=0;while(qi<q.length){const u=q[qi++];yield u;if(K(u)===end)return true;for(const v of nb(u))if(!seen.has(K(v))){seen.add(K(v));prev.set(K(v),u);q.push(v)}}return false}
+ if(alg==='dfs'){const st=[[GS,null]],seen=new Set();while(st.length){const [u,p]=st.pop();if(seen.has(K(u)))continue;seen.add(K(u));if(p)prev.set(K(u),p);yield u;if(K(u)===end)return true;for(const v of nb(u).reverse())if(!seen.has(K(v)))st.push([v,u])}return false}
+ const dist=new Map([[K(GS),0]]),pq=new PQ(),done=new Set(),hf=([r,c])=>alg==='astar'?Math.abs(r-GE[0])+Math.abs(c-GE[1]):0;pq.push([hf(GS),GS]);
+ while(pq.size){const [,u]=pq.pop();if(done.has(K(u)))continue;done.add(K(u));yield u;if(K(u)===end)return true;
+  for(const v of nb(u)){const nd=dist.get(K(u))+cost(v);if(nd<(dist.get(K(v))??Infinity)){dist.set(K(v),nd);prev.set(K(v),u);pq.push([nd+hf(v),v])}}}return false}
+$('#g-run').onclick=async()=>{if(gRunning)return;gRunning=true;gClearPath();const alg=$('#g-alg').value,prev=new Map(),it=gSearch(alg,prev);let vis=0,res;
+ say('g',`Running ${gInfo[alg][0]}…`);
+ while(true){const per=Math.max(1,Math.round((1700-SPEED)/120));let r;for(let k=0;k<per;k++){r=it.next();if(r.done)break;const [y,x]=r.value;cellEl(y,x).classList.add('visited');vis++}
+  $('#g-vis').textContent=vis;if(r.done){res=r.value;break}await sleep(16)}
+ if(!res){say('g','No path exists. The end is walled off.');gRunning=false;return}
+ const path=[];let cur=GE;while(cur&&K(cur)!==K(GS)){path.push(cur);cur=prev.get(K(cur))}path.push(GS);path.reverse();
+ let cost=0;for(const [y,x] of path.slice(1)){cost+=G[y][x]===2?5:1;cellEl(y,x).classList.add('path');await sleep(18)}
+ $('#g-len').textContent=path.length-1;$('#g-cost').textContent=cost;
+ const notes={bfs:'BFS guarantees the fewest steps, but not the lowest cost when there are weights.',dfs:'DFS found <i>a</i> path, but it is usually not the shortest one.',dijkstra:'Dijkstra found the lowest-cost path.',astar:'A* found the lowest-cost path while visiting fewer cells than Dijkstra.'};
+ say('g',`${gInfo[alg][0]} visited <b>${vis}</b> cells. Path: ${path.length-1} steps, cost ${cost}. ${notes[alg]}`);gRunning=false};
+$('#g-walls').onclick=()=>{if(gRunning)return;gClearPath();for(let r=0;r<GR;r++)for(let c=0;c<GC;c++)G[r][c]=Math.random()<.28?1:(G[r][c]===2?2:0);G[GS[0]][GS[1]]=0;G[GE[0]][GE[1]]=0;gPaint()};
+$('#g-weights').onclick=()=>{if(gRunning)return;gClearPath();for(let r=0;r<GR;r++)for(let c=0;c<GC;c++)if(G[r][c]!==1&&Math.random()<.25)G[r][c]=2;G[GS[0]][GS[1]]=0;G[GE[0]][GE[1]]=0;gPaint()};
+$('#g-clearpath').onclick=()=>{if(!gRunning)gClearPath()};
+$('#g-clear').onclick=()=>{if(gRunning)return;G=Array.from({length:GR},()=>Array(GC).fill(0));gClearPath();gPaint()};
+$('#g-alg').onchange=gInfoRender;
+TAB_HOOKS['algo:graph']=()=>{if(!G.length)gBuild();gInfoRender()};
+
+/* =========================================================
+   PATTERNS
+   ========================================================= */
+const PATTERNS=[
+ ['Two Pointers','Sorted array, pairs/triplets summing to a target, in-place partitioning, palindromes.',`l, r = 0, len(a) - 1
+while l < r:
+    s = a[l] + a[r]
+    if s == target: return [l, r]
+    if s < target: l += 1
+    else: r -= 1`,['3Sum','Container With Most Water','Trapping Rain Water']],
+ ['Sliding Window','"Longest/shortest contiguous subarray or substring such that…"',`l = 0
+for r in range(len(s)):
+    add(s[r])
+    while window_invalid():
+        remove(s[l]); l += 1
+    best = max(best, r - l + 1)`,['Longest Substring Without Repeating Characters','Minimum Window Substring']],
+ ['Fast & Slow Pointers','Cycle detection, middle of a list, duplicate-number problems.',`slow = fast = head
+while fast and fast.next:
+    slow, fast = slow.next, fast.next.next
+    if slow is fast: return True  # cycle`,['Linked List Cycle II','Find the Duplicate Number']],
+ ['Binary Search on Answer','"Minimise the maximum…", "smallest capacity/speed that works". A monotonic yes/no check.',`lo, hi = min_ans, max_ans
+while lo < hi:
+    mid = (lo + hi) // 2
+    if feasible(mid): hi = mid
+    else: lo = mid + 1
+return lo`,['Koko Eating Bananas','Capacity To Ship Packages']],
+ ['BFS','Shortest steps in an unweighted graph or grid, level order, spreading from many sources.',`q = deque([start]); seen = {start}
+while q:
+    node = q.popleft()
+    for nb in graph[node]:
+        if nb not in seen:
+            seen.add(nb); q.append(nb)`,['Number of Islands','Rotting Oranges','Word Ladder']],
+ ['DFS / Backtracking','"All combinations / permutations / subsets", constraint search.',`def backtrack(path, start):
+    if is_solution(path):
+        res.append(path[:]); return
+    for i in range(start, len(choices)):
+        path.append(choices[i])
+        backtrack(path, i + 1)
+        path.pop()   # undo the choice`,['Subsets','Permutations','Word Search','N-Queens']],
+ ['Dynamic Programming','Count ways or find min/max with overlapping subproblems. "Can I reach…?"',`dp = [0] * (n + 1)
+dp[0] = 1                      # base case
+for i in range(1, n + 1):
+    dp[i] = dp[i - 1] + (dp[i - 2] if i >= 2 else 0)
+return dp[n]`,['Climbing Stairs','Coin Change','Longest Increasing Subsequence','Edit Distance']],
+ ['Heap / Top-K','"K largest / most frequent / closest", merging sorted streams.',`h = []
+for x in nums:
+    heapq.heappush(h, x)
+    if len(h) > k: heapq.heappop(h)
+return h[0]   # k-th largest`,['Kth Largest Element','Top K Frequent Elements','Merge k Sorted Lists']],
+ ['Monotonic Stack','"Next greater / smaller element", spans, histogram areas.',`st = []   # indices with decreasing values
+for i, x in enumerate(a):
+    while st and a[st[-1]] < x:
+        j = st.pop(); ans[j] = i - j
+    st.append(i)`,['Daily Temperatures','Largest Rectangle in Histogram']],
+ ['Prefix Sum + Hash Map','"Number of subarrays with sum K", range-sum queries.',`count, s, seen = 0, 0, {0: 1}
+for x in nums:
+    s += x
+    count += seen.get(s - k, 0)
+    seen[s] = seen.get(s, 0) + 1`,['Subarray Sum Equals K','Continuous Subarray Sum']],
+ ['Intervals','Overlapping meetings or ranges. Sort by start time first.',`intervals.sort()
+out = [intervals[0]]
+for s, e in intervals[1:]:
+    if s <= out[-1][1]: out[-1][1] = max(out[-1][1], e)
+    else: out.append([s, e])`,['Merge Intervals','Meeting Rooms II','Insert Interval']],
+ ['Topological Sort','Dependencies and ordering, "course schedule", detecting a cycle in a DAG.',`q = deque(i for i in range(n) if indeg[i] == 0)
+order = []
+while q:
+    u = q.popleft(); order.append(u)
+    for v in g[u]:
+        indeg[v] -= 1
+        if indeg[v] == 0: q.append(v)
+return order if len(order) == n else []  # cycle`,['Course Schedule','Alien Dictionary']],
+ ['Union-Find','Dynamic connectivity, number of components, redundant edges.',`parent = list(range(n))
+def find(x):
+    while parent[x] != x:
+        parent[x] = parent[parent[x]]  # path compression
+        x = parent[x]
+    return x
+def union(a, b): parent[find(a)] = find(b)`,['Number of Provinces','Redundant Connection','Accounts Merge']],
+ ['Trie','Prefix search, autocomplete, word dictionaries.',`root = {}
+def insert(word):
+    node = root
+    for ch in word:
+        node = node.setdefault(ch, {})
+    node['$'] = True   # end of word`,['Implement Trie','Word Search II','Design Add and Search Words']]
+];
+$('#patterns').innerHTML=PATTERNS.map(([n,s,code,pr])=>`<div class="card"><h3>${n}</h3><p class="muted" style="font-size:14px;margin:0">${s}</p><details style="margin-top:10px;background:transparent"><summary>Python template</summary><pre>${esc(code)}</pre></details><div>${pr.map(p=>`<span class="pill">${p}</span>`).join('')}</div></div>`).join('');
+
+/* =========================================================
+   PROBLEMS
+   ========================================================= */
+const CO={G:'Google',A:'Amazon',M:'Meta',MS:'Microsoft',AP:'Apple',B:'Bloomberg'};
+const PROBS=[
+ [1,'Two Sum','two-sum','Easy','Hash Map','G A M MS AP B'],
+ [3,'Longest Substring Without Repeating Characters','longest-substring-without-repeating-characters','Medium','Sliding Window','A M MS B'],
+ [5,'Longest Palindromic Substring','longest-palindromic-substring','Medium','Two Pointers','A MS'],
+ [11,'Container With Most Water','container-with-most-water','Medium','Two Pointers','A G M'],
+ [15,'3Sum','3sum','Medium','Two Pointers','M A G MS'],
+ [20,'Valid Parentheses','valid-parentheses','Easy','Stack','A M G B'],
+ [21,'Merge Two Sorted Lists','merge-two-sorted-lists','Easy','Linked List','A MS AP'],
+ [23,'Merge k Sorted Lists','merge-k-sorted-lists','Hard','Heap','A M G MS'],
+ [33,'Search in Rotated Sorted Array','search-in-rotated-sorted-array','Medium','Binary Search','M A MS'],
+ [42,'Trapping Rain Water','trapping-rain-water','Hard','Two Pointers','A G B M'],
+ [46,'Permutations','permutations','Medium','Backtracking','M MS'],
+ [48,'Rotate Image','rotate-image','Medium','Matrix','A MS AP'],
+ [49,'Group Anagrams','group-anagrams','Medium','Hash Map','A B M'],
+ [53,'Maximum Subarray','maximum-subarray','Medium','Dynamic Programming','A MS AP'],
+ [56,'Merge Intervals','merge-intervals','Medium','Intervals','M G A B'],
+ [70,'Climbing Stairs','climbing-stairs','Easy','Dynamic Programming','A AP'],
+ [76,'Minimum Window Substring','minimum-window-substring','Hard','Sliding Window','M A G'],
+ [79,'Word Search','word-search','Medium','Backtracking','A MS B'],
+ [98,'Validate Binary Search Tree','validate-binary-search-tree','Medium','Trees','A M MS B'],
+ [102,'Binary Tree Level Order Traversal','binary-tree-level-order-traversal','Medium','BFS','A M MS'],
+ [121,'Best Time to Buy and Sell Stock','best-time-to-buy-and-sell-stock','Easy','Array','A M B MS'],
+ [124,'Binary Tree Maximum Path Sum','binary-tree-maximum-path-sum','Hard','Trees','M A G'],
+ [128,'Longest Consecutive Sequence','longest-consecutive-sequence','Medium','Hash Map','G A M'],
+ [138,'Copy List with Random Pointer','copy-list-with-random-pointer','Medium','Linked List','A M B'],
+ [139,'Word Break','word-break','Medium','Dynamic Programming','A G M'],
+ [146,'LRU Cache','lru-cache','Medium','Design','A M MS G B'],
+ [200,'Number of Islands','number-of-islands','Medium','BFS','A G M MS B'],
+ [206,'Reverse Linked List','reverse-linked-list','Easy','Linked List','A MS AP M'],
+ [207,'Course Schedule','course-schedule','Medium','Topological Sort','A G M'],
+ [208,'Implement Trie (Prefix Tree)','implement-trie-prefix-tree','Medium','Trie','G A MS'],
+ [215,'Kth Largest Element in an Array','kth-largest-element-in-an-array','Medium','Heap','M A G'],
+ [236,'Lowest Common Ancestor of a Binary Tree','lowest-common-ancestor-of-a-binary-tree','Medium','Trees','M A MS'],
+ [238,'Product of Array Except Self','product-of-array-except-self','Medium','Array','A M AP'],
+ [239,'Sliding Window Maximum','sliding-window-maximum','Hard','Monotonic Queue','A G'],
+ [253,'Meeting Rooms II','meeting-rooms-ii','Medium','Intervals','G M A B'],
+ [297,'Serialize and Deserialize Binary Tree','serialize-and-deserialize-binary-tree','Hard','Trees','A M G MS'],
+ [300,'Longest Increasing Subsequence','longest-increasing-subsequence','Medium','Dynamic Programming','G MS A'],
+ [322,'Coin Change','coin-change','Medium','Dynamic Programming','A G B'],
+ [347,'Top K Frequent Elements','top-k-frequent-elements','Medium','Heap','A M G'],
+ [394,'Decode String','decode-string','Medium','Stack','G A B'],
+ [560,'Subarray Sum Equals K','subarray-sum-equals-k','Medium','Prefix Sum','M G A'],
+ [739,'Daily Temperatures','daily-temperatures','Medium','Monotonic Stack','A G'],
+ [973,'K Closest Points to Origin','k-closest-points-to-origin','Medium','Heap','M A'],
+ [994,'Rotting Oranges','rotting-oranges','Medium','BFS','A MS'],
+ [1143,'Longest Common Subsequence','longest-common-subsequence','Medium','Dynamic Programming','G A']
+];
+let solved=new Set(store.get('solved',[]));
+(function(){const pats=[...new Set(PROBS.map(p=>p[4]))].sort();pats.forEach(p=>$('#p-pat').append(new Option(p,p)));for(const [k,v] of Object.entries(CO))$('#p-co').append(new Option(v,k))})();
+function renderProbs(){const q=$('#p-q').value.toLowerCase(),d=$('#p-diff').value,p=$('#p-pat').value,co=$('#p-co').value,hide=$('#p-hide').checked;
+ $('#p-body').innerHTML=PROBS.filter(r=>(!q||r[1].toLowerCase().includes(q)||String(r[0])===q)&&(!d||r[3]===d)&&(!p||r[4]===p)&&(!co||r[5].split(' ').includes(co))&&!(hide&&solved.has(r[0])))
+  .map(r=>`<tr class="${solved.has(r[0])?'solved':''}"><td><input type="checkbox" data-pid="${r[0]}" ${solved.has(r[0])?'checked':''} aria-label="Mark solved"></td><td class="muted">${r[0]}</td><td><a href="https://leetcode.com/problems/${r[2]}/" target="_blank" rel="noopener">${r[1]}</a></td><td><span class="pill ${r[3]}">${r[3]}</span></td><td><span class="pill">${r[4]}</span></td><td style="font-size:13px" class="muted">${r[5].split(' ').map(c=>CO[c]).join(', ')}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">No matches.</td></tr>';
+ $('#p-progress').textContent=`${solved.size} / ${PROBS.length} solved`;$('#p-bar').style.width=(solved.size/PROBS.length*100)+'%'}
+$('#p-body').addEventListener('change',e=>{const id=+e.target.dataset.pid;if(!id)return;e.target.checked?solved.add(id):solved.delete(id);store.set('solved',[...solved]);renderProbs()});
+['#p-q','#p-diff','#p-pat','#p-co','#p-hide'].forEach(s=>$(s).addEventListener('input',renderProbs));
+
+/* =========================================================
+   SYSTEM DESIGN
+   ========================================================= */
+const TYPE_COLORS={client:'#9aa4bf',lb:'#7c9cff',service:'#4fd1a5',cache:'#f6c453',db:'#f2777a',queue:'#c792ea',storage:'#ff9e64',cdn:'#56b6c2',worker:'#4fd1a5'};
+const TYPE_NAMES={client:'Client',lb:'Load balancer / gateway',service:'Service',cache:'Cache',db:'Database',queue:'Queue / stream',storage:'Object storage',cdn:'CDN',worker:'Async workers'};
+const SD={
+ url:{name:'URL Shortener',
+  nodes:{client:['Client','client',90,230,'Browser or app. Sends POST to create a short link and GET on the short link to be redirected.'],
+   lb:['Load Balancer','lb',265,230,'Spreads traffic across stateless API servers (round robin or least connections) and removes unhealthy ones using health checks. TLS is usually terminated here.'],
+   api:['URL Service','service',450,230,'Stateless app servers. Create: take a key, store the mapping. Redirect: read through the cache and return 301/302. Scale out by adding instances behind the LB.'],
+   kgs:['Key Generation Svc','service',450,70,'Generates unique 7-character base62 keys in advance and hands them to API servers in batches, so there are no collision checks on the hot path. 62⁷ ≈ 3.5 trillion keys.'],
+   cache:['Redis Cache','cache',680,130,'Hot short→long mappings. A small share of links gets most of the traffic, so a modest cache absorbs most reads. LRU eviction plus a TTL.'],
+   db:['KV Store','db',680,340,'DynamoDB or Cassandra: key = shortCode, value = {longUrl, userId, createdAt, expiresAt}. Pure key lookups that partition horizontally by key, so no joins are needed.'],
+   mq:['Kafka (clicks)','queue',450,395,'Click events are published asynchronously so analytics never slows down a redirect.'],
+   an:['Analytics Workers','worker',230,395,'Consume click events and aggregate counts by link, country and referrer into an OLAP store.']},
+  edges:[['client','lb'],['lb','api'],['api','kgs'],['api','cache'],['api','db'],['api','mq'],['mq','an']],
+  flows:[{n:'Create short URL',s:[['client','lb','POST /api/urls {longUrl}'],['lb','api','Route to a healthy API instance'],['api','kgs','Take the next unused key from the local batch (refill from KGS when it runs low)'],['api','db','PUT aB3x9Kq → longUrl (conditional write: only if absent)'],['api','cache','Optionally warm the cache'],['api','client','201 Created → https://sho.rt/aB3x9Kq']]},
+   {n:'Redirect',s:[['client','lb','GET /aB3x9Kq'],['lb','api','Forward the request'],['api','cache','Look up the key. Most popular links are served from here'],['api','db','On a cache miss, read from the KV store and populate the cache'],['api','mq','Publish a click event (async, fire-and-forget)'],['mq','an','Workers aggregate clicks'],['api','client','302 Found, Location: <longUrl>']]}],
+  req:[['Shorten a long URL, optionally with a custom alias','Redirect short → long','Link expiry','Click analytics'],['Redirect latency < 50 ms p99','Very high availability for reads','Read-heavy (~10:1 or more)','Keys should not be guessable (optional)']],
+  est:['100M new URLs/day ≈ <b>1.2K writes/s</b>','10:1 reads ≈ <b>12K reads/s</b> on average (plan for 3–5× peaks)','500 B/record × 100M × 365 × 5 yr ≈ <b>91 TB</b>','7 base62 chars = 62⁷ ≈ 3.5T keys, enough for decades'],
+  api:['POST /api/urls {longUrl, alias?, expiresAt?} → {shortUrl}','GET /{code} → 302 Location','GET /api/urls/{code}/stats','DELETE /api/urls/{code}'],
+  deep:[['How do you generate keys?','(1) Hash the long URL (MD5/SHA) and take 7 chars, which needs collision handling. (2) A global counter encoded in base62 is simple, but keys are predictable and the counter is a bottleneck, so hand out ID ranges per server (e.g. via ZooKeeper). (3) An offline Key Generation Service is fast with no collisions, but it is one more service to run. Name the trade-offs, then pick one.'],
+   ['301 or 302?','A 301 (permanent) is cached by browsers, which cuts load but means you stop seeing repeat clicks. A 302 (temporary) sends every click through you, so analytics stay accurate. Most shorteners that track clicks use 302.'],
+   ['Caching','Cache-aside with LRU. Protect against a stampede on a viral key with request coalescing or a short lock. Use negative caching for invalid codes to stop scans from hitting the DB.'],
+   ['Expiry and cleanup','Delete lazily when an expired key is read, plus a background sweeper. Optionally return expired keys to the key pool.'],
+   ['Abuse','Rate limit link creation per user or IP, check URLs against malware lists, and require auth for custom aliases.']]},
+ rate:{name:'Rate Limiter',extra:'tb',
+  nodes:{client:['Client','client',100,230,'A caller identified by API key, user ID or IP.'],
+   gw:['API Gateway + Limiter','lb',340,230,'Checks the limit before doing any expensive work. It is fast and fails open: if Redis is down, let traffic through and alert rather than blocking all traffic.'],
+   rules:['Rules Config','db',340,70,'e.g. free tier 100 req/min, paid 1,000 req/min, login endpoint 5/min per IP. Cached in gateway memory and refreshed periodically.'],
+   redis:['Redis (counters)','cache',340,395,'Shared counters so every gateway node sees the same count. Updated atomically with a Lua script (read, refill, decrement in one step). TTL on each key.'],
+   svc:['Backend Services','service',640,230,'Only receive traffic that is within limits.'],
+   logs:['Metrics / Logs','queue',640,395,'Throttle events feed dashboards and alerts, and help spot abusive clients.']},
+  edges:[['client','gw'],['gw','rules'],['gw','redis'],['gw','svc'],['gw','logs']],
+  flows:[{n:'Allowed request',s:[['client','gw','GET /api/orders (API key abc)'],['gw','rules','Rule from in-memory cache: 100 req/min for this key'],['gw','redis','Atomic Lua script: refill tokens, take 1 → 37 left'],['gw','svc','Forward the request'],['svc','gw','Response'],['gw','client','200 OK, X-RateLimit-Remaining: 37']]},
+   {n:'Throttled request',s:[['client','gw','GET /api/orders (101st call this minute)'],['gw','redis','Bucket is empty → reject'],['gw','logs','Record a throttle event'],['gw','client','429 Too Many Requests, Retry-After: 12']]}],
+  req:[['Limit by user, API key or IP, per endpoint','Configurable rules','Tell clients they were throttled'],['Adds < 1–2 ms per request','Works across many gateway nodes','Highly available (fail open)','Memory efficient']],
+  est:['1M req/s across the gateway fleet','1 Redis round trip per request, so shard Redis by key','10M active keys × ~100 B ≈ <b>1 GB</b> of counters','Local in-memory pre-check can cut Redis load for obvious abusers'],
+  api:['Middleware, not a public API','Response headers: X-RateLimit-Limit, X-RateLimit-Remaining, Retry-After','Admin: PUT /rules/{id}'],
+  deep:[['Which algorithm?','<b>Token bucket</b>: allows bursts, simple, widely used (try the demo below). <b>Leaky bucket</b>: smooth constant outflow. <b>Fixed window</b>: cheap, but allows 2× bursts at window edges. <b>Sliding log</b>: exact, but memory heavy. <b>Sliding window counter</b>: weighted mix of the current and previous window, accurate and cheap. A common interview answer is token bucket or sliding window counter.'],
+   ['Race conditions','Two gateways read "1 left" at the same moment and both allow the request. Fix it with an atomic Lua script or INCR plus EXPIRE in one step.'],
+   ['Where should it live?','Client side (can be bypassed), the API gateway (most common), or middleware in each service (finer control). Often a mix: coarse limits at the edge and fine ones in services.'],
+   ['Multi-region','Global exact counts are expensive. Use per-region limits, or accept eventual consistency by syncing counters asynchronously.']]},
+ chat:{name:'Chat (WhatsApp)',
+  nodes:{a:['User A','client',90,110,'Keeps a persistent WebSocket open while the app is in the foreground.'],
+   b:['User B','client',90,370,'Recipient. May be online (WebSocket) or offline (push notification).'],
+   lb:['LB (WebSocket)','lb',280,240,'Layer-4 or WebSocket-aware load balancer. Connections are long-lived, so balance by connection count.'],
+   chat:['Chat Servers','service',480,240,'Each holds about 100K open connections. Stateful in the sense that they own sockets. They talk to each other through pub/sub or direct RPC.'],
+   sess:['Session Store (Redis)','cache',480,70,'userId → which chat server holds their connection. Kept up to date on connect and disconnect, with a heartbeat TTL.'],
+   db:['Message Store','db',710,130,'Partition key = conversationId, clustering key = messageId (time-ordered). Typically Cassandra or HBase: write-heavy, so a wide-column store fits well.'],
+   pres:['Presence Service','service',710,370,'Online and last-seen status from heartbeats with a TTL. Changes are fanned out only to contacts who are currently viewing.'],
+   push:['Push (APNs / FCM)','worker',280,420,'Wakes offline devices. The notification carries little or no message content.']},
+  edges:[['a','lb'],['b','lb'],['lb','chat'],['chat','sess'],['chat','db'],['chat','pres'],['chat','push'],['push','b']],
+  flows:[{n:'Send (B online)',s:[['a','lb','Send over the WebSocket {to: B, text, clientMsgId}'],['lb','chat','Sticky to the server that holds A’s socket'],['chat','db','Persist first, since the store is the source of truth'],['chat','sess','Which server is B connected to?'],['chat','lb','Route to B’s chat server through internal pub/sub'],['lb','b','Deliver on B’s WebSocket'],['lb','a','ACK ✓ sent. B’s ACK later gives ✓✓ delivered']]},
+   {n:'Send (B offline)',s:[['a','lb','Send message'],['lb','chat','Route to A’s chat server'],['chat','db','Persist the message'],['chat','sess','B has no active connection'],['chat','push','Queue a push notification'],['push','b','Notification. On reconnect, B fetches everything after its last seen messageId']]}],
+  req:[['1:1 and group chat','Sent / delivered / read receipts','Online presence','History synced across devices','Push for offline users'],['Low latency (< 200 ms)','No message loss','Ordering within a conversation','High availability']],
+  est:['500M DAU × 40 msgs/day = 20B msgs/day ≈ <b>230K msgs/s</b>','100 B/msg → <b>2 TB/day</b> of text','~100M concurrent sockets ÷ 100K per server ≈ <b>1,000 chat servers</b>'],
+  api:['WS: send {to, text, clientMsgId}','WS event: message, ack, typing, presence','GET /conversations/{id}/messages?before=msgId'],
+  deep:[['WebSocket vs long polling','WebSockets give full-duplex, low-overhead push. Long polling is a fallback. Mention heartbeats and reconnect with exponential backoff.'],
+   ['Ordering and duplicates','Delivery is at-least-once with client-side de-duplication using clientMsgId. The server assigns a per-conversation sequence number (or Snowflake ID) so clients sort consistently.'],
+   ['Group chat fan-out','Small groups: fan out on write to each member’s connection. Very large groups and channels: members pull. Cap group size.'],
+   ['End-to-end encryption','With the Signal protocol, servers only store and forward ciphertext. Keys live on devices, and multi-device needs per-device sessions.'],
+   ['Media','Upload to object storage with a pre-signed URL, then send only the URL and thumbnail through chat.']]},
+ feed:{name:'News Feed',
+  nodes:{client:['Client','client',90,230,'Mobile or web app. Scrolls the feed with cursor pagination.'],
+   lb:['API Gateway','lb',260,230,'Auth, routing and rate limiting.'],
+   media:['Object Store + CDN','cdn',260,60,'Images and videos are uploaded directly with pre-signed URLs and served from CDN edges.'],
+   post:['Post Service','service',450,110,'Creates posts and stores them. Triggers fan-out asynchronously.'],
+   feed:['Feed Service','service',450,370,'Builds a feed page: reads post IDs from the feed cache, hydrates them, merges in celebrity posts, ranks.'],
+   pdb:['Post DB','db',690,60,'Posts by postId (sharded). Hot posts are cached.'],
+   mq:['Fan-out Queue','queue',690,190,'Decouples publishing from the expensive fan-out work.'],
+   fan:['Fan-out Workers','worker',690,310,'For each follower, push the postId into their feed list. Celebrity authors are skipped, and their posts are pulled at read time instead.'],
+   fc:['Feed Cache (Redis)','cache',690,420,'Per-user list of recent postIds, capped at ~500–1,000 entries.']},
+  edges:[['client','lb'],['client','media'],['lb','post'],['lb','feed'],['post','pdb'],['post','mq'],['mq','fan'],['fan','fc'],['feed','fc'],['feed','pdb']],
+  flows:[{n:'Publish post',s:[['client','media','Upload the image directly using a pre-signed URL'],['client','lb','POST /posts {text, mediaUrl}'],['lb','post','Validate and create'],['post','pdb','Persist the post'],['post','mq','Enqueue a fan-out job, then return 201 to the user immediately'],['mq','fan','A worker picks up the job and loads the author’s followers'],['fan','fc','LPUSH postId into each follower’s feed and trim the list']]},
+   {n:'Read feed',s:[['client','lb','GET /feed?cursor=…'],['lb','feed','Route the request'],['feed','fc','Read precomputed postIds for this user'],['feed','pdb','Batch-hydrate posts and pull recent celebrity posts'],['feed','client','Ranked page plus next cursor'],['client','media','Images load from the CDN edge']]}],
+  req:[['Publish posts (text, media)','Home timeline from people you follow','Follow / unfollow','Likes and comments'],['Feed loads in < 200 ms','Eventual consistency is fine (a few seconds)','Very read-heavy','Highly available']],
+  est:['300M DAU × 10 feed loads = 3B/day ≈ <b>35K reads/s</b>','50M posts/day ≈ <b>600 writes/s</b>','× 200 avg followers = 10B feed inserts/day ≈ <b>115K/s</b>'],
+  api:['POST /posts','GET /feed?cursor=&limit=20','POST /users/{id}/follow','POST /posts/{id}/like'],
+  deep:[['Push vs pull vs hybrid','<b>Push</b> (fan-out on write): fast reads, but expensive for celebrities with millions of followers. <b>Pull</b> (fan-out on read): cheap writes, slow reads. <b>Hybrid</b>: push for normal users, pull for celebrities at read time. This is the expected answer.'],
+   ['Ranking','Start chronologically. Then rank candidates by features such as affinity, recency and engagement, scored by a model. Precompute the candidates and rank them at request time.'],
+   ['Pagination','Use cursors (last postId or timestamp), not offsets, because new posts shift offsets and cause duplicates.'],
+   ['Inactive users','Skip fan-out for users who haven’t logged in for 30+ days and build their feed when they return.']]},
+ video:{name:'Video Streaming',
+  nodes:{creator:['Creator','client',90,90,'Uploads large files with resumable uploads.'],
+   viewer:['Viewer','client',90,390,'The player fetches a manifest, then small segments, and adapts quality to bandwidth.'],
+   api:['API / Upload Svc','service',300,90,'Issues pre-signed multipart upload URLs and serves video metadata.'],
+   raw:['Raw Store (S3)','storage',520,90,'Original uploads. Moved to cold storage after transcoding.'],
+   meta:['Metadata DB','db',300,240,'Title, owner, status, renditions and view counts (with counters batched).'],
+   mq:['Transcode Queue','queue',520,240,'Upload-complete events become transcoding jobs.'],
+   tw:['Transcoding Workers','worker',740,240,'Split into chunks and transcode them in parallel into several resolutions and codecs (H.264, VP9, AV1). Also produce thumbnails.'],
+   enc:['Encoded Segments','storage',740,400,'HLS/DASH segments (2–6 s each) plus manifests for each rendition.'],
+   cdn:['CDN','cdn',300,400,'Serves most bytes from edge caches near viewers. Popular videos are pushed to edges in advance, and the long tail is pulled from origin.']},
+  edges:[['creator','api'],['creator','raw'],['api','meta'],['raw','mq'],['mq','tw'],['tw','enc'],['tw','meta'],['enc','cdn'],['cdn','viewer'],['viewer','api']],
+  flows:[{n:'Upload',s:[['creator','api','Request upload → pre-signed, resumable multipart URLs'],['creator','raw','Upload chunks directly to object storage, bypassing app servers'],['raw','mq','An upload-complete event creates a job'],['mq','tw','Split and transcode in parallel to 240p…4K'],['tw','enc','Write segments and manifests'],['tw','meta','Mark the video READY and store its renditions']]},
+   {n:'Watch',s:[['viewer','api','GET /videos/{id} → metadata + manifest URL'],['api','meta','Read metadata (cached)'],['viewer','cdn','Fetch the manifest, then segments'],['cdn','enc','On a cache miss, fetch from origin'],['cdn','viewer','Adaptive bitrate: the player switches quality as bandwidth changes']]}],
+  req:[['Upload videos','Stream worldwide on any device','Search and metadata','View counts'],['Playback starts in < 2 s','Smooth playback (adaptive bitrate)','Highly available','Cost-efficient storage and egress']],
+  est:['Assume 500 hours uploaded per minute = 720K hours/day','× ~3 GB/hour across all renditions ≈ <b>2 PB/day</b> of new storage','Egress dominates cost, which is why CDN hit rate matters most'],
+  api:['POST /videos → upload URLs','GET /videos/{id}','GET /videos/{id}/manifest.m3u8','POST /videos/{id}/views (batched)'],
+  deep:[['Adaptive bitrate streaming','HLS or DASH: each rendition is cut into short segments, and the player picks the next segment’s quality based on measured throughput and buffer level.'],
+   ['Why chunk the transcoding?','Hours of video become many small parallel jobs organised as a DAG (split → transcode → merge → thumbnails). Failed chunks can be retried on their own.'],
+   ['CDN strategy','Pre-position the most popular content at edges and fetch the long tail from regional origins. Many large platforms also place cache servers inside ISP networks.'],
+   ['Storage cost tiers','Hot (recent and popular), warm and cold (rarely watched). Keep fewer renditions for the long tail.']]}
+};
+(function buildSD(){const tabs=$('#sd-tabs'),host=$('#sd-panes');
+ for(const [k,d] of Object.entries(SD)){tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));
+  host.append(h(`<div class="pane" data-pane="sd:${k}">
+  <div class="sd-layout"><div class="card"><div class="controls">${d.flows.map((f,i)=>`<button class="btn ${i?'':'pri'}" data-flow="${k}:${i}">▶ ${f.n}</button>`).join('')}<button class="btn" data-flow="${k}:reset">Reset</button></div>
+   <svg id="sd-svg-${k}" class="vizsvg" viewBox="0 0 900 460"></svg><ol class="steps" id="sd-steps-${k}"></ol></div>
+   <div class="card side" id="sd-info-${k}"><h3>Click any component</h3><p class="muted" style="font-size:14px">Each box shows why it exists and the trade-offs to mention in the interview.</p><h4>Legend</h4>${Object.entries(TYPE_NAMES).filter(([t])=>t!=='worker').map(([t,n])=>`<div style="font-size:13px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${TYPE_COLORS[t]};margin-right:6px"></span>${n}</div>`).join('')}</div></div>
+  <div class="grid3">
+   <div class="card"><h3>Requirements</h3><h4 style="margin-top:0">Functional</h4><ul>${d.req[0].map(x=>`<li>${x}</li>`).join('')}</ul><h4>Non-functional</h4><ul>${d.req[1].map(x=>`<li>${x}</li>`).join('')}</ul></div>
+   <div class="card"><h3>Back-of-the-envelope</h3><ul>${d.est.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+   <div class="card"><h3>API sketch</h3><ul>${d.api.map(x=>`<li><code style="font-size:12.5px">${esc(x)}</code></li>`).join('')}</ul></div>
+  </div>
+  ${d.extra==='tb'?`<div class="card" style="margin-bottom:16px"><h3>Try it: token bucket (capacity 5, refill 1 token/s)</h3><div class="tb-tokens" id="tb-tokens"></div><div class="controls"><button class="btn pri" id="tb-one">Send request</button><button class="btn" id="tb-burst">Burst of 8</button></div><div class="tb-log" id="tb-log"></div></div>`:''}
+  <h3 style="margin:6px 0 10px">Deep dives &amp; trade-offs</h3>${d.deep.map(([t,x],i)=>`<details ${i?'':'open'}><summary>${t}</summary><p>${x}</p></details>`).join('')}
+  </div>`))}
+ // Core concepts pane
+ tabs.append(h('<button data-tab="concepts">Core Concepts</button>'));
+ host.append(h(`<div class="pane" data-pane="sd:concepts">
+  <div class="card" style="margin-bottom:16px"><h3>A 45-minute interview framework</h3><ol style="margin:0;padding-left:20px;font-size:14px">
+   <li><b>Clarify requirements (5 min).</b> Functional scope, users and scale, read/write ratio, latency and consistency needs. Write them down.</li>
+   <li><b>Estimate (3–5 min).</b> QPS, storage and bandwidth. Only to the precision that changes a decision.</li>
+   <li><b>API and data model (5 min).</b> Key endpoints, entities, access patterns, then SQL vs NoSQL.</li>
+   <li><b>High-level design (10 min).</b> Boxes and arrows from client to storage. Walk one request end to end.</li>
+   <li><b>Deep dives (15 min).</b> Bottlenecks, scaling, failure modes, consistency. The interviewer will usually steer you here.</li>
+   <li><b>Wrap up (2 min).</b> Trade-offs you made, monitoring and alerting, what you would do next.</li></ol></div>
+  <div class="card" style="margin-bottom:16px"><h3>Try it: consistent hashing</h3>
+   <div class="ring-wrap"><svg id="ring" viewBox="0 0 360 360" class="vizsvg"></svg>
+   <div><p style="font-size:14px;margin-top:0">Servers and keys are hashed onto the same ring. Each key belongs to the first server clockwise from it. When a server is added or removed, only about <b>1/N</b> of keys move. With <code>hash % N</code>, almost all of them would.</p>
+   <div class="controls"><button class="btn pri" id="ring-add">Add server</button><button class="btn" id="ring-rm">Remove server</button><label class="muted" style="font-size:14px"><input type="checkbox" id="ring-v"> Virtual nodes (×4)</label></div>
+   <div class="say" id="ring-say">24 keys across 3 servers.</div><div id="ring-load" style="margin-top:10px;font-size:14px"></div></div></div></div>
+  <div id="concepts"></div></div>`));
+ host.addEventListener('click',e=>{const b=e.target.closest('[data-flow]');if(b){const [k,i]=b.dataset.flow.split(':');if(i==='reset'){if(!BUSY){drawSD(k);$('#sd-steps-'+k).innerHTML=''}}else run(()=>playFlow(k,+i));return}
+  const n=e.target.closest('[data-node]');if(n){const [k,id]=n.dataset.node.split(':');if(!BUSY)drawSD(k,new Set(),new Set(),id);sdInfo(k,id)}});
+ for(const k of Object.keys(SD))TAB_HOOKS['sd:'+k]=()=>{if(!BUSY)drawSD(k)};
+ TAB_HOOKS['sd:concepts']=()=>drawRing();
+})();
+function drawSD(k,act=new Set(),hot=new Set(),sel=null){const d=SD[k],s=svg('sd-svg-'+k),W=150,H=50;
+ for(const [a,b] of d.edges){const A=d.nodes[a],B=d.nodes[b];const dx=B[2]-A[2],dy=B[3]-A[3],len=Math.hypot(dx,dy);
+  const clip=(t)=>{const ux=dx/len,uy=dy/len,f=Math.min((W/2+4)/Math.abs(ux||1e-9),(H/2+4)/Math.abs(uy||1e-9));return f};
+  const f=clip();const x1=A[2]+dx/len*f,y1=A[3]+dy/len*f,x2=B[2]-dx/len*f,y2=B[3]-dy/len*f;
+  const isHot=hot.has(a+'>'+b)||hot.has(b+'>'+a);S('line',{x1,y1,x2,y2,class:'sdedge'+(isHot?' hot':''),'marker-end':`url(#${isHot?'arrA':'arr'})`},s)}
+ for(const [id,n] of Object.entries(d.nodes)){const g=S('g',{class:'sdn'+(act.has(id)?' act':'')+(sel===id?' sel':''),'data-node':k+':'+id},s);
+  S('rect',{x:n[2]-W/2,y:n[3]-H/2,width:W,height:H,rx:10,stroke:TYPE_COLORS[n[1]]},g);
+  const ty=S('text',{x:n[2],y:n[3]-9,class:'ty','text-anchor':'middle','dominant-baseline':'central',fill:TYPE_COLORS[n[1]]},g);ty.textContent=TYPE_NAMES[n[1]].split(' /')[0];
+  const nm=S('text',{x:n[2],y:n[3]+9,class:'nm','text-anchor':'middle','dominant-baseline':'central'},g);nm.textContent=n[0]}}
+function sdInfo(k,id){const n=SD[k].nodes[id];$('#sd-info-'+k).innerHTML=`<span class="pill" style="color:${TYPE_COLORS[n[1]]}">${TYPE_NAMES[n[1]]}</span><h3 style="margin-top:8px">${n[0]}</h3><p style="font-size:14px">${n[4]}</p><h4>Connected to</h4><ul>${SD[k].edges.filter(e=>e.includes(id)).map(e=>`<li>${SD[k].nodes[e[0]===id?e[1]:e[0]][0]}</li>`).join('')}</ul>`}
+function moveDot(dot,A,B,ms){return new Promise(res=>{const t0=performance.now();function f(t){const p=Math.min(1,(t-t0)/ms),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;dot.setAttribute('cx',A[2]+(B[2]-A[2])*e);dot.setAttribute('cy',A[3]+(B[3]-A[3])*e);p<1?requestAnimationFrame(f):res()}requestAnimationFrame(f)})}
+async function playFlow(k,fi){const d=SD[k],f=d.flows[fi],ol=$('#sd-steps-'+k);ol.innerHTML='';const act=new Set(),hot=new Set();
+ for(const [a,b,txt] of f.s){act.add(a);hot.add(a+'>'+b);drawSD(k,act,hot);$$('li',ol).forEach(li=>li.classList.remove('now'));const li=h(`<li class="now"><b>${d.nodes[a][0]} → ${d.nodes[b][0]}:</b> ${esc(txt)}</li>`);ol.append(li);
+  const dot=S('circle',{r:7,class:'dot',cx:d.nodes[a][2],cy:d.nodes[a][3]},$('#sd-svg-'+k));await moveDot(dot,d.nodes[a],d.nodes[b],Math.max(450,SPEED*1.1));act.add(b);drawSD(k,act,hot);await sleep(SPEED*0.5)}}
+
+/* Token bucket */
+const tb={cap:5,tokens:5,last:performance.now(),log:[]};
+function tbTick(){const now=performance.now();tb.tokens=Math.min(tb.cap,tb.tokens+(now-tb.last)/1000);tb.last=now;const el=$('#tb-tokens');if(el&&el.offsetParent)el.innerHTML=Array.from({length:tb.cap},(_,i)=>`<i class="${i<Math.floor(tb.tokens)?'on':''}"></i>`).join('')+`<span class="muted" style="font-size:13px;align-self:center">${tb.tokens.toFixed(1)} tokens</span>`}
+setInterval(tbTick,100);
+function tbReq(){tbTick();const t=new Date().toLocaleTimeString();if(tb.tokens>=1){tb.tokens-=1;tb.log.unshift(`<div class="ok">${t}  200 OK      (${tb.tokens.toFixed(1)} tokens left)</div>`)}else tb.log.unshift(`<div class="bad">${t}  429 Too Many Requests</div>`);tb.log=tb.log.slice(0,30);$('#tb-log').innerHTML=tb.log.join('')}
+$('#tb-one').onclick=tbReq;$('#tb-burst').onclick=()=>{for(let i=0;i<8;i++)tbReq()};
+
+/* Consistent hashing ring */
+const RCOL=['#7c9cff','#4fd1a5','#f6c453','#f2777a','#c792ea','#56b6c2','#ff9e64','#9aa4bf'];
+let ringServers=['A','B','C'],ringPrev=null,ringMoved=new Set();
+const RKEYS=Array.from({length:24},(_,i)=>'user'+(i+1));
+function fnv(s){let x=2166136261;for(const c of s){x^=c.charCodeAt(0);x=Math.imul(x,16777619)>>>0}return x}
+function ringPoints(){const v=$('#ring-v').checked?4:1,pts=[];ringServers.forEach((sv,si)=>{for(let j=0;j<v;j++)pts.push({a:fnv(sv+'#'+j)%3600/10,s:sv,si})});return pts.sort((x,y)=>x.a-y.a)}
+function ringOwner(pts,k){const a=fnv(k)%3600/10;for(const p of pts)if(p.a>=a)return p;return pts[0]}
+function drawRing(){const s=svg('ring'),cx=180,cy=180,R=135,pts=ringPoints();const P=a=>[cx+R*Math.sin(a*Math.PI/180),cy-R*Math.cos(a*Math.PI/180)];
+ S('circle',{cx,cy,r:R,fill:'none',stroke:'#2e3650','stroke-width':10},s);
+ const load={};
+ RKEYS.forEach(k=>{const o=ringOwner(pts,k);load[o.s]=(load[o.s]||0)+1;const [x,y]=P(fnv(k)%3600/10);S('circle',{cx:x,cy:y,r:5,fill:RCOL[o.si%8],stroke:ringMoved.has(k)?'#fff':'none','stroke-width':2},s)});
+ pts.forEach(p=>{const [x,y]=P(p.a);S('rect',{x:x-9,y:y-9,width:18,height:18,rx:4,fill:RCOL[p.si%8],stroke:'#0e1016','stroke-width':2},s);const [lx,ly]=[cx+(R+22)*Math.sin(p.a*Math.PI/180),cy-(R+22)*Math.cos(p.a*Math.PI/180)];T(s,lx,ly,p.s,'ts')});
+ T(s,cx,cy-8,'hash ring','lbl');T(s,cx,cy+10,'■ server  ● key','lbl');
+ $('#ring-load').innerHTML='<b>Keys per server:</b> '+ringServers.map((sv,i)=>`<span style="color:${RCOL[i%8]}">${sv}: ${load[sv]||0}</span>`).join(' · ')+'<br><span class="muted" style="font-size:13px">Virtual nodes even out this distribution.</span>';
+ const own={};RKEYS.forEach(k=>own[k]=ringOwner(pts,k).s);return own}
+function ringChange(fn){const before=drawRingOwners();const n0=ringServers.length;fn();const pts=ringPoints();ringMoved=new Set(RKEYS.filter(k=>ringOwner(pts,k).s!==before[k]));
+ const n1=ringServers.length,modMoved=RKEYS.filter(k=>fnv(k)%n0!==fnv(k)%n1).length;drawRing();
+ say('ring',`<b>${ringMoved.size} of 24</b> keys moved (outlined in white). With <code>hash % N</code>, going from ${n0} to ${n1} servers would move <b>${modMoved} of 24</b>.`)}
+function drawRingOwners(){const pts=ringPoints(),o={};RKEYS.forEach(k=>o[k]=ringOwner(pts,k).s);return o}
+$('#ring-add').onclick=()=>{if(ringServers.length>=8)return;ringChange(()=>ringServers.push('ABCDEFGH'[ringServers.length]))};
+$('#ring-rm').onclick=()=>{if(ringServers.length<=1)return;ringChange(()=>ringServers.pop())};
+$('#ring-v').onchange=()=>{ringMoved=new Set();drawRing();say('ring','Each server now owns several points on the ring, so the load is spread more evenly.')};
+
+const CONCEPTS=[
+ ['Scaling: vertical vs horizontal','Vertical means a bigger machine: simple, but there is a ceiling and a single point of failure. Horizontal means more machines: keep services stateless and put session state in Redis or a DB so any instance can serve any request.'],
+ ['Load balancing','L4 (TCP) is fast. L7 (HTTP) can route by path or header, terminate TLS and do sticky sessions. Algorithms: round robin, least connections, consistent hashing (for cache affinity). Use health checks, and run the LB itself in an active-passive pair.'],
+ ['Caching','Patterns: <b>cache-aside</b> (the app reads the cache, then the DB on a miss: most common), <b>write-through</b> (write to the cache and DB together), <b>write-back</b> (write to the cache and flush later: fast, but can lose data). Eviction: LRU or LFU. The hard parts are invalidation, stampedes and hot keys.'],
+ ['SQL vs NoSQL','SQL: relations, joins, ACID transactions, strong consistency (payments, inventory). NoSQL: key-value (Redis, DynamoDB), document (MongoDB), wide-column (Cassandra: write-heavy, time series), graph (Neo4j). Choose by access pattern, not by hype.'],
+ ['Replication','Leader–follower: writes go to the leader, reads scale across replicas, but replication lag breaks read-your-writes. Multi-leader: writes in several regions, with conflicts to resolve. Leaderless (Dynamo style): quorum reads and writes where R + W &gt; N.'],
+ ['Sharding / partitioning','By hash (even spread, but range queries are hard), by range (good for scans, but risks hot spots), or by geography. Problems: cross-shard joins and transactions, rebalancing (use consistent hashing), celebrity hot keys.'],
+ ['CAP and PACELC','During a network partition you choose consistency (CP: refuse some requests) or availability (AP: serve possibly stale data). PACELC adds that even without a partition you trade latency for consistency. Banking leans CP. Social feeds lean AP.'],
+ ['Message queues and streams','Queues (SQS, RabbitMQ) decouple producers and consumers, absorb spikes and allow retries. Streams (Kafka) are durable, replayable logs read by many consumer groups. Delivery is usually at-least-once, so make consumers idempotent.'],
+ ['CDN','Caches static content and media at edges near users. Push CDN (you upload) or pull CDN (fetched on first request). Version file names to bust caches.'],
+ ['Unique IDs at scale','UUIDv4: random, no coordination, but not sortable. Snowflake (timestamp + machine + sequence): 64-bit and time-sortable. A DB auto-increment does not scale across shards.'],
+ ['Latency numbers to know','L1 cache ~1 ns · RAM ~100 ns · SSD random read ~100 µs · same-datacenter round trip ~0.5 ms · HDD seek ~10 ms · US↔Europe round trip ~100–150 ms.'],
+ ['Availability (the "nines")','99.9% ≈ 8.8 h of downtime per year · 99.99% ≈ 53 min/year · 99.999% ≈ 5 min/year. Components in series multiply their availabilities. Redundant components in parallel raise it.']
+];
+$('#concepts').innerHTML=CONCEPTS.map(([t,x])=>`<details><summary>${t}</summary><p>${x}</p></details>`).join('');
+
+/* =========================================================
+   BEHAVIORAL
+   ========================================================= */
+const BQ=[
+ ['Introduction',['Tell me about yourself.','Why do you want to work here?','Why are you leaving your current role?']],
+ ['Ownership & Leadership',['Tell me about a time you took ownership of something outside your responsibilities.','Describe a project you led from start to finish.','Tell me about a time you made a decision without complete information.']],
+ ['Conflict & Collaboration',['Tell me about a time you disagreed with your manager.','Describe a conflict with a teammate and how you resolved it.','Tell me about a time you influenced others without having authority.']],
+ ['Failure & Growth',['Tell me about a time you failed.','Describe the hardest feedback you have received and what you did with it.','Tell me about a mistake you made that affected users or customers.']],
+ ['Delivery & Pressure',['Tell me about a time you missed a deadline.','Describe a time you had to juggle competing priorities.','Tell me about a time you had to deliver with very limited resources.']],
+ ['Impact & Customer',['What is the most impactful project you have worked on?','Tell me about a time you went above and beyond for a customer.','Tell me about a time you used data to change a decision.']],
+ ['Innovation & Simplification',['Tell me about a time you improved a process or system.','Describe a creative solution to a hard technical problem.','Tell me about a time you simplified something complex.']]
+];
+const FLAT=BQ.flatMap(([c,qs])=>qs);
+let stories=store.get('stories',{}),bCur=0,tLeft=120,tRun=null;
+const STAR=[['s','Situation','Context: company, team, scale, timeline. 1–2 sentences.'],['t','Task','Your specific responsibility, or the goal and the challenge.'],['a','Action','What YOU did, step by step: decisions, trade-offs, how you handled pushback. This should be most of the answer.'],['r','Result','A measurable outcome (%, $, time saved, users) and what you learned or would do differently.']];
+function hasStory(q){const s=stories[q];return s&&Object.values(s).some(v=>v&&v.trim())}
+function renderBList(){$('#b-list').innerHTML=BQ.map(([c,qs])=>`<div class="cat">${c}</div>`+qs.map(q=>{const i=FLAT.indexOf(q);return`<button class="${i===bCur?'active':''}" data-bq="${i}">${hasStory(q)?'<span class="chk">✓</span>':''}${esc(q)}</button>`}).join('')).join('')}
+function renderBEditor(){const q=FLAT[bCur],s=stories[q]||{};$('#b-editor').innerHTML=`<div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap"><h2 style="flex:1;min-width:240px">${esc(q)}</h2>
+  <div style="text-align:right"><div class="timer" id="b-timer">${fmt(tLeft)}</div><button class="btn sm" id="b-tstart">${tRun?'Pause':'Start'} timer</button> <button class="btn sm" id="b-treset">Reset</button></div></div>
+  ${STAR.map(([k,l,ph])=>`<label for="star-${k}">${l} <span>· ${k==='a'?'~60%':'~15–20%'}</span></label><textarea id="star-${k}" data-k="${k}" placeholder="${esc(ph)}" rows="${k==='a'?6:3}">${esc(s[k]||'')}</textarea>`).join('')}
+  <div class="controls" style="margin-top:12px;justify-content:space-between"><span class="muted" id="b-wc" style="font-size:14px"></span><span><button class="btn sm" id="b-copy">Copy story</button> <button class="btn sm" id="b-next">Next question →</button></span></div>`;wc()}
+function fmt(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
+function wc(){const q=FLAT[bCur],s=stories[q]||{};const n=Object.values(s).join(' ').trim().split(/\s+/).filter(Boolean).length;$('#b-wc').textContent=`${n} words ≈ ${Math.round(n/130*60)} s spoken (aim for 250–350 words, about 2 minutes)`}
+$('#b-list').addEventListener('click',e=>{const b=e.target.closest('[data-bq]');if(!b)return;bCur=+b.dataset.bq;resetTimer();renderBList();renderBEditor()});
+$('#b-editor').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;const q=FLAT[bCur];stories[q]=stories[q]||{};stories[q][k]=e.target.value;store.set('stories',stories);wc();
+ const btn=$(`[data-bq="${bCur}"]`);if(btn&&!!btn.querySelector('.chk')!==hasStory(q))renderBList()});
+function resetTimer(){clearInterval(tRun);tRun=null;tLeft=120}
+$('#b-editor').addEventListener('click',async e=>{
+ if(e.target.id==='b-tstart'){if(tRun){clearInterval(tRun);tRun=null;e.target.textContent='Start timer'}else{tRun=setInterval(()=>{tLeft--;const el=$('#b-timer');if(el){el.textContent=fmt(Math.max(0,tLeft));el.style.color=tLeft<=0?'var(--red)':tLeft<=20?'var(--yellow)':''}if(tLeft<=0){clearInterval(tRun);tRun=null;const b=$('#b-tstart');if(b)b.textContent='Start timer'}},1000);e.target.textContent='Pause timer'}}
+ if(e.target.id==='b-treset'){resetTimer();renderBEditor()}
+ if(e.target.id==='b-next'){bCur=(bCur+1)%FLAT.length;resetTimer();renderBList();renderBEditor()}
+ if(e.target.id==='b-copy'){const q=FLAT[bCur],s=stories[q]||{};const txt=`${q}\n\n`+STAR.map(([k,l])=>`${l}: ${s[k]||''}`).join('\n\n');try{await navigator.clipboard.writeText(txt);e.target.textContent='Copied ✓'}catch(_){e.target.textContent='Copy blocked'}setTimeout(()=>{if(e.target.isConnected)e.target.textContent='Copy story'},1500)}});
+
+/* =========================================================
+   TECHNICAL FLASHCARDS
+   ========================================================= */
+const FC={
+ 'Operating Systems':[
+  ['Process vs thread?','A process has its own address space and resources. Threads live inside a process and share its memory, so they are cheaper to create and switch between, but shared memory needs synchronisation.'],
+  ['What is virtual memory?','Each process gets its own contiguous address space. Pages are mapped to physical frames through page tables, with the TLB caching translations. This gives isolation, lets memory be overcommitted, and allows paging to disk.'],
+  ['What is a page fault?','An access to a page that is not in physical memory (or a permission violation). The OS loads the page from disk or zero-fills it and retries the instruction. A minor fault is resolved without disk I/O. A major fault needs disk I/O.'],
+  ['What does a context switch cost?','Saving and restoring registers, possibly switching page tables (between processes) and losing warm caches and TLB entries. Typically a few microseconds. Switching between threads of the same process is cheaper.'],
+  ['What are the four conditions for deadlock?','Mutual exclusion, hold-and-wait, no preemption, circular wait (the Coffman conditions). Break any one, for example by always acquiring locks in a fixed global order.'],
+  ['Stack vs heap memory?','The stack is per thread, LIFO, allocated and freed automatically, fast but limited in size. The heap is dynamically allocated and shared, managed by malloc/free or a garbage collector, and can fragment.']],
+ 'Networking':[
+  ['What happens when you type a URL and press Enter?','DNS lookup (browser cache → OS → resolver → root → TLD → authoritative), TCP handshake, TLS handshake, HTTP request, server processing, response, then the browser parses HTML, fetches sub-resources and renders (DOM, CSSOM, layout, paint).'],
+  ['TCP vs UDP?','TCP is connection-oriented, reliable and ordered, with flow and congestion control. UDP is connectionless with no delivery guarantees but very low overhead. It is used for DNS, games, video calls and QUIC.'],
+  ['Explain the TCP three-way handshake.','SYN → SYN-ACK → ACK. Both sides agree on initial sequence numbers. Closing uses FIN/ACK in each direction, and the side that closes first waits in TIME_WAIT.'],
+  ['HTTP/1.1 vs HTTP/2 vs HTTP/3?','1.1: one in-flight request per connection, so it suffers head-of-line blocking. 2: binary framing and many multiplexed streams on one TCP connection, plus header compression. 3: runs over QUIC (UDP), which removes TCP head-of-line blocking and gives faster handshakes.'],
+  ['How does TLS work?','The client says hello. The server sends a certificate, which the client verifies against trusted CAs. They do an ECDHE key exchange to derive symmetric session keys, then encrypt all data with those keys. TLS 1.3 needs a single round trip.'],
+  ['L4 vs L7 load balancer?','L4 routes on IP and port without reading the payload, so it is fast and protocol-agnostic. L7 understands HTTP: it can route by path, header or cookie, terminate TLS and rewrite requests, at more CPU cost.']],
+ 'Databases':[
+  ['What does ACID mean?','Atomicity (all or nothing), Consistency (constraints hold), Isolation (concurrent transactions do not interfere), Durability (committed data survives crashes, via the write-ahead log).'],
+  ['What are the isolation levels?','Read uncommitted (allows dirty reads) → read committed (allows non-repeatable reads) → repeatable read (allows phantoms) → serializable. Many databases default to read committed. MySQL InnoDB defaults to repeatable read.'],
+  ['How does an index work?','Usually a B+tree of sorted keys, giving O(log n) lookups and efficient range scans. It speeds up reads but slows writes and uses storage. Composite indexes follow the leftmost-prefix rule.'],
+  ['When would you choose SQL vs NoSQL?','SQL for relational data, joins, transactions and strong consistency. NoSQL for flexible schemas, huge horizontal scale, high write throughput and simple, known access patterns.'],
+  ['What are the sharding strategies?','Hash-based, range-based, directory/lookup, geographic. Pitfalls: hot shards, cross-shard queries and transactions, and resharding (consistent hashing reduces data movement).'],
+  ['How does replication work?','Leader–follower (synchronous or asynchronous), multi-leader, or leaderless with quorums (R + W &gt; N). Asynchronous replication lag can cause stale reads, so route read-your-writes requests to the leader.']],
+ 'OOP & Design':[
+  ['What are the four pillars of OOP?','Encapsulation (hide state behind methods), abstraction (expose only what is essential), inheritance (reuse through is-a), polymorphism (one interface, many implementations).'],
+  ['What is SOLID?','Single responsibility, Open/closed, Liskov substitution, Interface segregation, Dependency inversion.'],
+  ['Composition vs inheritance?','Prefer composition (has-a). It is more flexible, can change behaviour at runtime and avoids fragile base classes. Use inheritance only for a true is-a relationship with shared behaviour.'],
+  ['How would you design an LRU cache?','A hash map from key to node plus a doubly linked list ordered by recency. get: move the node to the front. put: insert at the front and evict from the tail when full. Every operation is O(1).'],
+  ['Name design patterns you have used.','Strategy (swappable algorithms), Observer (events), Factory and Builder (object creation), Decorator (adding behaviour), Adapter (incompatible interfaces), Singleton (use sparingly). Give a real example for each one you mention.'],
+  ['Interface vs abstract class?','An interface is a pure contract, and a class can implement many. An abstract class can hold state and partial implementation, but a class can extend only one (in Java and C#).']],
+ 'Concurrency':[
+  ['Mutex vs semaphore?','A mutex gives exclusive access and has an owner (only the holder unlocks it). A semaphore is a counter that allows up to N holders, has no ownership, and is used for resource pools and signalling.'],
+  ['What is a race condition and how do you fix it?','The result depends on how threads interleave, for example two threads doing count++. Fix it with locks, atomic operations, immutable data, or confining data to one thread or actor.'],
+  ['How do you implement producer–consumer?','A bounded buffer with a lock and two condition variables (notFull, notEmpty), or simply a blocking queue. Producers wait when the buffer is full and consumers wait when it is empty.'],
+  ['Optimistic vs pessimistic locking?','Optimistic: read a version, check it at commit, and retry on conflict. Good when contention is low. Pessimistic: lock up front (SELECT … FOR UPDATE). Good when contention is high.'],
+  ['Async I/O vs multithreading?','Async interleaves many I/O-bound tasks on one thread with an event loop. Threads give real parallelism for CPU-bound work (in CPython, the GIL limits this, so use processes).'],
+  ['What is idempotency and why does it matter?','Running a request several times has the same effect as running it once. It is essential for safe retries, for example idempotency keys on payments. GET, PUT and DELETE are idempotent. POST is not.']],
+ 'Web & APIs':[
+  ['REST vs GraphQL vs gRPC?','REST: resource URLs, HTTP verbs, cacheable, simple. GraphQL: the client asks for exactly the fields it needs through one endpoint, which avoids over- and under-fetching. gRPC: binary Protobuf over HTTP/2 with streaming, ideal between internal services.'],
+  ['Authentication vs authorization? Sessions vs JWT?','Authentication is who you are. Authorization is what you can do. Sessions keep state on the server (easy to revoke). JWTs are stateless signed tokens (scale easily but are hard to revoke, so keep them short-lived and use refresh tokens).'],
+  ['What is CORS?','A browser rule that blocks cross-origin requests unless the server allows them with Access-Control-Allow-Origin headers. Non-simple requests are sent a preflight OPTIONS request first.'],
+  ['How does HTTP caching work?','Cache-Control (max-age, no-cache, no-store, public/private), plus validators: ETag with If-None-Match, or Last-Modified with If-Modified-Since. When nothing changed, the server replies 304 Not Modified.'],
+  ['Offset vs cursor pagination?','Offset (LIMIT/OFFSET) is simple, but it slows down on deep pages and shifts when data changes. A cursor (WHERE id &lt; last_id) is stable and fast, which is better for feeds.'],
+  ['Name the key HTTP status codes.','200 OK, 201 Created, 204 No Content, 301/302 redirects, 304 Not Modified, 400 Bad Request, 401 Unauthenticated, 403 Forbidden, 404 Not Found, 409 Conflict, 429 Too Many Requests, 500 Server Error, 503 Unavailable.']]
+};
+let known=new Set(store.get('known',[])),fcTopic='All',fcIdx=0,fcFlip=false,fcOrder=null;
+function fcAll(){return Object.entries(FC).flatMap(([t,cs])=>cs.map((c,i)=>({id:t+':'+i,t,q:c[0],a:c[1]})))}
+function fcDeck(){let d=fcAll().filter(c=>fcTopic==='All'||c.t===fcTopic);if($('#fc-unknown').checked)d=d.filter(c=>!known.has(c.id));if(fcOrder){const o=new Map(fcOrder.map((id,i)=>[id,i]));d.sort((a,b)=>(o.get(a.id)??0)-(o.get(b.id)??0))}return d}
+function renderFC(){$('#fc-topics').innerHTML=['All',...Object.keys(FC)].map(t=>`<button class="btn sm ${t===fcTopic?'pri':''}" data-topic="${esc(t)}">${t}</button>`).join('');
+ const d=fcDeck();if(fcIdx>=d.length)fcIdx=0;const total=fcAll().filter(c=>fcTopic==='All'||c.t===fcTopic);
+ $('#fc-count').textContent=`${d.length?fcIdx+1:0} / ${d.length} · ${total.filter(c=>known.has(c.id)).length} of ${total.length} known`;
+ const c=d[fcIdx];$('#fc-card').innerHTML=c?`<div class="muted" style="font-size:12.5px;margin-bottom:8px">${c.t}${known.has(c.id)?' · ✓ known':''}</div><div class="q">${c.q}</div>${fcFlip?`<div class="a">${c.a}</div>`:'<div class="muted" style="font-size:13px;margin-top:14px">Click to reveal the answer</div>'}`:'<div class="q">🎉 You know every card in this set.</div>'}
+$('#fc-topics').onclick=e=>{const b=e.target.closest('[data-topic]');if(!b)return;fcTopic=b.dataset.topic;fcIdx=0;fcFlip=false;renderFC()};
+$('#fc-card').onclick=()=>{fcFlip=!fcFlip;renderFC()};
+$('#fc-next').onclick=()=>{const n=fcDeck().length;if(n){fcIdx=(fcIdx+1)%n;fcFlip=false;renderFC()}};
+$('#fc-prev').onclick=()=>{const n=fcDeck().length;if(n){fcIdx=(fcIdx-1+n)%n;fcFlip=false;renderFC()}};
+$('#fc-know').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.add(c.id);store.set('known',[...known]);if(!$('#fc-unknown').checked)fcIdx++;fcFlip=false;renderFC()};
+$('#fc-again').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.delete(c.id);store.set('known',[...known]);fcIdx++;fcFlip=false;renderFC()};
+$('#fc-unknown').onchange=()=>{fcIdx=0;fcFlip=false;renderFC()};
+$('#fc-shuffle').onclick=()=>{fcOrder=fcAll().map(c=>c.id).sort(()=>Math.random()-.5);fcIdx=0;fcFlip=false;renderFC()};
+
+/* =========================================================
+   HOME + ROUTER + TABS
+   ========================================================= */
+function renderHome(){const nStories=FLAT.filter(hasStory).length,nCards=fcAll().length;
+ const stat=(v,t,k)=>`<div class="stat"><div class="v">${v}<span class="muted" style="font-size:14px"> / ${t}</span></div><div class="k">${k}</div><div class="bar-bg"><div class="bar-fg" style="width:${v/t*100}%"></div></div></div>`;
+ $('#home-stats').innerHTML=stat(solved.size,PROBS.length,'problems solved')+stat(known.size,nCards,'flashcards known')+stat(nStories,FLAT.length,'STAR stories written');
+ const cards=[['ds','▦','Data Structures','Stack, queue, linked list, BST, heap and hash table, animated operation by operation.'],['algo','↯','Algorithms','6 sorting algorithms, binary search, BFS/DFS/Dijkstra/A* on a grid you can draw on, and 14 pattern templates.'],
+  ['problems','✓','Top Problems','45 frequently asked problems, tagged by pattern and company, with progress tracking.'],['system','⧉','System Design','5 classic designs with animated request flows, a token bucket demo, consistent hashing and core concepts.'],
+  ['behavioral','☺','Behavioral','21 common questions with a STAR builder, a 2-minute timer and a saved story bank.'],['technical','?','Technical Q&A','36 flashcards on OS, networking, databases, OOP, concurrency and web APIs.']];
+ $('#home-cards').innerHTML=cards.map(([id,em,t,d])=>`<div class="card go" data-goto="${id}"><div class="em">${em}</div><h3 style="margin-top:6px">${t}</h3><p class="muted" style="font-size:14px;margin:0">${d}</p></div>`).join('')}
+$('#home-cards').onclick=e=>{const c=e.target.closest('[data-goto]');if(c)location.hash=c.dataset.goto};
+const SECTIONS=['home','ds','algo','problems','system','behavioral','technical'];
+function show(id){if(!SECTIONS.includes(id))id='home';$$('main>section').forEach(s=>s.hidden=s.id!=='sec-'+id);$$('#nav button[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
+ if(id==='home')renderHome();if(id==='problems')renderProbs();if(id==='technical')renderFC();if(id==='behavioral'){renderBList();renderBEditor()}
+ const sec=$('#sec-'+id),act=sec&&$('.tabs button.active',sec);if(act)act.click();window.scrollTo(0,0)}
+$$('#nav button[data-go]').forEach(b=>b.onclick=()=>{if(location.hash.slice(1)===b.dataset.go)show(b.dataset.go);else location.hash=b.dataset.go});
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+$$('.tabs').forEach(tb=>{const g=tb.dataset.tabs,btns=$$('button',tb);
+ const sel=name=>{btns.forEach(b=>b.classList.toggle('active',b.dataset.tab===name));$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+name);(TAB_HOOKS[g+':'+name]||(()=>{}))()};
+ btns.forEach(b=>b.onclick=()=>{if(!BUSY||b.classList.contains('active'))sel(b.dataset.tab)});btns[0].classList.add('active');$$(`[data-pane^="${g}:"]`).forEach(p=>p.hidden=p.dataset.pane!==g+':'+btns[0].dataset.tab)});
+show(location.hash.slice(1));
+</script>
+</body>
+</html>
