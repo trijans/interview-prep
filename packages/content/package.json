@@ -1,0 +1,10 @@
+{
+  "name": "@ipl/content",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": { "typecheck": "tsc --noEmit -p ." },
+  "devDependencies": { "typescript": "^5.5.4" }
+}

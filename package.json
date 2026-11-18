@@ -1,0 +1,11 @@
+{
+  "name": "interview-prep-lab",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev -w @ipl/web",
+    "build": "npm run build -w @ipl/web",
+    "preview": "npm run preview -w @ipl/web",
+    "typecheck": "npm run typecheck -w @ipl/content && npm run typecheck -w @ipl/web"
+  }
+}
