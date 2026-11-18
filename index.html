@@ -147,7 +147,38 @@ ol.steps li.now{color:var(--text)}
 .flash .a{font-size:15.5px;color:#cfd3de;text-align:left;margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
 .ring-wrap{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}
+.modal{position:fixed;inset:0;background:rgba(5,7,12,.74);z-index:50;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+.modal-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;width:min(880px,100%);position:relative}
+.modal-x{all:unset;cursor:pointer;position:absolute;top:14px;right:18px;color:var(--muted);font-size:18px}
+.modal-x:hover{color:var(--text)}
+.pm-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;margin-top:6px}
+.hints{padding-left:20px;margin:4px 0 8px}
+.hints li{margin:6px 0;font-size:14px}
+.rate{display:flex;flex-direction:column;gap:8px}
+.linkbtn{all:unset;cursor:pointer;color:var(--accent)}
+.linkbtn:hover{text-decoration:underline}
+.pill.due{color:var(--yellow);border-color:#5a4a1c}
+.steps-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.steps-nav button{all:unset;cursor:pointer;font-size:13px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);color:var(--muted)}
+.steps-nav button.done{border-color:#2b5a4b;color:var(--green)}
+.steps-nav button.active{background:var(--accent);color:#0e1016;border-color:var(--accent)}
+.ref{background:var(--panel2);margin-top:12px;font-size:14px}
+.ref h4:first-child{margin-top:0}
+.ref ul,.ref ol{padding-left:20px}
+.checks label{display:block;font-size:14px;margin:7px 0;cursor:pointer}
+.checks input{accent-color:var(--green);margin-right:6px}
+.btn:disabled{opacity:.4;cursor:default;border-color:var(--line)}
+.today-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px}
+.streak{font-size:22px;font-weight:700}
+.heat{display:grid;grid-template-rows:repeat(7,13px);grid-auto-flow:column;grid-auto-columns:13px;gap:3px;overflow-x:auto;padding:4px 0}
+.heat i{border-radius:3px;background:#1a1f2c}
+.heat i.l1{background:#1d4d3f}.heat i.l2{background:#2a7a60}.heat i.l3{background:var(--green)}
+.heat i.today{outline:1px solid var(--muted)}
+.duelist{display:flex;flex-direction:column;gap:6px;font-size:14px}
 @media (max-width:980px){
+ .pm-grid,.today-grid{grid-template-columns:1fr}
+ .modal{padding:10px}
+ .modal-card{padding:18px}
  .app{grid-template-columns:1fr}
  #nav{position:sticky;top:0;height:auto;flex-direction:row;overflow-x:auto;z-index:5;padding:8px}
  .brand{display:none}.speed{display:none}
@@ -196,7 +227,14 @@ ol.steps li.now{color:var(--text)}
    </ul>
   </div>
  </div>
+ <div class="today-grid" id="home-today"></div>
  <div class="cards" id="home-cards"></div>
+ <div class="card" style="margin-top:16px">
+  <h3>Back up or move your progress</h3>
+  <p class="muted" style="font-size:14px;margin:0 0 10px">Progress is saved in this browser only. Export a backup file to keep it safe, or to move to another device and import it there. Importing replaces the progress in this browser.</p>
+  <div class="controls" style="margin:0"><button class="btn" id="bk-export">Export backup</button><label class="btn" for="bk-file">Import backup</label><input type="file" id="bk-file" accept=".json,application/json" hidden></div>
+  <div class="say" id="bk-say" hidden></div>
+ </div>
 </section>
 
 <!-- DATA STRUCTURES -->
@@ -280,18 +318,18 @@ ol.steps li.now{color:var(--text)}
 <!-- PROBLEMS -->
 <section id="sec-problems" hidden>
  <h1>Top Interview Problems</h1>
- <p class="sub">45 problems that come up again and again at large tech companies, grouped by pattern. Ticks are saved in this browser.</p>
+ <p class="sub">45 problems that come up again and again at large tech companies, grouped by pattern. Click a problem for hints, a timer and notes. Rate each attempt and it comes back for review on a schedule (1, 3, 7, 14, 30 days).</p>
  <div class="card">
   <div class="controls">
    <input type="search" id="p-q" placeholder="Search…">
    <select id="p-diff"><option value="">All difficulties</option><option>Easy</option><option>Medium</option><option>Hard</option></select>
    <select id="p-pat"><option value="">All patterns</option></select>
    <select id="p-co"><option value="">All companies</option></select>
-   <label class="muted" style="font-size:14px"><input type="checkbox" id="p-hide"> Hide solved</label>
+   <select id="p-status"><option value="">All problems</option><option value="unsolved">Not solved yet</option><option value="solved">Solved</option><option value="due">Due for review</option></select>
   </div>
   <div id="p-progress" class="muted" style="font-size:14px"></div>
   <div class="bar-bg" style="margin-bottom:12px"><div class="bar-fg" id="p-bar" style="width:0"></div></div>
-  <div style="overflow:auto"><table class="probs"><thead><tr><th></th><th>#</th><th>Problem</th><th>Difficulty</th><th>Pattern</th><th>Often reported at</th></tr></thead><tbody id="p-body"></tbody></table></div>
+  <div style="overflow:auto"><table class="probs"><thead><tr><th></th><th>#</th><th>Problem</th><th>Difficulty</th><th>Pattern</th><th>Next review</th><th>Often reported at</th></tr></thead><tbody id="p-body"></tbody></table></div>
   <p class="muted" style="font-size:12.5px;margin-bottom:0">Company tags come from public interview reports and change over time, so use them as a guide only. Problem links open LeetCode.</p>
  </div>
 </section>
@@ -333,7 +371,7 @@ ol.steps li.now{color:var(--text)}
  <p class="sub">Flashcards on the CS fundamentals that come up in phone screens and technical rounds. Click a card to reveal the answer.</p>
  <div class="chips" id="fc-topics"></div>
  <div class="controls">
-  <label class="muted" style="font-size:14px"><input type="checkbox" id="fc-unknown"> Only cards I don't know yet</label>
+  <select id="fc-mode"><option value="all">All cards</option><option value="unknown">Cards I don't know yet</option><option value="due">Due for review</option></select>
   <button class="btn sm" id="fc-shuffle">Shuffle</button>
   <span class="muted" id="fc-count" style="font-size:14px"></span>
  </div>
@@ -348,6 +386,7 @@ ol.steps li.now{color:var(--text)}
 
 </main>
 </div>
+<div id="modal" class="modal" hidden><div class="modal-card"><button class="modal-x" id="modal-x" aria-label="Close">✕</button><div id="modal-body"></div></div></div>
 
 <script>
 /* =========================================================
@@ -373,6 +412,29 @@ function say(k,msg){$('#'+k+'-say').innerHTML=msg}
 function svg(id){const s=$('#'+id);s.innerHTML='';return s}
 function arrowLine(p,x1,y1,x2,y2,cls='arrow',mk='arr'){return S('line',{x1,y1,x2,y2,class:cls,'marker-end':`url(#${mk})`},p)}
 const TAB_HOOKS={};
+
+/* ---- Dates, spaced repetition, activity ---- */
+function dkey(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return dkey(d)}
+function daysUntil(ds){return Math.round((new Date(ds)-new Date(dkey()))/864e5)}
+const IV=[1,3,7,14,30];
+let SR=store.get('sr',{});
+function srRate(id,r){const o=SR[id]||{box:0,h:[]};let box=o.box||0;
+ if(r==='easy')box=o.h.length?Math.min(box+1,IV.length-1):1;else if(r==='fail')box=0;
+ const days=r==='hard'?Math.max(1,Math.ceil(IV[box]/2)):IV[box];
+ o.box=box;o.due=addDays(days);o.h=[...o.h,{d:dkey(),r}].slice(-20);SR[id]=o;store.set('sr',SR);logActivity();return days}
+function isDue(id){const o=SR[id];return !!(o&&o.due<=dkey())}
+function logActivity(){const a=store.get('act',{});const k=dkey();a[k]=(a[k]||0)+1;store.set('act',a)}
+function logOnce(tag){const o=store.get('actonce',{});if(o[tag]===dkey())return;o[tag]=dkey();store.set('actonce',o);logActivity()}
+function streak(){const a=store.get('act',{});const d=new Date();let n=0;if(!a[dkey(d)])d.setDate(d.getDate()-1);while(a[dkey(d)]){n++;d.setDate(d.getDate()-1)}return n}
+
+/* ---- Modal ---- */
+let pTimer=null;
+function openModal(html){const b=$('#modal-body');b.onclick=null;b.oninput=null;b.onchange=null;b.innerHTML=html;$('#modal').hidden=false;document.body.style.overflow='hidden';$('#modal').scrollTop=0}
+function closeModal(){$('#modal').hidden=true;document.body.style.overflow='';clearInterval(pTimer);pTimer=null}
+$('#modal-x').onclick=closeModal;
+$('#modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#modal').hidden)closeModal()});
 
 /* =========================================================
    DATA STRUCTURES
@@ -831,14 +893,90 @@ const PROBS=[
  [994,'Rotting Oranges','rotting-oranges','Medium','BFS','A MS'],
  [1143,'Longest Common Subsequence','longest-common-subsequence','Medium','Dynamic Programming','G A']
 ];
+/* [time, space, [hints…]] */
+const HINTS={
+ 1:['O(n)','O(n)',['Brute force checks every pair, which is O(n²). What would you need to look up quickly instead?','For each number x, you only need to know whether target − x appeared earlier.','Scan once, storing value → index in a hash map. Check for the complement before inserting x.']],
+ 3:['O(n)','O(min(n, alphabet))',['Think of a window [l, r] that never contains a repeated character.','When s[r] is already inside the window, the left edge must jump past its previous position.','Store the last index of each character and set l = max(l, last[c] + 1).']],
+ 5:['O(n²)','O(1)',['Every palindrome mirrors around a center.','There are 2n − 1 possible centers: each character and each gap between two characters.','Expand outward from every center while both ends match, and keep the longest.']],
+ 11:['O(n)','O(1)',['Area = min(h[l], h[r]) × (r − l). Start with the widest possible container.','Moving the taller line inward can never help: the width shrinks and the height is still capped by the shorter line.','Use two pointers and always move the shorter side.']],
+ 15:['O(n²)','O(1) extra',['Sort the array first.','Fix one number a[i], then look for pairs in the rest that sum to −a[i].','Find the pair with two pointers, and skip duplicate values for i, l and r.']],
+ 20:['O(n)','O(n)',['The most recently opened bracket must be the first one closed.','Push opening brackets onto a stack. On a closing bracket, the top of the stack must be its match.','At the end, the stack must be empty.']],
+ 21:['O(n + m)','O(1)',['A dummy head node removes the special cases.','Compare the two heads and attach the smaller one.','When one list runs out, attach the rest of the other.']],
+ 23:['O(N log k)','O(k)',['Merging lists one at a time costs O(kN). Can you always find the smallest head quickly?','A min-heap holding the k current heads gives you the smallest in O(log k).','Pop the smallest, append it, then push its next node. Pairwise divide-and-conquer merging also works.']],
+ 33:['O(log n)','O(1)',['At any mid point, at least one half of the array is sorted.','Compare a[lo] with a[mid] to find out which half is sorted.','If the target is inside the sorted half’s range, search there. Otherwise search the other half.']],
+ 42:['O(n)','O(1)',['Water above index i = min(highest bar to the left, highest bar to the right) − h[i].','Precomputing both "max so far" arrays gives O(n) time and O(n) space.','With two pointers, process the side whose max is smaller. Its water level is already decided.']],
+ 46:['O(n · n!)','O(n)',['Build each permutation one position at a time.','Keep track of which numbers are already used in the current path.','Backtrack: choose, recurse, un-choose. Save a copy when the path has length n.']],
+ 48:['O(n²)','O(1)',['It must be in place, so think in terms of simple transformations of the matrix.','A 90° clockwise rotation = transpose, then reverse each row.','Transpose by swapping m[i][j] with m[j][i] for every j > i.']],
+ 49:['O(n · k log k)','O(n · k)',['Anagrams share the same canonical form.','The sorted word, or a tuple of 26 letter counts, works as that key.','Group with a hash map from key → list of words.']],
+ 53:['O(n)','O(1)',['At each index, you either extend the previous subarray or start a new one.','cur = max(x, cur + x).','Track the best value of cur seen so far. This is Kadane’s algorithm.']],
+ 56:['O(n log n)','O(n)',['Sort the intervals by start time.','An interval overlaps the last merged one if its start ≤ that interval’s end.','If they overlap, extend the end with max(). Otherwise append a new interval.']],
+ 70:['O(n)','O(1)',['To reach step n, your last move came from step n − 1 or step n − 2.','ways(n) = ways(n − 1) + ways(n − 2), which is the Fibonacci sequence.','You only need to keep the last two values.']],
+ 76:['O(m + n)','O(alphabet)',['Expand the right edge until the window contains all of t, then shrink from the left.','Keep counts of the characters you still need and how many are missing.','While the window is valid, record it and move l forward, updating the counts.']],
+ 79:['O(m · n · 4^L)','O(L)',['Start a DFS from every cell that matches word[0].','From each cell, try the 4 neighbours for the next character.','Mark a cell as used while it is on the path, and unmark it when you backtrack.']],
+ 98:['O(n)','O(h)',['Checking each node only against its direct children is not enough.','Every node must sit within (low, high) bounds inherited from its ancestors.','Recurse left with high = node.val and right with low = node.val. An inorder traversal must also be strictly increasing.']],
+ 102:['O(n)','O(n)',['This is BFS with a queue.','Handle one level at a time: read the queue’s size before you start popping.','Pop exactly that many nodes, push their children, and collect the values.']],
+ 121:['O(n)','O(1)',['You must buy before you sell.','Track the lowest price seen so far.','Each day, profit = price − lowest so far. Keep the best profit.']],
+ 124:['O(n)','O(h)',['Any node can be the highest point of a path that uses both of its children.','To its parent, a node can only return one branch: node.val + max(0, left, right).','Update a global answer with node.val + max(0, left) + max(0, right).']],
+ 128:['O(n)','O(n)',['Sorting gives O(n log n). Can you do it in O(n)?','Put every number in a hash set.','Only start counting a run from numbers x where x − 1 is not in the set.']],
+ 138:['O(n)','O(n)',['The tricky part is random pointers to nodes that have not been copied yet.','First pass: map each original node → a new copy.','Second pass: set next and random on the copies using the map. Interleaving copies in the list gives O(1) extra space.']],
+ 139:['O(n²)','O(n)',['Let dp[i] mean "s[:i] can be split into dictionary words".','dp[i] is true if some j < i has dp[j] true and s[j:i] is in the dictionary.','Put the dictionary in a set and start with dp[0] = true.']],
+ 146:['O(1) per op','O(capacity)',['You need O(1) lookup and O(1) "mark as most recently used".','Combine a hash map (key → node) with a doubly linked list ordered by recency.','On get and put, move the node to the front. When over capacity, evict from the tail.']],
+ 200:['O(m · n)','O(m · n)',['Each island is a connected group of "1" cells.','Scan the grid. When you find unvisited land, count one island and flood-fill it.','Use DFS or BFS to mark all connected land as visited (or overwrite it with "0").']],
+ 206:['O(n)','O(1)',['You need three pointers: prev, curr and next.','Save next, point curr.next back to prev, then move both forward.','Return prev at the end. Practise the recursive version as well.']],
+ 207:['O(V + E)','O(V + E)',['Courses and prerequisites form a directed graph.','You can finish every course only if the graph has no cycle.','Kahn’s algorithm: keep taking nodes with in-degree 0 and check whether you processed all of them.']],
+ 208:['O(L) per op','O(total characters)',['Each node maps a character to a child node.','insert walks or creates nodes along the word, then marks the end.','search needs the end mark. startsWith only needs the path to exist.']],
+ 215:['O(n log k) / O(n) avg','O(k)',['Sorting is O(n log n). Can you avoid sorting everything?','Keep a min-heap of size k. Its top is the k-th largest element.','Quickselect, using the partition step from quicksort, runs in O(n) on average.']],
+ 236:['O(n)','O(h)',['Recurse into both subtrees looking for p or q.','If the current node is p or q, return it.','If both sides return something, the current node is the LCA. Otherwise pass up whichever side is non-null.']],
+ 238:['O(n)','O(1) extra',['Division is not allowed, and it would break with zeros anyway.','answer[i] = (product of everything to the left of i) × (product of everything to the right).','Fill prefix products left to right, then multiply by a running suffix product right to left.']],
+ 239:['O(n)','O(k)',['A heap works in O(n log n), but there is an O(n) approach.','Keep a deque of indices whose values are in decreasing order.','Pop from the back while smaller than the new value, pop from the front when it leaves the window. The front is the max.']],
+ 253:['O(n log n)','O(n)',['Rooms needed = the largest number of meetings happening at the same time.','Sort by start time and keep a min-heap of the end times of rooms in use.','If the earliest end ≤ the new start, reuse that room (pop). Push the new end. The heap size is the answer.']],
+ 297:['O(n)','O(n)',['Pick a traversal and include markers for null children.','Preorder with "#" for null describes the tree exactly.','Deserialize by reading tokens recursively in the same order.']],
+ 300:['O(n log n)','O(n)',['O(n²) DP: dp[i] = 1 + max(dp[j]) over j < i with a[j] < a[i].','Faster: keep tails[k] = the smallest possible tail of an increasing subsequence of length k + 1.','For each x, binary-search its position in tails and replace that value (or append).']],
+ 322:['O(amount × coins)','O(amount)',['Greedy fails, e.g. coins [1, 3, 4] with amount 6.','Let dp[a] = fewest coins that make amount a.','dp[a] = min(dp[a − c] + 1) over all coins c, with dp[0] = 0. Unreachable amounts stay infinite.']],
+ 347:['O(n log k) / O(n)','O(n)',['Count frequencies with a hash map first.','A min-heap of size k over (count, number) gives O(n log k).','Bucket sort by frequency gives O(n): buckets[count] holds the numbers with that count.']],
+ 394:['O(output length)','O(n)',['Nested brackets suggest a stack.','On "[", push the current string and the repeat count, then reset both.','On "]", pop and set current = previous + current × count.']],
+ 560:['O(n)','O(n)',['Negative numbers break the sliding-window approach.','sum(i..j) = prefix[j] − prefix[i − 1], so you need to know how often prefix[j] − k appeared before.','Keep a hash map of prefix-sum counts, starting with {0: 1}.']],
+ 739:['O(n)','O(n)',['For each day you want the next warmer day, which is a "next greater element" problem.','Keep a stack of indices whose temperatures are decreasing.','When a warmer day arrives, pop and set answer[j] = i − j.']],
+ 973:['O(n log k)','O(k)',['Compare squared distances. There is no need for sqrt.','Use a max-heap of size k: push each point and pop the farthest when the heap grows past k.','Quickselect also works, in O(n) on average.']],
+ 994:['O(m · n)','O(m · n)',['Rot spreads from all rotten oranges at the same time.','Multi-source BFS: start the queue with every rotten orange.','Process level by level, counting minutes. At the end, check whether any fresh oranges are left.']],
+ 1143:['O(m · n)','O(min(m, n))',['This is classic 2D DP over prefixes of both strings.','If a[i] == b[j], dp[i][j] = dp[i−1][j−1] + 1. Otherwise dp[i][j] = max(dp[i−1][j], dp[i][j−1]).','You only need the previous row, which brings space down to O(n).']]
+};
+const RLAB={easy:'✅ solved easily',hard:'😓 solved with struggle',fail:'❌ not solved'};
 let solved=new Set(store.get('solved',[]));
 (function(){const pats=[...new Set(PROBS.map(p=>p[4]))].sort();pats.forEach(p=>$('#p-pat').append(new Option(p,p)));for(const [k,v] of Object.entries(CO))$('#p-co').append(new Option(v,k))})();
-function renderProbs(){const q=$('#p-q').value.toLowerCase(),d=$('#p-diff').value,p=$('#p-pat').value,co=$('#p-co').value,hide=$('#p-hide').checked;
- $('#p-body').innerHTML=PROBS.filter(r=>(!q||r[1].toLowerCase().includes(q)||String(r[0])===q)&&(!d||r[3]===d)&&(!p||r[4]===p)&&(!co||r[5].split(' ').includes(co))&&!(hide&&solved.has(r[0])))
-  .map(r=>`<tr class="${solved.has(r[0])?'solved':''}"><td><input type="checkbox" data-pid="${r[0]}" ${solved.has(r[0])?'checked':''} aria-label="Mark solved"></td><td class="muted">${r[0]}</td><td><a href="https://leetcode.com/problems/${r[2]}/" target="_blank" rel="noopener">${r[1]}</a></td><td><span class="pill ${r[3]}">${r[3]}</span></td><td><span class="pill">${r[4]}</span></td><td style="font-size:13px" class="muted">${r[5].split(' ').map(c=>CO[c]).join(', ')}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">No matches.</td></tr>';
- $('#p-progress').textContent=`${solved.size} / ${PROBS.length} solved`;$('#p-bar').style.width=(solved.size/PROBS.length*100)+'%'}
-$('#p-body').addEventListener('change',e=>{const id=+e.target.dataset.pid;if(!id)return;e.target.checked?solved.add(id):solved.delete(id);store.set('solved',[...solved]);renderProbs()});
-['#p-q','#p-diff','#p-pat','#p-co','#p-hide'].forEach(s=>$(s).addEventListener('input',renderProbs));
+function dueLabel(id){const o=SR[id];if(!o)return'<span class="muted">–</span>';if(o.due<=dkey())return'<span class="pill due">Due now</span>';const n=daysUntil(o.due);return`<span class="muted" style="font-size:13px">in ${n} day${n>1?'s':''}</span>`}
+function dueProblems(){return PROBS.filter(p=>isDue('p:'+p[0]))}
+function renderProbs(){const q=$('#p-q').value.toLowerCase(),d=$('#p-diff').value,p=$('#p-pat').value,co=$('#p-co').value,st=$('#p-status').value;
+ const ok=r=>st==='unsolved'?!solved.has(r[0]):st==='solved'?solved.has(r[0]):st==='due'?isDue('p:'+r[0]):true;
+ $('#p-body').innerHTML=PROBS.filter(r=>(!q||r[1].toLowerCase().includes(q)||String(r[0])===q)&&(!d||r[3]===d)&&(!p||r[4]===p)&&(!co||r[5].split(' ').includes(co))&&ok(r))
+  .map(r=>`<tr class="${solved.has(r[0])&&!isDue('p:'+r[0])?'solved':''}"><td><input type="checkbox" data-pid="${r[0]}" ${solved.has(r[0])?'checked':''} aria-label="Mark solved"></td><td class="muted">${r[0]}</td><td><button class="linkbtn" data-open="${r[0]}">${r[1]}</button> <a href="https://leetcode.com/problems/${r[2]}/" target="_blank" rel="noopener" title="Open on LeetCode" style="text-decoration:none;font-size:13px">↗</a></td><td><span class="pill ${r[3]}">${r[3]}</span></td><td><span class="pill">${r[4]}</span></td><td>${dueLabel('p:'+r[0])}</td><td style="font-size:13px" class="muted">${r[5].split(' ').map(c=>CO[c]).join(', ')}</td></tr>`).join('')||'<tr><td colspan="7" class="muted">No matches.</td></tr>';
+ const nd=dueProblems().length;$('#p-progress').textContent=`${solved.size} / ${PROBS.length} solved${nd?` · ${nd} due for review`:''}`;$('#p-bar').style.width=(solved.size/PROBS.length*100)+'%'}
+$('#p-body').addEventListener('change',e=>{const id=+e.target.dataset.pid;if(!id)return;if(e.target.checked){solved.add(id);store.set('solved',[...solved]);renderProbs();openProblem(id)}else{solved.delete(id);store.set('solved',[...solved]);renderProbs()}});
+$('#p-body').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)openProblem(+b.dataset.open)});
+['#p-q','#p-diff','#p-pat','#p-co','#p-status'].forEach(s=>$(s).addEventListener('input',renderProbs));
+function refreshViews(){if(!$('#sec-home').hidden)renderHome();if(!$('#sec-problems').hidden)renderProbs()}
+function openProblem(id){const r=PROBS.find(p=>p[0]===id);if(!r)return;const hn=HINTS[id]||['–','–',[]],o=SR['p:'+id],notes=store.get('notes',{}),target={Easy:15,Medium:25,Hard:40}[r[3]];
+ clearInterval(pTimer);pTimer=null;let sec=0,shown=0;
+ openModal(`<div class="muted" style="font-size:13px">#${id} · <span class="pill ${r[3]}">${r[3]}</span> <span class="pill">${r[4]}</span></div>
+ <h2 style="margin:8px 0 4px">${esc(r[1])}</h2><a href="https://leetcode.com/problems/${r[2]}/" target="_blank" rel="noopener">Solve it on LeetCode ↗</a>
+ <div class="pm-grid"><div>
+  <h4>Target complexity</h4><div style="font-size:14px">Time <code style="color:var(--green)">${hn[0]}</code> · Space <code style="color:var(--green)">${hn[1]}</code></div>
+  <h4>Hints</h4><ol class="hints" id="pm-hints"></ol>${hn[2].length?`<button class="btn sm" id="pm-hint">Show hint 1 of ${hn[2].length}</button>`:''}
+  <h4>My notes</h4><textarea id="pm-notes" rows="4" placeholder="Key insight, edge cases, mistakes to avoid next time…">${esc(notes[id]||'')}</textarea>
+ </div><div>
+  <h4>Timer</h4><div class="timer" id="pm-time">0:00</div><div class="muted" style="font-size:13px">Aim for about ${target} minutes, as in a real interview</div>
+  <div class="controls" style="margin-top:8px"><button class="btn sm" id="pm-tgo">Start</button><button class="btn sm" id="pm-trs">Reset</button></div>
+  <h4>How did it go?</h4><div class="rate"><button class="btn" data-rate="easy">✅ Solved it easily</button><button class="btn" data-rate="hard">😓 Solved it, but struggled</button><button class="btn" data-rate="fail">❌ Couldn't solve it</button></div>
+  <div class="say" id="pm-say">${o?`Next review: <b>${o.due}</b>${o.due<=dkey()?' (due now)':''}`:'Rate each attempt and this problem comes back for review at the right time (1 → 3 → 7 → 14 → 30 days).'}</div>
+  ${o&&o.h.length?`<h4>History</h4><div class="muted" style="font-size:13px">${o.h.slice(-6).reverse().map(x=>`${x.d} · ${RLAB[x.r]}`).join('<br>')}</div>`:''}
+ </div></div>`);
+ const hb=$('#pm-hint');if(hb)hb.onclick=()=>{$('#pm-hints').append(h(`<li>${esc(hn[2][shown])}</li>`));shown++;if(shown>=hn[2].length){hb.disabled=true;hb.textContent='All hints shown'}else hb.textContent=`Show hint ${shown+1} of ${hn[2].length}`};
+ $('#pm-notes').oninput=e=>{const n=store.get('notes',{});n[id]=e.target.value;store.set('notes',n)};
+ const tick=()=>{const el=$('#pm-time');if(!el)return;el.textContent=fmt(sec);el.style.color=sec>target*60?'var(--yellow)':''};
+ $('#pm-tgo').onclick=e=>{if(pTimer){clearInterval(pTimer);pTimer=null;e.target.textContent='Start'}else{pTimer=setInterval(()=>{sec++;tick()},1000);e.target.textContent='Pause'}};
+ $('#pm-trs').onclick=()=>{clearInterval(pTimer);pTimer=null;sec=0;tick();$('#pm-tgo').textContent='Start'};
+ $$('[data-rate]',$('#modal-body')).forEach(b=>b.onclick=()=>{const r2=b.dataset.rate,days=srRate('p:'+id,r2);if(r2!=='fail'){solved.add(id);store.set('solved',[...solved])}
+  $('#pm-say').innerHTML=`Saved as <b>${RLAB[r2]}</b>. Next review in <b>${days} day${days>1?'s':''}</b> (${SR['p:'+id].due}).`;refreshViews()})}
 
 /* =========================================================
    SYSTEM DESIGN
@@ -947,7 +1085,7 @@ const SD={
 (function buildSD(){const tabs=$('#sd-tabs'),host=$('#sd-panes');
  for(const [k,d] of Object.entries(SD)){tabs.append(h(`<button data-tab="${k}">${d.name}</button>`));
   host.append(h(`<div class="pane" data-pane="sd:${k}">
-  <div class="sd-layout"><div class="card"><div class="controls">${d.flows.map((f,i)=>`<button class="btn ${i?'':'pri'}" data-flow="${k}:${i}">▶ ${f.n}</button>`).join('')}<button class="btn" data-flow="${k}:reset">Reset</button></div>
+  <div class="sd-layout"><div class="card"><div class="controls">${d.flows.map((f,i)=>`<button class="btn ${i?'':'pri'}" data-flow="${k}:${i}">▶ ${f.n}</button>`).join('')}<button class="btn" data-flow="${k}:reset">Reset</button><button class="btn" data-practice="${k}" style="margin-left:auto">✎ Practice this design</button></div>
    <svg id="sd-svg-${k}" class="vizsvg" viewBox="0 0 900 460"></svg><ol class="steps" id="sd-steps-${k}"></ol></div>
    <div class="card side" id="sd-info-${k}"><h3>Click any component</h3><p class="muted" style="font-size:14px">Each box shows why it exists and the trade-offs to mention in the interview.</p><h4>Legend</h4>${Object.entries(TYPE_NAMES).filter(([t])=>t!=='worker').map(([t,n])=>`<div style="font-size:13px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${TYPE_COLORS[t]};margin-right:6px"></span>${n}</div>`).join('')}</div></div>
   <div class="grid3">
@@ -974,7 +1112,7 @@ const SD={
    <div class="controls"><button class="btn pri" id="ring-add">Add server</button><button class="btn" id="ring-rm">Remove server</button><label class="muted" style="font-size:14px"><input type="checkbox" id="ring-v"> Virtual nodes (×4)</label></div>
    <div class="say" id="ring-say">24 keys across 3 servers.</div><div id="ring-load" style="margin-top:10px;font-size:14px"></div></div></div></div>
   <div id="concepts"></div></div>`));
- host.addEventListener('click',e=>{const b=e.target.closest('[data-flow]');if(b){const [k,i]=b.dataset.flow.split(':');if(i==='reset'){if(!BUSY){drawSD(k);$('#sd-steps-'+k).innerHTML=''}}else run(()=>playFlow(k,+i));return}
+ host.addEventListener('click',e=>{const pr=e.target.closest('[data-practice]');if(pr){openPractice(pr.dataset.practice);return}const b=e.target.closest('[data-flow]');if(b){const [k,i]=b.dataset.flow.split(':');if(i==='reset'){if(!BUSY){drawSD(k);$('#sd-steps-'+k).innerHTML=''}}else run(()=>playFlow(k,+i));return}
   const n=e.target.closest('[data-node]');if(n){const [k,id]=n.dataset.node.split(':');if(!BUSY)drawSD(k,new Set(),new Set(),id);sdInfo(k,id)}});
  for(const k of Object.keys(SD))TAB_HOOKS['sd:'+k]=()=>{if(!BUSY)drawSD(k)};
  TAB_HOOKS['sd:concepts']=()=>drawRing();
@@ -993,6 +1131,56 @@ function moveDot(dot,A,B,ms){return new Promise(res=>{const t0=performance.now()
 async function playFlow(k,fi){const d=SD[k],f=d.flows[fi],ol=$('#sd-steps-'+k);ol.innerHTML='';const act=new Set(),hot=new Set();
  for(const [a,b,txt] of f.s){act.add(a);hot.add(a+'>'+b);drawSD(k,act,hot);$$('li',ol).forEach(li=>li.classList.remove('now'));const li=h(`<li class="now"><b>${d.nodes[a][0]} → ${d.nodes[b][0]}:</b> ${esc(txt)}</li>`);ol.append(li);
   const dot=S('circle',{r:7,class:'dot',cx:d.nodes[a][2],cy:d.nodes[a][3]},$('#sd-svg-'+k));await moveDot(dot,d.nodes[a],d.nodes[b],Math.max(450,SPEED*1.1));act.add(b);drawSD(k,act,hot);await sleep(SPEED*0.5)}}
+
+/* Guided system design practice */
+const li=x=>`<li>${x}</li>`;
+const SDGEN=[
+ ['Requirements','Write the functional requirements (what the system must do) and the non-functional ones (scale, latency, availability, consistency). In a real interview, this is where you ask clarifying questions.',
+  d=>`<h4>Functional</h4><ul>${d.req[0].map(li).join('')}</ul><h4>Non-functional</h4><ul>${d.req[1].map(li).join('')}</ul>`,
+  d=>['Listed the 3–5 core features, and nothing extra','Stated the expected scale (users, requests per second)','Named latency, availability or consistency targets','Said what is out of scope']],
+ ['Estimates','Estimate reads and writes per second, storage over a few years, and anything else that shapes the design.',
+  d=>`<ul>${d.est.map(li).join('')}</ul>`,
+  d=>['Worked out read and write QPS','Estimated storage growth over time','Used a number to justify a design choice (cache, sharding, CDN…)']],
+ ['API & data model','Sketch the main API endpoints and the core entities with their keys. Choose a datastore and say why.',
+  d=>`<ul>${d.api.map(x=>`<li><code>${esc(x)}</code></li>`).join('')}</ul>`,
+  d=>['Defined the main endpoints with inputs and outputs','Named the core entities and their primary keys','Picked a datastore based on the access pattern']],
+ ['High-level design','List the main components, then walk one request from the client to storage and back.',
+  d=>`<h4>Components</h4><ul>${Object.values(d.nodes).map(n=>`<li><b>${n[0]}</b>: ${n[4]}</li>`).join('')}</ul>`+d.flows.map(f=>`<h4>${f.n}</h4><ol>${f.s.map(s=>`<li>${d.nodes[s[0]][0]} → ${d.nodes[s[1]][0]}: ${esc(s[2])}</li>`).join('')}</ol>`).join(''),
+  d=>['Walked one request end to end','Kept app servers stateless behind a load balancer','Placed a cache, queue or CDN where it is actually needed','Covered every functional requirement']],
+ ['Deep dives','Pick the hardest parts of this system and go deeper: bottlenecks, failure modes and trade-offs.',
+  d=>d.deep.map(([t,x])=>`<h4>${t}</h4><p>${x}</p>`).join(''),
+  d=>[...d.deep.map(x=>'Covered: '+x[0].replace(/\?$/,'')),'Named a single point of failure and how to remove it','Mentioned monitoring and alerting']]
+];
+let sdp=store.get('sdp',{});
+function sdState(k){return sdp[k]=sdp[k]||{step:0,ans:{},chk:{},rev:{}}}
+function sdScore(k){const d=SD[k],s=sdState(k);let done=0,total=0;SDGEN.forEach((g,j)=>{total+=g[3](d).length;done+=(s.chk[j]||[]).filter(Boolean).length});return[done,total]}
+function openPractice(k){openModal('');renderPractice(k)}
+function renderPractice(k){const d=SD[k],s=sdState(k),body=$('#modal-body');
+ if(s.step>=SDGEN.length)return renderPracticeSummary(k);
+ const i=s.step,g=SDGEN[i],chks=g[3](d),c=s.chk[i]||[],[done,total]=sdScore(k);
+ body.innerHTML=`<div class="muted" style="font-size:13px">Guided practice · step ${i+1} of ${SDGEN.length}</div><h2 style="margin:4px 0 12px">Design ${d.name}</h2>
+ <div class="steps-nav">${SDGEN.map((x,j)=>`<button class="${j===i?'active':''} ${(s.ans[j]||'').trim()?'done':''}" data-pstep="${j}">${j+1}. ${x[0]}</button>`).join('')}</div>
+ <p style="font-size:14.5px">${g[1]}</p><textarea id="pr-ans" rows="8" placeholder="Write your answer here. Bullet points are fine.">${esc(s.ans[i]||'')}</textarea>
+ <div class="controls" style="margin-top:10px"><button class="btn ${s.rev[i]?'':'pri'}" id="pr-rev">${s.rev[i]?'Hide':'Reveal'} reference answer</button>${s.rev[i]?'':'<span class="muted" style="font-size:13px">Write your own answer first, then compare.</span>'}</div>
+ ${s.rev[i]?`<div class="card ref">${g[2](d)}</div><h4>Self-check: did your answer…</h4><div class="checks">${chks.map((t,j)=>`<label><input type="checkbox" data-chk="${j}" ${c[j]?'checked':''}> ${esc(t)}</label>`).join('')}</div>`:''}
+ <div class="controls" style="margin-top:16px;justify-content:space-between"><span class="muted" style="font-size:14px">Score so far: <b id="pr-score">${done} / ${total}</b></span><span><button class="btn" id="pr-prev" ${i?'':'disabled'}>← Back</button> <button class="btn pri" id="pr-next">${i<SDGEN.length-1?'Next step →':'Finish'}</button></span></div>`;
+ const save=()=>store.set('sdp',sdp);
+ body.oninput=e=>{if(e.target.id==='pr-ans'){s.ans[i]=e.target.value;save()}};
+ body.onchange=e=>{const j=e.target.dataset.chk;if(j==null)return;(s.chk[i]=s.chk[i]||[])[+j]=e.target.checked;save();const [a,b]=sdScore(k);$('#pr-score').textContent=`${a} / ${b}`};
+ body.onclick=e=>{const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.pstep!=null){s.step=+t.dataset.pstep;save();renderPractice(k)}
+  else if(t.id==='pr-rev'){s.rev[i]=!s.rev[i];if(s.rev[i])logOnce('sd');save();renderPractice(k)}
+  else if(t.id==='pr-prev'){s.step=Math.max(0,i-1);save();renderPractice(k)}
+  else if(t.id==='pr-next'){s.step=i+1;save();renderPractice(k)}}}
+function renderPracticeSummary(k){const d=SD[k],s=sdState(k),body=$('#modal-body'),[done,total]=sdScore(k),pct=Math.round(done/total*100);
+ body.innerHTML=`<div class="muted" style="font-size:13px">Guided practice · results</div><h2 style="margin:4px 0 12px">Design ${d.name}: ${pct}%</h2>
+ <div class="bar-bg" style="height:10px;margin-bottom:16px"><div class="bar-fg" style="width:${pct}%"></div></div>
+ <table class="cx">${SDGEN.map((g,j)=>{const n=g[3](d).length,c=(s.chk[j]||[]).filter(Boolean).length;return`<tr><td>${j+1}. ${g[0]}</td><td><code>${c} / ${n}</code></td><td>${!s.rev[j]?'<span class="muted">not checked yet</span>':c===n?'<span class="ok">✓ solid</span>':'<span style="color:var(--yellow)">revisit</span>'}</td></tr>`}).join('')}</table>
+ <p class="muted" style="font-size:14px">Steps marked "revisit" are the ones to practise again. Try explaining this design out loud in 35–40 minutes, as you would in a real interview.</p>
+ <div class="controls"><button class="btn" data-pstep="0">Review my answers</button><button class="btn" id="pr-reset">Start over</button><button class="btn pri" id="pr-close">Done</button></div>`;
+ body.oninput=null;body.onchange=null;
+ body.onclick=e=>{const t=e.target.closest('button');if(!t)return;if(t.dataset.pstep!=null){s.step=0;store.set('sdp',sdp);renderPractice(k)}
+  else if(t.id==='pr-reset'){sdp[k]={step:0,ans:{},chk:{},rev:{}};store.set('sdp',sdp);renderPractice(k)}else if(t.id==='pr-close')closeModal()}}
 
 /* Token bucket */
 const tb={cap:5,tokens:5,last:performance.now(),log:[]};
@@ -1064,7 +1252,7 @@ function renderBEditor(){const q=FLAT[bCur],s=stories[q]||{};$('#b-editor').inne
 function fmt(s){return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`}
 function wc(){const q=FLAT[bCur],s=stories[q]||{};const n=Object.values(s).join(' ').trim().split(/\s+/).filter(Boolean).length;$('#b-wc').textContent=`${n} words ≈ ${Math.round(n/130*60)} s spoken (aim for 250–350 words, about 2 minutes)`}
 $('#b-list').addEventListener('click',e=>{const b=e.target.closest('[data-bq]');if(!b)return;bCur=+b.dataset.bq;resetTimer();renderBList();renderBEditor()});
-$('#b-editor').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;const q=FLAT[bCur];stories[q]=stories[q]||{};stories[q][k]=e.target.value;store.set('stories',stories);wc();
+$('#b-editor').addEventListener('input',e=>{const k=e.target.dataset.k;if(!k)return;const q=FLAT[bCur];stories[q]=stories[q]||{};stories[q][k]=e.target.value;store.set('stories',stories);wc();if(e.target.value.trim().length>20)logOnce('story');
  const btn=$(`[data-bq="${bCur}"]`);if(btn&&!!btn.querySelector('.chk')!==hasStory(q))renderBList()});
 function resetTimer(){clearInterval(tRun);tRun=null;tLeft=120}
 $('#b-editor').addEventListener('click',async e=>{
@@ -1122,18 +1310,19 @@ const FC={
 };
 let known=new Set(store.get('known',[])),fcTopic='All',fcIdx=0,fcFlip=false,fcOrder=null;
 function fcAll(){return Object.entries(FC).flatMap(([t,cs])=>cs.map((c,i)=>({id:t+':'+i,t,q:c[0],a:c[1]})))}
-function fcDeck(){let d=fcAll().filter(c=>fcTopic==='All'||c.t===fcTopic);if($('#fc-unknown').checked)d=d.filter(c=>!known.has(c.id));if(fcOrder){const o=new Map(fcOrder.map((id,i)=>[id,i]));d.sort((a,b)=>(o.get(a.id)??0)-(o.get(b.id)??0))}return d}
+function fcDeck(){let d=fcAll().filter(c=>fcTopic==='All'||c.t===fcTopic);const m=$('#fc-mode').value;if(m==='unknown')d=d.filter(c=>!known.has(c.id));if(m==='due')d=d.filter(c=>isDue('f:'+c.id));if(fcOrder){const o=new Map(fcOrder.map((id,i)=>[id,i]));d.sort((a,b)=>(o.get(a.id)??0)-(o.get(b.id)??0))}return d}
 function renderFC(){$('#fc-topics').innerHTML=['All',...Object.keys(FC)].map(t=>`<button class="btn sm ${t===fcTopic?'pri':''}" data-topic="${esc(t)}">${t}</button>`).join('');
  const d=fcDeck();if(fcIdx>=d.length)fcIdx=0;const total=fcAll().filter(c=>fcTopic==='All'||c.t===fcTopic);
  $('#fc-count').textContent=`${d.length?fcIdx+1:0} / ${d.length} · ${total.filter(c=>known.has(c.id)).length} of ${total.length} known`;
- const c=d[fcIdx];$('#fc-card').innerHTML=c?`<div class="muted" style="font-size:12.5px;margin-bottom:8px">${c.t}${known.has(c.id)?' · ✓ known':''}</div><div class="q">${c.q}</div>${fcFlip?`<div class="a">${c.a}</div>`:'<div class="muted" style="font-size:13px;margin-top:14px">Click to reveal the answer</div>'}`:'<div class="q">🎉 You know every card in this set.</div>'}
+ const c=d[fcIdx];$('#fc-card').innerHTML=c?`<div class="muted" style="font-size:12.5px;margin-bottom:8px">${c.t}${known.has(c.id)?' · ✓ known':''}</div><div class="q">${c.q}</div>${fcFlip?`<div class="a">${c.a}</div>`:'<div class="muted" style="font-size:13px;margin-top:14px">Click to reveal the answer</div>'}`:`<div class="q">${$('#fc-mode').value==='due'?'🎉 Nothing due for review right now. Come back tomorrow.':'🎉 You know every card in this set.'}</div>`}
 $('#fc-topics').onclick=e=>{const b=e.target.closest('[data-topic]');if(!b)return;fcTopic=b.dataset.topic;fcIdx=0;fcFlip=false;renderFC()};
 $('#fc-card').onclick=()=>{fcFlip=!fcFlip;renderFC()};
 $('#fc-next').onclick=()=>{const n=fcDeck().length;if(n){fcIdx=(fcIdx+1)%n;fcFlip=false;renderFC()}};
 $('#fc-prev').onclick=()=>{const n=fcDeck().length;if(n){fcIdx=(fcIdx-1+n)%n;fcFlip=false;renderFC()}};
-$('#fc-know').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.add(c.id);store.set('known',[...known]);if(!$('#fc-unknown').checked)fcIdx++;fcFlip=false;renderFC()};
-$('#fc-again').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.delete(c.id);store.set('known',[...known]);fcIdx++;fcFlip=false;renderFC()};
-$('#fc-unknown').onchange=()=>{fcIdx=0;fcFlip=false;renderFC()};
+$('#fc-know').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.add(c.id);store.set('known',[...known]);srRate('f:'+c.id,'easy');if($('#fc-mode').value==='all')fcIdx++;fcFlip=false;renderFC()};
+$('#fc-again').onclick=()=>{const c=fcDeck()[fcIdx];if(!c)return;known.delete(c.id);store.set('known',[...known]);srRate('f:'+c.id,'fail');if($('#fc-mode').value!=='due')fcIdx++;fcFlip=false;renderFC()};
+$('#fc-mode').onchange=()=>{fcIdx=0;fcFlip=false;renderFC()};
+function dueCards(){return fcAll().filter(c=>isDue('f:'+c.id))}
 $('#fc-shuffle').onclick=()=>{fcOrder=fcAll().map(c=>c.id).sort(()=>Math.random()-.5);fcIdx=0;fcFlip=false;renderFC()};
 
 /* =========================================================
@@ -1141,12 +1330,32 @@ $('#fc-shuffle').onclick=()=>{fcOrder=fcAll().map(c=>c.id).sort(()=>Math.random(
    ========================================================= */
 function renderHome(){const nStories=FLAT.filter(hasStory).length,nCards=fcAll().length;
  const stat=(v,t,k)=>`<div class="stat"><div class="v">${v}<span class="muted" style="font-size:14px"> / ${t}</span></div><div class="k">${k}</div><div class="bar-bg"><div class="bar-fg" style="width:${v/t*100}%"></div></div></div>`;
+ renderToday();
  $('#home-stats').innerHTML=stat(solved.size,PROBS.length,'problems solved')+stat(known.size,nCards,'flashcards known')+stat(nStories,FLAT.length,'STAR stories written');
  const cards=[['ds','▦','Data Structures','Stack, queue, linked list, BST, heap and hash table, animated operation by operation.'],['algo','↯','Algorithms','6 sorting algorithms, binary search, BFS/DFS/Dijkstra/A* on a grid you can draw on, and 14 pattern templates.'],
-  ['problems','✓','Top Problems','45 frequently asked problems, tagged by pattern and company, with progress tracking.'],['system','⧉','System Design','5 classic designs with animated request flows, a token bucket demo, consistent hashing and core concepts.'],
+  ['problems','✓','Top Problems','45 frequently asked problems with step-by-step hints, a timer, notes and a spaced-repetition review schedule.'],['system','⧉','System Design','5 classic designs with animated request flows, guided step-by-step practice with self-scoring, and core concepts.'],
   ['behavioral','☺','Behavioral','21 common questions with a STAR builder, a 2-minute timer and a saved story bank.'],['technical','?','Technical Q&A','36 flashcards on OS, networking, databases, OOP, concurrency and web APIs.']];
  $('#home-cards').innerHTML=cards.map(([id,em,t,d])=>`<div class="card go" data-goto="${id}"><div class="em">${em}</div><h3 style="margin-top:6px">${t}</h3><p class="muted" style="font-size:14px;margin:0">${d}</p></div>`).join('')}
+function renderToday(){
+ const pool=PROBS.filter(p=>!solved.has(p[0])),L=pool.length?pool:PROBS,p=L[fnv(dkey())%L.length],dp=dueProblems(),dc=dueCards().length,s=streak(),act=store.get('act',{});
+ const now=new Date(),start=new Date(now);start.setDate(start.getDate()-(19*7+now.getDay()));let cells='',total=0,active=0;
+ for(const d=new Date(start);d<=now;d.setDate(d.getDate()+1)){const k=dkey(d),n=act[k]||0;total+=n;if(n)active++;cells+=`<i class="${n>=6?'l3':n>=3?'l2':n?'l1':''}${k===dkey()?' today':''}" title="${k}: ${n} activit${n===1?'y':'ies'}"></i>`}
+ $('#home-today').innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h3 style="margin:0">Today</h3><div class="streak">🔥 ${s} <span class="muted" style="font-size:14px;font-weight:500">day streak</span></div></div>
+  <h4>Problem of the day</h4><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="linkbtn" style="font-weight:600;font-size:16px" data-open="${p[0]}">${p[1]}</button><span class="pill ${p[3]}">${p[3]}</span><span class="pill">${p[4]}</span></div>
+  <h4>Due for review</h4>${dp.length?`<div class="duelist">${dp.slice(0,6).map(x=>`<div><button class="linkbtn" data-open="${x[0]}">${x[1]}</button> <span class="pill ${x[3]}">${x[3]}</span></div>`).join('')}${dp.length>6?`<a href="#problems" class="muted" style="font-size:13px">+${dp.length-6} more in Top Problems</a>`:''}</div>`:'<div class="muted" style="font-size:14px">No problems due. Solve one and rate it to start your review queue.</div>'}
+  ${dc?`<div style="margin-top:10px"><button class="btn sm" id="home-fc">Review ${dc} due flashcard${dc>1?'s':''}</button></div>`:''}</div>
+ <div class="card"><h3>Activity</h3><div class="heat">${cells}</div><div class="muted" style="font-size:13px;margin-top:6px">Last 20 weeks · active on ${active} day${active===1?'':'s'} · ${total} activities. Solving, reviewing, writing stories and design practice all count.</div></div>`}
+$('#home-today').addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o)return openProblem(+o.dataset.open);if(e.target.id==='home-fc'){$('#fc-mode').value='due';fcTopic='All';fcIdx=0;location.hash='technical'}});
 $('#home-cards').onclick=e=>{const c=e.target.closest('[data-goto]');if(c)location.hash=c.dataset.goto};
+/* Backup */
+let bkJson='';
+function bkSay(m){const el=$('#bk-say');el.hidden=false;el.innerHTML=m}
+$('#bk-export').onclick=()=>{const data={};try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ipl_'))data[k]=localStorage.getItem(k)}}catch(e){}
+ bkJson=JSON.stringify({app:'interview-prep-lab',version:1,exported:new Date().toISOString(),data});
+ try{const url=URL.createObjectURL(new Blob([bkJson],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=`interview-prep-backup-${dkey()}.json`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}catch(e){}
+ bkSay(`Backup saved as <code>interview-prep-backup-${dkey()}.json</code> (${Object.keys(data).length} items). If no download started, <button class="btn sm" id="bk-copy">copy the backup</button> and paste it into a .json file.`)};
+$('#bk-say').addEventListener('click',async e=>{if(e.target.id!=='bk-copy')return;try{await navigator.clipboard.writeText(bkJson);e.target.textContent='Copied ✓'}catch(_){e.target.textContent='Copy blocked'}});
+$('#bk-file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const o=JSON.parse(await f.text());if(o.app!=='interview-prep-lab'||!o.data)throw 0;let n=0;for(const [k,v] of Object.entries(o.data))if(k.startsWith('ipl_')){localStorage.setItem(k,v);n++}bkSay(`Imported ${n} items. Reloading…`);setTimeout(()=>location.reload(),700)}catch(_){bkSay('That file isn’t an Interview Prep Lab backup.')}e.target.value=''};
 const SECTIONS=['home','ds','algo','problems','system','behavioral','technical'];
 function show(id){if(!SECTIONS.includes(id))id='home';$$('main>section').forEach(s=>s.hidden=s.id!=='sec-'+id);$$('#nav button[data-go]').forEach(b=>b.classList.toggle('active',b.dataset.go===id));
  if(id==='home')renderHome();if(id==='problems')renderProbs();if(id==='technical')renderFC();if(id==='behavioral'){renderBList();renderBEditor()}
